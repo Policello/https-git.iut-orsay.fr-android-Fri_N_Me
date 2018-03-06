@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<fragment tools:context="com.example.guillaume.aninterface.MainActivity"
+<fragment tools:context="fr.iut_orsay.frinme.MainActivity"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map"
