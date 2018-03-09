@@ -33,6 +33,11 @@ import java.util.ArrayList;
 
 import fr.iut_orsay.frinme.R;
 
+
+/**
+ * Vue principale de l'application
+ * carte et gestion de la localisation
+ */
 public class Map extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {

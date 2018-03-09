@@ -17,7 +17,10 @@ import fr.iut_orsay.frinme.MainActivity;
 import fr.iut_orsay.frinme.view.dialog.QuitFrag;
 import fr.iut_orsay.frinme.R;
 
-
+/**
+ * Vue des détails de l'événement
+ * utilisateur quelconque
+ */
 public class Event extends Fragment {
 
     private ListView mListView;

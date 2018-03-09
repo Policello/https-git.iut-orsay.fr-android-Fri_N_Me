@@ -13,12 +13,7 @@ import fr.iut_orsay.frinme.R;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link JoinFrag.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link JoinFrag#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment permettant de joindre un événement
  */
 public class JoinFrag extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
