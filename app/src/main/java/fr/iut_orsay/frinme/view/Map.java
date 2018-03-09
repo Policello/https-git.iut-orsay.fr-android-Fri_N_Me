@@ -1,10 +1,14 @@
 package fr.iut_orsay.frinme.view;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -14,8 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -32,6 +38,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.SettingsActivity;
 
 
 /**
@@ -47,8 +54,9 @@ public class Map extends Fragment implements
     public static final String TAG = "Map";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private LocationRequest mLocationRequest;
-
+    private LocationManager lm;
     private ArrayList<LatLng> tab;
+    private Activity mActivity;
 
     //MarkerOptions currentPosition;
     private Marker myLocattionMarker;
@@ -61,6 +69,10 @@ public class Map extends Fragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.activity_maps, container, false);
+
+        //Gestionnaire de localisation pour verifier que la localisation est activée
+        lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
 
 
 
@@ -96,6 +108,8 @@ public class Map extends Fragment implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+        //Placer les autres marqueurs
         for (LatLng l : tab) {
             addMarkerLatLng(l, BitmapDescriptorFactory.HUE_GREEN);
             Log.i("marker ", "" + l.latitude);
@@ -109,18 +123,52 @@ public class Map extends Fragment implements
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Location services connected.");
 
-            if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-                handleNewLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+        //Localisation activée ?
+        boolean isLocationEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (checkedPlayService(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))) {
+
+            if (!isLocationEnabled){
+                redirectToSettings("Location not activated");
             }
-            else{
-                ActivityCompat.requestPermissions(this.getActivity(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        AUTHORIZED_LOCATION);
+
+            else {
+                //Voir si on  la permission
+                if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    //Mettre à jour la localisation
+                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                    Log.d("Location", "Location");
+
+                    //Attendre 2 secondes que la localisation se mettre à jour
+                    new Thread() {
+                        public void run() {
+
+                            getActivity().runOnUiThread(() -> {
+                                //On ne fait rien, on attend
+                            });
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+
+                    //Re-positionner sur la carte
+                    handleNewLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+                } else {
+                    //Demander la permission
+                    ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUTHORIZED_LOCATION);
+                }
             }
+
+        }
 
 
     }
+
+
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -156,9 +204,19 @@ public class Map extends Fragment implements
         }
     }
 
+    /**
+     *
+     * @param location : nnew location to mark
+     */
     private void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
         LatLng myLoc = new LatLng(location.getLatitude(), location.getLongitude());
+
+        /*
+         * Réglage de la caméra :
+         *  - si c'est la première fois, c'est le placement sur la carte, on centre sur le marqueur
+         *  - sinon, c'est une mise à jour, on ne bouge pas la caméra
+         */
         if (firstLocationUpdate) {
 
             myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("me"));
@@ -169,9 +227,6 @@ public class Map extends Fragment implements
         } else {
             myLocattionMarker.setPosition(myLoc);
         }
-        //currentPosition = new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title(""+ location.getLatitude() + " ; " +location.getLongitude());
-
-        //mMap.addMarker(currentPosition);
     }
 
 
@@ -215,4 +270,56 @@ public class Map extends Fragment implements
             }
         }
     }
+
+    /**
+     * Marche à suivre selon le statut des Google Play Services
+     * @param PLAY_SERVICE_STATUS
+     * @return true si il n'y a pas de problème
+     *         redirection dans tous les cas
+     *         false si rien n'est fait
+     *
+     */
+    private boolean checkedPlayService(int PLAY_SERVICE_STATUS)
+    {
+        switch (PLAY_SERVICE_STATUS)
+        {
+            case ConnectionResult.API_UNAVAILABLE:
+                //API is not available
+                redirectToSettings("API is not available");
+                break;
+            case ConnectionResult.NETWORK_ERROR:
+                //Network error while connection
+                redirectToSettings("API is not available");
+                break;
+            case ConnectionResult.RESTRICTED_PROFILE:
+                //Google Profile is restricted
+                redirectToSettings("API is not available");
+                break;
+            case ConnectionResult.SERVICE_MISSING:
+                //service is missing
+                redirectToSettings("API is not available");
+                break;
+            case ConnectionResult.SIGN_IN_REQUIRED:
+                //service available but user not signed in
+                redirectToSettings("API is not available");
+                break;
+            case ConnectionResult.SUCCESS:
+                return true;
+                //break;
+        }
+        return false;
+    }
+
+
+    /**
+     * Redirige vers les paramètres pour tout problème de configuration
+     * @param text : texte à afficher à l'utilisateur
+     */
+    private void redirectToSettings(String text){
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
+        Log.d("TAG", text);
+        Intent i = new Intent(getActivity(), SettingsActivity.class);
+        startActivity(i);
+    }
+
 }
