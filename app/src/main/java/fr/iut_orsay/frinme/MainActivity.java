@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import fr.iut_orsay.frinme.view.Contact;
 import fr.iut_orsay.frinme.view.Event;
 import fr.iut_orsay.frinme.view.EventAdmin;
 import fr.iut_orsay.frinme.view.Map;
@@ -96,14 +97,14 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_contacts) {
+            Contact contactFrag = new Contact();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, contactFrag);
+            fragmentTransaction.commit();
+        } else if (id == R.id.nav_evts) {
             Event evtFrag = new Event();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, evtFrag);
-            fragmentTransaction.commit();
-        } else if (id == R.id.nav_evts) {
-            EventAdmin evtAdminFrag = new EventAdmin();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, evtAdminFrag);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_settings) {
             SettingsActivity settings = new SettingsActivity();
