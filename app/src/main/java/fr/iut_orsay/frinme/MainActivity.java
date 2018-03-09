@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import fr.iut_orsay.frinme.view.Contact;
 import fr.iut_orsay.frinme.view.Event;
 import fr.iut_orsay.frinme.view.EventList;
 import fr.iut_orsay.frinme.view.Map;
