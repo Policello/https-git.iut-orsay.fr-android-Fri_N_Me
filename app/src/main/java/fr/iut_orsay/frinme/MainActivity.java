@@ -21,6 +21,7 @@ import android.view.View;
 import fr.iut_orsay.frinme.view.Contact;
 import fr.iut_orsay.frinme.view.Event;
 import fr.iut_orsay.frinme.view.EventAdmin;
+import fr.iut_orsay.frinme.view.EventList;
 import fr.iut_orsay.frinme.view.Map;
 import fr.iut_orsay.frinme.view.dialog.JoinFrag;
 import fr.iut_orsay.frinme.view.dialog.QuitFrag;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
             fragmentTransaction.replace(R.id.fragment_container, contactFrag);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_evts) {
-            Event evtFrag = new Event();
+            EventList evtFrag = new EventList();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, evtFrag);
             fragmentTransaction.commit();
@@ -143,6 +144,13 @@ public class MainActivity extends AppCompatActivity implements
             userStatus = Status.EXTERNE;
         }
         Log.e("STATUS", userStatus.toString());
+    }
+
+    public void setEventFrag(){
+        Event evtFrag = new Event();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, evtFrag);
+        fragmentTransaction.commit();
     }
 
     private void showFabMenu(){
