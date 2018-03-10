@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements
             fragmentTransaction.replace(R.id.fragment_container, evtAdminFrag);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_settings) {
-            SettingsActivity settings = new SettingsActivity();
             Intent i = new Intent(this, SettingsActivity.class);
             startActivity(i);
         } else if (id == R.id.nav_map) {
