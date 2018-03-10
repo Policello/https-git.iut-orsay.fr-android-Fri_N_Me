@@ -5,15 +5,15 @@
         <menu>
             <item
                 android:id="@+id/nav_map"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/ic_location_on_black_24dp"
                 android:title="Carte" />
             <item
                 android:id="@+id/nav_contacts"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_person_black_24dp"
                 android:title="Contacts" />
             <item
                 android:id="@+id/nav_evts"
-                android:icon="@drawable/ic_menu_camera"
+                android:icon="@drawable/ic_event_black_24dp"
                 android:title="Evénements" />
         </menu>
     </item>
