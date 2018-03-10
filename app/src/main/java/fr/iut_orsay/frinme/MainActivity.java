@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -153,6 +154,18 @@ public class MainActivity extends AppCompatActivity implements
             userStatus = Status.EXTERNE;
         }
         Log.e("STATUS", userStatus.toString());
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new Map())
+                    .commit();
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            return true;
+        }
+        return super.onKeyLongPress(keyCode, event);
     }
 
     public void setEventFrag(){
