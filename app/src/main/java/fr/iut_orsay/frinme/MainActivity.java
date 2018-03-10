@@ -65,13 +65,23 @@ public class MainActivity extends AppCompatActivity implements
         fabEvent = (FloatingActionButton) findViewById(R.id.fabEvent);
 
         fab.setOnClickListener(v -> {
-            if(!isFabOpen) showFabMenu(); else closeFabMenu(); });
-        fabContact.setOnClickListener(v ->
-            fragmentManager.beginTransaction().replace(R.id.fragment_container, new Contact()).commit()
-        );
-        fabEvent.setOnClickListener(v ->
-            fragmentManager.beginTransaction().replace(R.id.fragment_container, new Event()).commit()
-        );
+            if(!isFabOpen) showFabMenu();
+            else closeFabMenu();
+        });
+        fabContact.setOnClickListener(v -> {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new Contact())
+                    .addToBackStack(null)
+                    .commit();
+            closeFabMenu();
+        });
+        fabEvent.setOnClickListener(v -> {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new Event())
+                    .addToBackStack(null)
+                    .commit();
+            closeFabMenu();
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -112,23 +122,22 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_contacts) {
-            Event evtFrag = new Event();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, evtFrag);
-            fragmentTransaction.commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new Contact())
+                    .addToBackStack(null)
+                    .commit();
         } else if (id == R.id.nav_evts) {
-            EventList evtFrag = new EventList();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, evtAdminFrag);
-            fragmentTransaction.commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new EventList())
+                    .addToBackStack(null)
+                    .commit();
         } else if (id == R.id.nav_settings) {
-            Intent i = new Intent(this, SettingsActivity.class);
-            startActivity(i);
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.nav_map) {
-            Map MapFrag = new Map();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, MapFrag);
-            fragmentTransaction.commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new Map())
+                    .addToBackStack(null)
+                    .commit();
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -146,10 +155,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void setEventFrag(){
-        Event evtFrag = new Event();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, evtFrag);
-        fragmentTransaction.commit();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, new Event())
+                .addToBackStack(null)
+                .commit();
     }
 
     private void showFabMenu(){
