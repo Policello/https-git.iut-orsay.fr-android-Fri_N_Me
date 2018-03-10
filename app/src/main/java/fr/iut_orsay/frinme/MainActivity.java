@@ -3,6 +3,7 @@ package fr.iut_orsay.frinme;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity implements
 
     public static Status userStatus = Status.EXTERNE;
     private View parentLayout;
+    private boolean isFabOpen = false;
+    private FloatingActionButton fabContact;
+    private FloatingActionButton fabEvent;
+    private FloatingActionButton fab;
     private final FragmentManager fragmentManager = getFragmentManager();
 
     @Override
@@ -53,9 +58,19 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(t);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Snackbar.make(view, "Accès rapide", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show());
+        //Mise en place du menu flottant
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fabContact = (FloatingActionButton) findViewById(R.id.fabContact);
+        fabEvent = (FloatingActionButton) findViewById(R.id.fabEvent);
+
+        fab.setOnClickListener(v -> {
+            if(!isFabOpen) showFabMenu(); else closeFabMenu(); });
+        fabContact.setOnClickListener(v ->
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new Contact()).commit()
+        );
+        fabEvent.setOnClickListener(v ->
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new Event()).commit()
+        );
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -89,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         // Handle navigation view item clicks here.
@@ -128,5 +143,19 @@ public class MainActivity extends AppCompatActivity implements
             userStatus = Status.EXTERNE;
         }
         Log.e("STATUS", userStatus.toString());
+    }
+
+    private void showFabMenu(){
+        isFabOpen=true;
+        fab.setImageResource(R.drawable.ic_close_black_24dp);
+        fabContact.animate().translationY(-getResources().getDimension(R.dimen.fab_spacing));
+        fabEvent.animate().translationY(-getResources().getDimension(R.dimen.fab_spacing)*2);
+    }
+
+    private void closeFabMenu(){
+        isFabOpen=false;
+        fab.setImageResource(R.drawable.ic_add_black_24dp);
+        fabContact.animate().translationY(0);
+        fabEvent.animate().translationY(0);
     }
 }
