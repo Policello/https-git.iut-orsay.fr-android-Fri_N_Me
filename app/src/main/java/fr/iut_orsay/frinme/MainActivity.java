@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity implements
         parentLayout = findViewById(android.R.id.content);
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Event evtFrag = new Event();
-        fragmentTransaction.add(R.id.fragment_container, evtFrag, "init");
+        Map mapFrag = new Map();
+        fragmentTransaction.add(R.id.fragment_container, mapFrag, "init");
         fragmentTransaction.commit();
 
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
