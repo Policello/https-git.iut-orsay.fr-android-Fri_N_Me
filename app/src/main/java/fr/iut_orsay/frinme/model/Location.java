@@ -1,10 +1,12 @@
 package fr.iut_orsay.frinme.model;
 
+import android.support.annotation.NonNull;
+
 /**
  * Représente la localisation d'un lieu
  * sous la forme d'un couple de coordonnées
  */
-public class Location {
+public class Location implements Comparable {
 
     private final static double RAYON_TERRE = 6367445;
     private double latitude, longitude;
@@ -59,7 +61,14 @@ public class Location {
     }
 
     @Override
+    public int compareTo(@NonNull Object o) {
+        //TODO: implémenter la distance par rapport à la distance actuelle
+        //TODO: pour trier les évenements en fonction de leur proximité
+        return 0;
+    }
+
+    @Override
     public String toString(){
-        return "Latidude: "+latitude+" Longitude: "+longitude;
+        return latitude+" ; "+longitude;
     }
 }
