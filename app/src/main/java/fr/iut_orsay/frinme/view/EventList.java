@@ -108,7 +108,10 @@ public class EventList extends Fragment {
     private class EventClickListener implements TableDataClickListener<EventModel> {
         @Override
         public void onDataClicked(int rowIndex, EventModel event) {
-            ((MainActivity)getActivity()).setEventFrag();
+            getActivity().getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new Event())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
