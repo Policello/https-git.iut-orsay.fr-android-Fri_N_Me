@@ -168,13 +168,6 @@ public class MainActivity extends AppCompatActivity implements
         return super.onKeyLongPress(keyCode, event);
     }
 
-    public void setEventFrag(){
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, new Event())
-                .addToBackStack(null)
-                .commit();
-    }
-
     private void showFabMenu(){
         isFabOpen=true;
         fab.setImageResource(R.drawable.ic_close_black_24dp);
