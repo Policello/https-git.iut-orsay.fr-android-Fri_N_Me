@@ -58,7 +58,6 @@ public class Map extends Fragment implements
     private ArrayList<LatLng> tab;
     private Activity mActivity;
 
-    //MarkerOptions currentPosition;
     private Marker myLocattionMarker;
     private boolean firstLocationUpdate = true;
 
@@ -72,9 +71,6 @@ public class Map extends Fragment implements
 
         //Gestionnaire de localisation pour verifier que la localisation est activée
         lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-
-
 
         mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
                 .addConnectionCallbacks(this)
@@ -108,14 +104,11 @@ public class Map extends Fragment implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
         //Placer les autres marqueurs
         for (LatLng l : tab) {
             addMarkerLatLng(l, BitmapDescriptorFactory.HUE_GREEN);
             Log.i("marker ", "" + l.latitude);
         }
-
-
     }
 
 
@@ -161,14 +154,8 @@ public class Map extends Fragment implements
                     ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUTHORIZED_LOCATION);
                 }
             }
-
         }
-
-
     }
-
-
-
 
     @Override
     public void onConnectionSuspended(int i) {
