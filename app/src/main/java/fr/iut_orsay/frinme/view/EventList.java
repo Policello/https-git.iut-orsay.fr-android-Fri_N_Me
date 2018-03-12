@@ -19,7 +19,6 @@ import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
-import fr.iut_orsay.frinme.MainActivity;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
