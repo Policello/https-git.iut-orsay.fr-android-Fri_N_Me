@@ -27,12 +27,15 @@ import fr.iut_orsay.frinme.model.Location;
 
 public class EventList extends Fragment {
 
+    // Liste d'événements
     List<EventModel> testEvent;
+    // Nom les colonnes du tableau
     private static final String[] TABLE_HEADERS = { "Nom", "Type", "Date", "Coordonnées" };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Jeu de test d'événements
         testEvent = new ArrayList<>();
         EventModel e1 = new EventModel("test", "cat", new Date(), new Location(2.36,5.69));
         EventModel e2 = new EventModel("wew", "chat", new Date(), new Location(8.36,5.6777));
@@ -51,10 +54,15 @@ public class EventList extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         SortableTableView tableView = (SortableTableView ) view.findViewById(R.id.tableView);
+        // Tableau de 4 colonnes
         tableView.setColumnCount(4);
+        // Adaptateur pour l'affichage du contenu des cases
         tableView.setDataAdapter(new EventTableAdaptater (getActivity(), testEvent));
+        // Header simple
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
+        // Réaction au click
         tableView.addDataClickListener(new EventClickListener());
+        // Comparateurs permettant de trier les colonnes
         tableView.setColumnComparator(0, EventComparator.getEventNameComparator());
         tableView.setColumnComparator(1, EventComparator.getEventTypeComparator());
         tableView.setColumnComparator(2, EventComparator.getEventDateComparator());
