@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import fr.iut_orsay.frinme.view.Contact;
 import fr.iut_orsay.frinme.view.Event;
 import fr.iut_orsay.frinme.view.EventList;
+import fr.iut_orsay.frinme.view.ListeContact;
 import fr.iut_orsay.frinme.view.Map;
 import fr.iut_orsay.frinme.view.dialog.JoinFrag;
 import fr.iut_orsay.frinme.view.dialog.QuitFrag;
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (id == R.id.nav_contacts) {
             fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, new Contact())
+                    .replace(R.id.fragment_container, new ListeContact())
                     .addToBackStack(null)
                     .commit();
         } else if (id == R.id.nav_evts) {
