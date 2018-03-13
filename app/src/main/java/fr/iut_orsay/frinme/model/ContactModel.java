@@ -1,6 +1,7 @@
 package fr.iut_orsay.frinme.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Représente un contact , les évenements auquels il participe et ses attributs.
@@ -10,24 +11,36 @@ public class ContactModel {
     private int id;
     private String nom;
     private String prenom;
-    private String lastLocalisation;
-    private EventModel lastEvent;
+    private String numeroTel;
+    private Location lastLocalisation;
+    private String lastEvent;
     private String notes;
-    private ArrayList<EventModel> listEvenement;
+    private ArrayList<EventModel> listEvenement= new ArrayList<>();
 
     public ContactModel(int id){
         this.id = id;
         //TODO: Récupérer les infos manquantes depuis le serveur
     }
-    public ContactModel(int id,String nom,String prenom,String lastLocalisation,EventModel lastEvent,String notes,ArrayList<EventModel> listEvenement){
+
+    public String getNumeroTel() {
+        return numeroTel;
+    }
+
+    public void setNumeroTel(String numeroTel) {
+        this.numeroTel = numeroTel;
+    }
+
+    public ContactModel(int id, String nom, String prenom, String numeroTel, Location lastLocalisation, String lastEvent, String notes, List<EventModel> listEvenement){
         this.id = id;
         this.prenom=prenom;
         this.nom=nom;
+        this.numeroTel=numeroTel;
         this.lastLocalisation=lastLocalisation;
         this.lastEvent=lastEvent;
         this.notes=notes;
+
         for (int i = 0; i < listEvenement.size(); i++) {
-            this.listEvenement.add(i, listEvenement.get(i));
+            this.listEvenement.add(listEvenement.get(i));
         }
 
         //TODO: Récupérer les infos manquantes depuis le serveur
@@ -51,19 +64,16 @@ public class ContactModel {
         this.prenom = prenom;
     }
 
-    public String getLastLocalisation() {
+    public Location getCoordonnées() {
         return lastLocalisation;
     }
 
-    public void setLastLocalisation(String lastLocalisation) {
-        this.lastLocalisation = lastLocalisation;
-    }
 
-    public EventModel getLastEvent() {
+    public String getLastEvent() {
         return lastEvent;
     }
 
-    public void setLastEvent(EventModel lastEvent) {
+    public void setLastEvent(String lastEvent) {
         this.lastEvent = lastEvent;
     }
 
