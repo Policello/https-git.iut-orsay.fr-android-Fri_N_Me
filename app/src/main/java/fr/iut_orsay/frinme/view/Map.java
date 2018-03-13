@@ -1,7 +1,6 @@
 package fr.iut_orsay.frinme.view;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -51,13 +50,15 @@ public class Map extends Fragment implements
     private LocationRequest mLocationRequest;
     private LocationManager lm;
     private ArrayList<LatLng> tab;
-    private Activity mActivity;
+
+    private Location location;
 
     private Marker myLocattionMarker;
     private boolean firstLocationUpdate = true;
 
     private final int AUTHORIZED_LOCATION = 1;
 
+    private boolean isLocationEnabled;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -111,16 +112,28 @@ public class Map extends Fragment implements
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Location services connected.");
 
-        //Localisation activée ?
-        boolean isLocationEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+
+        /*lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        //Localisation activée
+        isLocationEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);*/
+
+
+
+        /*Log.i(TAG, ""+isLocationEnabled);
+        Log.i(TAG, Settings.Secure.LOCATION_MODE);*/
 
         if (checkedPlayService(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))) {
 
-            if (!isLocationEnabled){
+            //Log.i(TAG, LocationManager.GPS_PROVIDER);
+
+            
+           /* if (!LocationManager.GPS_PROVIDER.equals("gps")){
                 redirectToSettings("Location not activated");
             }
 
-            else {
+            else {*/
                 //Voir si on  la permission
                 if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     //Mettre à jour la localisation
@@ -143,12 +156,20 @@ public class Map extends Fragment implements
                     }.start();
 
                     //Re-positionner sur la carte
-                    handleNewLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+
+                    location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+                    if (location == null) {
+                        redirectToSettings("Location is not activated");
+                    }
+                    else {
+                        handleNewLocation(location);
+                    }
                 } else {
                     //Demander la permission
                     ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUTHORIZED_LOCATION);
                 }
-            }
+            //}
         }
     }
 
@@ -271,19 +292,19 @@ public class Map extends Fragment implements
                 break;
             case ConnectionResult.NETWORK_ERROR:
                 //Network error while connection
-                redirectToSettings("API is not available");
+                redirectToSettings("Network error while connection");
                 break;
             case ConnectionResult.RESTRICTED_PROFILE:
                 //Google Profile is restricted
-                redirectToSettings("API is not available");
+                redirectToSettings("Google Profile is restricted");
                 break;
             case ConnectionResult.SERVICE_MISSING:
                 //service is missing
-                redirectToSettings("API is not available");
+                redirectToSettings("service is missing");
                 break;
             case ConnectionResult.SIGN_IN_REQUIRED:
                 //service available but user not signed in
-                redirectToSettings("API is not available");
+                redirectToSettings("service available but user not signed in");
                 break;
             case ConnectionResult.SUCCESS:
                 return true;
