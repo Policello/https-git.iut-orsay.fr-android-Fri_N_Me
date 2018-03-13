@@ -11,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.view.dialog.JoinFrag;
 import fr.iut_orsay.frinme.MainActivity;
 import fr.iut_orsay.frinme.view.dialog.QuitFrag;
@@ -21,6 +23,7 @@ import fr.iut_orsay.frinme.R;
 public class Event extends Fragment {
 
     private ListView mListView;
+    private EventModel currentEvent;
 
     private String[] prenoms = new String[]{
             "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
@@ -34,6 +37,9 @@ public class Event extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_main, container, false);
+        if (getArguments() != null) {
+            currentEvent = ((EventModel)getArguments().getParcelable("event"));
+        }
         return view;
     }
 
@@ -50,6 +56,12 @@ public class Event extends Fragment {
                 R.array.cat, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterS);
+
+        TextView tvNomc = (TextView) view.findViewById(R.id.nom);
+        tvNomc.setText(currentEvent.getNom());
+
+        TextView tvDesc = (TextView) view.findViewById(R.id.desc);
+        tvDesc.setText(currentEvent.getDesc());
 
         ImageView img = (ImageView) view.findViewById(R.id.imageView);
         img.setOnClickListener(diag -> {
