@@ -27,6 +27,7 @@ public class Event extends Fragment {
 
     private ListView mListView;
     private EventModel currentEvent;
+    private boolean defaultValues = false;
 
     private String[] prenoms = new String[]{
             "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
@@ -42,6 +43,8 @@ public class Event extends Fragment {
         View view = inflater.inflate(R.layout.content_main, container, false);
         if (getArguments() != null) {
             currentEvent = ((EventModel)getArguments().getParcelable("event"));
+        } else {
+            defaultValues = true;
         }
         return view;
     }
@@ -60,11 +63,13 @@ public class Event extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterS);
 
-        TextView tvNomc = (TextView) view.findViewById(R.id.nom);
-        tvNomc.setText(currentEvent.getNom());
+        if (!defaultValues) {
+            TextView tvNomc = (TextView) view.findViewById(R.id.nom);
+            tvNomc.setText(currentEvent.getNom());
 
-        TextView tvDesc = (TextView) view.findViewById(R.id.desc);
-        tvDesc.setText(currentEvent.getDesc());
+            TextView tvDesc = (TextView) view.findViewById(R.id.desc);
+            tvDesc.setText(currentEvent.getDesc());
+        }
 
         ImageView img = (ImageView) view.findViewById(R.id.imageView);
         img.setOnClickListener(diag -> {
