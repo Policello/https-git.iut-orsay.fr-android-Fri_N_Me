@@ -8,6 +8,8 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -63,7 +65,7 @@ public class Map extends Fragment implements
 
     private final int AUTHORIZED_LOCATION = 1;
 
-    private boolean isLocationEnabled;
+    private boolean networkEnabled;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,6 +85,7 @@ public class Map extends Fragment implements
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(2 * 1000); // seconds, in milliseconds
+
 
         MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -104,7 +107,7 @@ public class Map extends Fragment implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        Log.d(TAG, "onmapready");
         //Placer les autres marqueurs
         for (LatLng l : tab) {
             addMarkerLatLng(l, BitmapDescriptorFactory.HUE_GREEN);
@@ -118,63 +121,43 @@ public class Map extends Fragment implements
         Log.i(TAG, "Location services connected.");
 
 
-
-        /*lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         //Localisation activée
-        isLocationEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);*/
+        networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        /*final ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkEnabled = connMgr.isDefaultNetworkActive();*/
 
 
 
-        /*Log.i(TAG, ""+isLocationEnabled);
-        Log.i(TAG, Settings.Secure.LOCATION_MODE);*/
+        int locationMode = getLocationMode(getActivity());
+        Log.d(TAG, "Location Mode" + locationMode);
+        Log.i(TAG, "network activated : " + networkEnabled);
+        if (!networkEnabled) {
+            redirectToSettings("Network not activated");
+        }
+        else {
+            if (checkedPlayService(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))) {
 
-        if (checkedPlayService(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))) {
 
-            //Log.i(TAG, LocationManager.GPS_PROVIDER);
 
-            
-           /* if (!LocationManager.GPS_PROVIDER.equals("gps")){
-                redirectToSettings("Location not activated");
-            }
-
-            else {*/
-                //Voir si on  la permission
-                if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    //Mettre à jour la localisation
-                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-                    Log.d("Location", "Location");
-
-                    //Attendre 2 secondes que la localisation se mettre à jour
-                    new Thread() {
-                        public void run() {
-
-                            getActivity().runOnUiThread(() -> {
-                                //On ne fait rien, on attend
-                            });
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }.start();
-
-                    //Re-positionner sur la carte
-
-                    location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-                    if (location == null) {
-                        redirectToSettings("Location is not activated");
-                    }
-                    else {
-                        handleNewLocation(location);
-                    }
+                if (locationMode != 3) {
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 } else {
-                    //Demander la permission
-                    ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUTHORIZED_LOCATION);
+
+                    //Voir si on  la permission
+                    if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        //Mettre à jour la localisation
+                        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+
+                    } else {
+                        //Demander la permission
+                        ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUTHORIZED_LOCATION);
+                    }
                 }
-            //}
+            }
         }
     }
 
@@ -213,7 +196,6 @@ public class Map extends Fragment implements
     }
 
     /**
-     *
      * @param location : nnew location to mark
      */
     private void handleNewLocation(Location location) {
@@ -225,6 +207,7 @@ public class Map extends Fragment implements
          *  - si c'est la première fois, c'est le placement sur la carte, on centre sur le marqueur
          *  - sinon, c'est une mise à jour, on ne bouge pas la caméra
          */
+        Log.d(TAG, "" + firstLocationUpdate);
         if (firstLocationUpdate) {
 
             myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("me"));
@@ -240,6 +223,7 @@ public class Map extends Fragment implements
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "onchanged");
         handleNewLocation(location);
     }
 
@@ -248,7 +232,6 @@ public class Map extends Fragment implements
         ;
         mMap.addMarker(options);
     }
-
 
 
     @Override
@@ -265,7 +248,7 @@ public class Map extends Fragment implements
                         try {
                             Log.i(TAG, "API Connected");
                             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-                            handleNewLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+                            //handleNewLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
 
                         } catch (SecurityException ex) {
                             ex.printStackTrace();
@@ -281,16 +264,14 @@ public class Map extends Fragment implements
 
     /**
      * Marche à suivre selon le statut des Google Play Services
+     *
      * @param PLAY_SERVICE_STATUS
      * @return true si il n'y a pas de problème
-     *         redirection dans tous les cas
-     *         false si rien n'est fait
-     *
+     * redirection dans tous les cas
+     * false si rien n'est fait
      */
-    private boolean checkedPlayService(int PLAY_SERVICE_STATUS)
-    {
-        switch (PLAY_SERVICE_STATUS)
-        {
+    private boolean checkedPlayService(int PLAY_SERVICE_STATUS) {
+        switch (PLAY_SERVICE_STATUS) {
             case ConnectionResult.API_UNAVAILABLE:
                 //API is not available
                 redirectToSettings("API is not available");
@@ -313,7 +294,7 @@ public class Map extends Fragment implements
                 break;
             case ConnectionResult.SUCCESS:
                 return true;
-                //break;
+            //break;
         }
         return false;
     }
@@ -321,13 +302,24 @@ public class Map extends Fragment implements
 
     /**
      * Redirige vers les paramètres pour tout problème de configuration
+     *
      * @param text : texte à afficher à l'utilisateur
      */
-    private void redirectToSettings(String text){
+    private void redirectToSettings(String text) {
         Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
         Log.d("TAG", text);
         Intent i = new Intent(getActivity(), SettingsActivity.class);
         startActivity(i);
+    }
+
+    public int getLocationMode(Context c) {
+        try {
+            return Settings.Secure.getInt(getActivity().getContentResolver(), Settings.Secure.LOCATION_MODE);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            //return -1;
+        }
+        return -1;
     }
 
 }
