@@ -39,9 +39,9 @@ public class Contact extends Fragment {
         super.onCreate(savedInstanceState);
         // Jeu de test d'événements
         testEvent = new ArrayList<>();
-        EventModel e1 = new EventModel("test", "cat", new Date(), new Location(2.36,5.69));
-        EventModel e2 = new EventModel("wew", "chat", new Date(), new Location(8.36,5.6777));
-        EventModel e3 = new EventModel("aaaaa", "zzzzzzzz", new Date(), new Location(2.36,5.69));
+        EventModel e1 = new EventModel("test", "cat", new Date(), "", new Location(2.36,5.69));
+        EventModel e2 = new EventModel("wew", "chat", new Date(), "description très longue" ,new Location(8.36,5.6777));
+        EventModel e3 = new EventModel("aaaaa", "zzzzzzzz", new Date(), "", new Location(2.36,5.69));
         testEvent.add(e1);
         testEvent.add(e2);
         testEvent.add(e3);
