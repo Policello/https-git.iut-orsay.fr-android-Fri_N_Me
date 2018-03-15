@@ -16,6 +16,7 @@ public class EventModel implements Parcelable {
     private Date date;
     private String desc;
     private Location coordonnées;
+    //TODO: Ajouter la liste d'amis associé
 
     public EventModel(int id){
         this.id = id;

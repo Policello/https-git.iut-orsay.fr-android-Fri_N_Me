@@ -36,11 +36,13 @@
                 android:text="Vélo en montagne"
                 android:gravity="center"/>
 
-            <Spinner
+            <TextView
                 android:id="@+id/cat"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Sport en nature"
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -51,6 +53,7 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/date"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -58,6 +61,7 @@
                 android:gravity="center"/>
 
             <TextView
+                android:id="@+id/location"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:text="Lieu: En montagne"
