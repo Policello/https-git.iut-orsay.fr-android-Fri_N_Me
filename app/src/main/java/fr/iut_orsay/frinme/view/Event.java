@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import fr.iut_orsay.frinme.model.EventModel;
@@ -50,25 +49,34 @@ public class Event extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mListView = (ListView) view.findViewById(R.id.listView);
 
+        // Remplissage de la liste d'amis
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, prenoms);
         mListView.setAdapter(adapter);
 
-        Spinner spinner = (Spinner) view.findViewById(R.id.cat);
-        ArrayAdapter<CharSequence> adapterS = ArrayAdapter.createFromResource(getActivity(),
-                R.array.cat, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapterS);
-
+        // Affichage de l'événement selectionné
         if (!defaultValues) {
             TextView tvNomc = (TextView) view.findViewById(R.id.nom);
             tvNomc.setText(currentEvent.getNom());
 
             TextView tvDesc = (TextView) view.findViewById(R.id.desc);
             tvDesc.setText(currentEvent.getDesc());
+
+            TextView tvDate = (TextView) view.findViewById(R.id.date);
+            tvDate.setText(currentEvent.getDate().toString());
+
+            TextView tvCat = (TextView) view.findViewById(R.id.cat);
+            tvCat.setText(currentEvent.getType());
+
+            TextView tvLocation = (TextView) view.findViewById(R.id.location);
+            tvLocation.setText(currentEvent.getCoordonnées().toString());
         }
 
+        // Affiche l'aimge associée à l'événement
+        // TODO: Récupérer l'image depuis le serveur
         ImageView img = (ImageView) view.findViewById(R.id.imageView);
+
+        // Dialogs permettant de se (de)inscrire aux evts
         img.setOnClickListener(diag -> {
             DialogFragment dialogFragment;
             if (MainActivity.userStatus == MainActivity.Status.EXTERNE) {
