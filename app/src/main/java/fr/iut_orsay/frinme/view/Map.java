@@ -1,6 +1,8 @@
 package fr.iut_orsay.frinme.view;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -50,6 +54,10 @@ public class Map extends Fragment implements
     private LocationRequest mLocationRequest;
     private LocationManager lm;
     private ArrayList<LatLng> tab;
+
+    TextView dialog_msg, dialog_title, dialog_ok;
+    Dialog dialog;
+    View view;
 
     private Location location;
 
@@ -105,6 +113,49 @@ public class Map extends Fragment implements
             addMarkerLatLng(l, BitmapDescriptorFactory.HUE_GREEN);
             Log.i("marker ", "" + l.latitude);
         }
+    }
+
+    public void showDialog(String  content) {
+
+        AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
+// 1.
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.item_dialog, null);
+
+        dialog_msg = (TextView) layout.findViewById(R.id.dialog_msg);
+        dialog_title = (TextView) layout.findViewById(R.id.dialog_title);
+        dialog_ok = (TextView) layout.findViewById(R.id.dialog_ok);
+        dialog_title.setText("information");
+        dialog_msg.setText(content);
+        dialog_ok.setText("voir les details");
+
+        dialog_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                这个MainActivity换成你要跳到的界面
+                Intent intent =null;
+
+                switch(content)
+                {
+                    case "test":
+                        intent = new Intent(getActivity(), Event.class);
+                        break;
+                    case "test2":
+                        intent = new Intent(getActivity(), Contact.class);
+                        break;
+                }
+
+                intent.putExtra("data", dialog_msg.getText().toString());
+                startActivity(intent);
+                dialog.dismiss();
+                getActivity().finish();
+
+            }
+        });
+
+        builder.setView(layout);
+        dialog=builder.create();
+        dialog.show();
     }
 
 
