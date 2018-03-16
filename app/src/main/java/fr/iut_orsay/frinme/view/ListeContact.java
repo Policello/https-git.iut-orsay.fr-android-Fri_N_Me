@@ -27,6 +27,7 @@ import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.model.ContactComparator;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
@@ -41,17 +42,16 @@ public class ListeContact extends Fragment {
     List<ContactModel> testContact;
     private static final String[] TABLE_HEADERS = { "Nom", "prenom" };
 
-    private String[] prenoms = new String[]{
-            "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
-            "Gerard", "Hugo", "Ingrid", "Jonathan", "Kevin", "Logan",
-            "Mathieu", "Noemie", "Olivia", "Philippe", "Quentin", "Romain",
-            "Sophie", "Tristan", "Ulric", "Vincent", "Willy", "Xavier",
-            "Yann", "Zoé"
-    };
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         testContact = new ArrayList<>();
+        ContactModel c1 = new ContactModel("nom1","prenom1");
+        ContactModel c2 = new ContactModel("onm2","repnom2");
+        ContactModel c3 = new ContactModel("mon3","erpnom3");
+        testContact.add(c1);
+        testContact.add(c2);
+        testContact.add(c3);
     }
 
     @Override
@@ -61,35 +61,52 @@ public class ListeContact extends Fragment {
         return view;
     }
 
+    private class ContactTableAdaptater extends TableDataAdapter<ContactModel> {
 
-    private class EventTableAdaptater extends TableDataAdapter<ContactModel> {
-
-        EventTableAdaptater(Context context, List<ContactModel> data) {
+        ContactTableAdaptater(Context context, List<ContactModel> data) {
             super(context, data);
         }
 
         @Override
         public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-            ContactModel evt = getRowData(rowIndex);
+            ContactModel contact = getRowData(rowIndex);
             View renderedView = null;
+
+            switch (columnIndex) {
+                case 0:
+                    TextView tvName = new TextView(getContext());
+                    tvName.setText(contact.getNom());
+                    tvName.setGravity(Gravity.CENTER);
+                    renderedView = tvName;
+                    break;
+                case 1:
+                    TextView tvType = new TextView(getContext());
+                    tvType.setText(contact.getPrenom());
+                    tvType.setGravity(Gravity.CENTER);
+                    renderedView = tvType;
+                    break;
+            }
 
             return renderedView;
         }
 
     }
+
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         SortableTableView tableView = (SortableTableView ) view.findViewById(R.id.ListeContact);
-        tableView.setDataAdapter(new ListeContact.EventTableAdaptater(getActivity(), testContact));
+        tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
         tableView.addDataClickListener(new ListeContact.EventClickListener());
-        tableView.setColumnComparator(0, EventComparator.getEventNameComparator());
-        tableView.setColumnComparator(1, EventComparator.getEventTypeComparator());
+        tableView.setColumnComparator(0, ContactComparator.getContactNomComparator());
+        tableView.setColumnComparator(1, ContactComparator.getContactPrenomComparator());
     }
 
-    private class EventClickListener implements TableDataClickListener<EventModel> {
+    private class EventClickListener implements TableDataClickListener<ContactModel> {
         @Override
-        public void onDataClicked(int rowIndex, EventModel event) {
+        public void onDataClicked(int rowIndex, ContactModel clickedData) {
+
             getActivity().getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new Contact())
                     .addToBackStack(null)

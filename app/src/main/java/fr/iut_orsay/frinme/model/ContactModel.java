@@ -30,6 +30,12 @@ public class ContactModel {
         this.numeroTel = numeroTel;
     }
 
+// Pour tester la liste
+    public ContactModel(String nom,String prenom){
+        this.prenom=prenom;
+        this.nom=nom;
+    }
+
     public ContactModel(int id, String nom, String prenom, String numeroTel, Location lastLocalisation, String lastEvent, String notes, List<EventModel> listEvenement){
         this.id = id;
         this.prenom=prenom;
