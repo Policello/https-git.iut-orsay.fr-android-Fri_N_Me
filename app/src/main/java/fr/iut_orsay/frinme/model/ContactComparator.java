@@ -23,8 +23,6 @@ public class ContactComparator {
 
 
     private static class ContactNomComparator implements Comparator<ContactModel> {
-
-
         @Override
         public int compare(ContactModel contactModel, ContactModel t1) {
             return contactModel.getNom().compareTo(t1.getNom());

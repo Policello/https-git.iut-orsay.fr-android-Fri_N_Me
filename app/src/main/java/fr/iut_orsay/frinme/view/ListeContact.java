@@ -31,7 +31,11 @@ import fr.iut_orsay.frinme.model.ContactComparator;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
-
+import de.codecrafters.tableview.listeners.TableDataClickListener;
+import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.EventModel;
+import fr.iut_orsay.frinme.model.Location;
 
 /**
  * Created by yyang5 on 13/03/2018.
@@ -46,12 +50,12 @@ public class ListeContact extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         testContact = new ArrayList<>();
-        ContactModel c1 = new ContactModel("nom1","prenom1");
-        ContactModel c2 = new ContactModel("onm2","repnom2");
-        ContactModel c3 = new ContactModel("mon3","erpnom3");
-        testContact.add(c1);
+        //ContactModel c1 = new ContactModel("nom1","prenom1");
+        ContactModel c2 = new ContactModel(1,"Carlos","Juan","0102060405",new Location(14.7,15.7),"Test","Notes test");
+        //ContactModel c3 = new ContactModel("mon3","erpnom3");
+        //testContact.add(c1);
         testContact.add(c2);
-        testContact.add(c3);
+        //testContact.add(c3);
     }
 
     @Override
@@ -106,9 +110,12 @@ public class ListeContact extends Fragment {
     private class EventClickListener implements TableDataClickListener<ContactModel> {
         @Override
         public void onDataClicked(int rowIndex, ContactModel clickedData) {
-
+            Bundle args = new Bundle();
+            args.putParcelable("Contact", testContact.get(rowIndex));
+            Contact EventContact = new Contact();
+            EventContact.setArguments(args);
             getActivity().getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new Contact())
+                    .replace(R.id.fragment_container, EventContact)
                     .addToBackStack(null)
                     .commit();
         }
