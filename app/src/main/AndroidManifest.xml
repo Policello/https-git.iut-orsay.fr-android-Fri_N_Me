@@ -33,6 +33,10 @@
             android:name=".InscriptionActivity"
             android:label="Inscription"
             android:theme="@style/AppBarTheme"> </activity>
+        <activity
+            android:name=".ConnexionActivity"
+            android:label="Connexion"
+            android:theme="@style/AppBarTheme"> </activity>
     </application>
 
 </manifest>
