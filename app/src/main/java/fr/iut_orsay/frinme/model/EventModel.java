@@ -3,7 +3,9 @@ package fr.iut_orsay.frinme.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Représente un événement et tous ses attributs
@@ -16,7 +18,7 @@ public class EventModel implements Parcelable {
     private Date date;
     private String desc;
     private Location coordonnées;
-    //TODO: Ajouter la liste d'amis associé
+    private List<ContactModel> participants;
 
     public EventModel(int id){
         this.id = id;
@@ -29,7 +31,16 @@ public class EventModel implements Parcelable {
         this.date = date;
         this.desc = desc;
         this.coordonnées = coord;
-        //TODO: Ajouter les informations au serveur
+        this.participants = new ArrayList<>();
+    }
+
+    public EventModel(String nom, String type, Date date, String desc, Location coord, ArrayList<ContactModel> participants){
+        this.nom = nom;
+        this.type = type;
+        this.date = date;
+        this.desc = desc;
+        this.coordonnées = coord;
+        this.participants = new ArrayList<>(participants);
     }
 
     public int getId() {
@@ -56,6 +67,10 @@ public class EventModel implements Parcelable {
         return coordonnées;
     }
 
+    public List<ContactModel> getParticipants() {
+        return participants;
+    }
+
     public void setNom(String nom) {
         this.nom = nom;
     }
@@ -74,6 +89,14 @@ public class EventModel implements Parcelable {
 
     public void setCoordonnées(Location coordonnées) {
         this.coordonnées = coordonnées;
+    }
+
+    public boolean addParticipant(ContactModel c) {
+        return this.participants.add(c);
+    }
+
+    public boolean delParticipant(ContactModel c) {
+        return this.participants.remove(c);
     }
 
     @Override
