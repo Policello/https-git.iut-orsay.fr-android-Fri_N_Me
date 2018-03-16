@@ -33,36 +33,31 @@ public class Contact extends Fragment {
     List<EventModel> testEvent;
     List<String> listEvenements= new ArrayList<>();
     private ContactModel contactRecu;
+    private boolean defaultValues = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Jeu de test d'événements
-        testEvent = new ArrayList<>();
-        EventModel e1 = new EventModel("test", "cat", new Date(), "", new Location(2.36,5.69));
-        EventModel e2 = new EventModel("wew", "chat", new Date(), "description très longue" ,new Location(8.36,5.6777));
-        EventModel e3 = new EventModel("aaaaa", "zzzzzzzz", new Date(), "", new Location(2.36,5.69));
-        testEvent.add(e1);
-        testEvent.add(e2);
-        testEvent.add(e3);
-
-        contactRecu = new ContactModel(1,"Carlos","Juan","0102060405",new Location(14.7,15.7),e1.getNom(),"Notes test",testEvent);
-
-        for (int i = 0; i < testEvent.size(); i++) {
-            listEvenements.add(testEvent.get(i).getNom());
-        }
+//        for (int i = 0; i < testEvent.size(); i++) {
+//            listEvenements.add(testEvent.get(i).getNom());
+//        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
+        if (getArguments() != null) {
+            contactRecu = ((ContactModel) getArguments().getParcelable("Contact"));
+        } else {
+            defaultValues = true;
+        }
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        mListView = (ListView) view.findViewById(R.id.ListeEvenementsCommunDetails);
+       mListView = (ListView) view.findViewById(R.id.ListeEvenementsCommunDetails);
 
         final TextView PrenomContact = (TextView) view.findViewById(R.id.PrenomContact);
         final TextView nomContact = (TextView) view.findViewById(R.id.NomContact);
@@ -71,19 +66,19 @@ public class Contact extends Fragment {
         final TextView LastEvenementsContactsDetails = (TextView) view.findViewById(R.id.LastEvenementsContactsDetails);
         final TextView NotesContactsDetails = (TextView) view.findViewById(R.id.NotesContactsDetails);
 
-        PrenomContact.setText(contactRecu.getPrenom());
-        nomContact.setText(contactRecu.getNom());
-        NumContactDetails.setText(contactRecu.getNumeroTel());
+       PrenomContact.setText(contactRecu.getPrenom());
+       nomContact.setText(contactRecu.getNom());
+       NumContactDetails.setText(contactRecu.getNumeroTel());
         LocalisationContactsDetails.setText(contactRecu.getCoordonnées().toString());
         LastEvenementsContactsDetails.setText(contactRecu.getLastEvent());
         NotesContactsDetails.setText(contactRecu.getNotes());
 
         ImageView img = (ImageView) view.findViewById(R.id.ImageProfil);
-        img.setImageResource(R.drawable.ic_menu_camera);
+       img.setImageResource(R.drawable.ic_menu_camera);
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1,listEvenements );
-        mListView.setAdapter(adapter);
+//        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+//                android.R.layout.simple_list_item_1,listEvenements );
+//        mListView.setAdapter(adapter);
         mListView.setOnItemClickListener((a, v, position, id) -> getActivity().getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new Event())
                 .addToBackStack(null)
