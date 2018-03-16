@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -170,22 +171,24 @@ public class Map extends Fragment implements
         lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         //Localisation activée
-        networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        //networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        /*final ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        networkEnabled = connMgr.isDefaultNetworkActive();*/
+        final ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo net = connMgr.getActiveNetworkInfo();
+        networkEnabled = net != null && net.isConnected();
 
 
 
-        int locationMode = getLocationMode(getActivity());
-        Log.d(TAG, "Location Mode" + locationMode);
-        Log.i(TAG, "network activated : " + networkEnabled);
+
         if (!networkEnabled) {
             redirectToSettings("Network not activated");
         }
         else {
             if (checkedPlayService(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))) {
 
+                int locationMode = getLocationMode(getActivity());
+                Log.d(TAG, "Location Mode" + locationMode);
+                Log.i(TAG, "network activated : " + networkEnabled);
 
 
                 if (locationMode != 3) {
