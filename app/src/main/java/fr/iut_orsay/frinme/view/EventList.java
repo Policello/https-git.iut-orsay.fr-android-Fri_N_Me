@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -23,6 +25,11 @@ import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.model.Location;
+import fr.iut_orsay.frinme.rest.EventListDetails;
+import fr.iut_orsay.frinme.rest.RestUser;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class EventList extends Fragment {
@@ -53,6 +60,7 @@ public class EventList extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        sendRequest();
         SortableTableView tableView = (SortableTableView ) view.findViewById(R.id.tableView);
         // Tableau de 4 colonnes
         tableView.setColumnCount(4);
@@ -124,6 +132,29 @@ public class EventList extends Fragment {
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    private void sendRequest() {
+        Call<EventListDetails> call = RestUser.get().getEventDetailedList();
+        call.enqueue(new Callback<EventListDetails>() {
+            @Override
+            public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
+                if (response.isSuccessful()) {
+                    final EventListDetails r = response.body();
+                    Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                    // Fail here
+                    // Expected BEGIN_OBJECT but was BEGIN_ARRAY at line 1 column 35 path $.tabEventUser[0]
+                    Log.e("REST CALL", r.getEvents().toString());
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventListDetails> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
     }
 
 }
