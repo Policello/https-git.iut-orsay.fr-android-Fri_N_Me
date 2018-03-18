@@ -42,14 +42,9 @@ public class EventList extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Jeu de test d'événements
         testEvent = new ArrayList<>();
-        EventModel e1 = new EventModel("test", "cat", new Date(), "", new Location(2.36,5.69));
-        EventModel e2 = new EventModel("wew", "chat", new Date(), "description très longue" ,new Location(8.36,5.6777));
-        EventModel e3 = new EventModel("aaaaa", "zzzzzzzz", new Date(), "", new Location(2.36,5.69));
-        testEvent.add(e1);
-        testEvent.add(e2);
-        testEvent.add(e3);
     }
 
     @Override
@@ -65,7 +60,7 @@ public class EventList extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        sendRequest();
+        sendRequest(view);
         SortableTableView tableView = (SortableTableView ) view.findViewById(R.id.tableView);
         // Tableau de 4 colonnes
         tableView.setColumnCount(4);
@@ -142,7 +137,7 @@ public class EventList extends Fragment {
         }
     }
 
-    private void sendRequest() {
+    private void sendRequest(View v) {
         Call<EventListDetails> call = RestUser.get().getEventDetailedList();
         call.enqueue(new Callback<EventListDetails>() {
             @Override
@@ -150,9 +145,10 @@ public class EventList extends Fragment {
                 if (response.isSuccessful()) {
                     final EventListDetails r = response.body();
                     Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
-                    // Fail here
-                    // Expected BEGIN_OBJECT but was BEGIN_ARRAY at line 1 column 35 path $.tabEventUser[0]
-                    Log.e("REST CALL", r.getEvents().toString());
+                    testEvent.addAll(r.getEvents());
+                    SortableTableView tableView = (SortableTableView ) v.findViewById(R.id.tableView);
+                    tableView.setDataAdapter(new EventTableAdaptater (getActivity(), testEvent));
+                    Log.e("REST CALL", testEvent.toString());
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }
