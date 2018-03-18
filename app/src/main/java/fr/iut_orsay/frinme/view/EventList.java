@@ -50,6 +50,11 @@ public class EventList extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if(isHidden()){
+            getActivity().getFragmentManager().beginTransaction()
+                    .show(EventList.this)
+                    .commit();
+        }
         return inflater.inflate(R.layout.fragment_event_list, container, false);
     }
 
@@ -123,7 +128,10 @@ public class EventList extends Fragment {
             Event EventFrag = new Event();
             EventFrag.setArguments(args);
             getActivity().getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, EventFrag)
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                            android.R.animator.fade_in, android.R.animator.fade_out)
+                    .add(R.id.fragment_container, EventFrag)
+                    .hide(EventList.this)
                     .addToBackStack(null)
                     .commit();
         }

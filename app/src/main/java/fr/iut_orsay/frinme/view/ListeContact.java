@@ -60,8 +60,13 @@ public class ListeContact extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.liste_contact, container, false);
+        if(isHidden()){
+            getActivity().getFragmentManager().beginTransaction()
+                    .show(ListeContact.this)
+                    .commit();
+        }
 
+        View view = inflater.inflate(R.layout.liste_contact, container, false);
         return view;
     }
 
@@ -115,7 +120,10 @@ public class ListeContact extends Fragment {
             Contact EventContact = new Contact();
             EventContact.setArguments(args);
             getActivity().getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, EventContact)
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                            android.R.animator.fade_in, android.R.animator.fade_out)
+                    .add(R.id.fragment_container, EventContact)
+                    .hide(ListeContact.this)
                     .addToBackStack(null)
                     .commit();
         }

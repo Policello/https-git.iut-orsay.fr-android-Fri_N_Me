@@ -1,5 +1,6 @@
 package fr.iut_orsay.frinme;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements
         });
         fabContact.setOnClickListener(v -> {
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                            android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.fragment_container, new Contact())
                     .addToBackStack(null)
                     .commit();
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements
         });
         fabEvent.setOnClickListener(v -> {
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                            android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.fragment_container, new Event())
                     .addToBackStack(null)
                     .commit();
@@ -105,7 +110,11 @@ public class MainActivity extends AppCompatActivity implements
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
+                super.onBackPressed();
+            } else {
+                getFragmentManager().popBackStack();
+            }
         }
     }
 
@@ -118,23 +127,31 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Fragment currentFrag = getFragmentManager().findFragmentById(R.id.fragment_container);
+
         // Gère le changement de fragment dans le drawer
         int id = item.getItemId();
 
-        if (id == R.id.nav_contacts) {
+        if (id == R.id.nav_contacts && !(currentFrag instanceof ListeContact)) {
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                            android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.fragment_container, new ListeContact())
                     .addToBackStack(null)
                     .commit();
-        } else if (id == R.id.nav_evts) {
+        } else if (id == R.id.nav_evts && !(currentFrag instanceof EventList)) {
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                            android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.fragment_container, new EventList())
                     .addToBackStack(null)
                     .commit();
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
-        } else if (id == R.id.nav_map) {
+        } else if (id == R.id.nav_map && !(currentFrag instanceof Map)) {
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                            android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.fragment_container, new Map())
                     .addToBackStack(null)
                     .commit();
@@ -158,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.fragment_container, new Map())
                     .commit();
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
