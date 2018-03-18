@@ -3,6 +3,9 @@ package fr.iut_orsay.frinme.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,11 +15,26 @@ import java.util.List;
  */
 public class EventModel implements Parcelable {
 
+    @SerializedName("NumEvenement")
+    @Expose
     private int id;
+
+    @SerializedName("NomEvenement")
+    @Expose
     private String nom;
+
+    @SerializedName("NomTypeEvenement")
+    @Expose
     private String type;
+
+    @SerializedName("DateEvenement")
+    @Expose
     private Date date;
+
     private String desc;
+
+    @SerializedName("Localisation")
+    @Expose
     private Location coordonnées;
     private List<ContactModel> participants;
 

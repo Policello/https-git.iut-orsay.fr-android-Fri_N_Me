@@ -2,6 +2,9 @@ package fr.iut_orsay.frinme.model;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Représente la localisation d'un lieu
  * sous la forme d'un couple de coordonnées
@@ -9,7 +12,14 @@ import android.support.annotation.NonNull;
 public class Location implements Comparable {
 
     private final static double RAYON_TERRE = 6367445;
-    private double latitude, longitude;
+
+    @SerializedName("latitude")
+    @Expose
+    private double latitude;
+
+    @SerializedName("longitude")
+    @Expose
+    private double longitude;
 
     /**
      * Construit un point dont les coordonnées sont nulles

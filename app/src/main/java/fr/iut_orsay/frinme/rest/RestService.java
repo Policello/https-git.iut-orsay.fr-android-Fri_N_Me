@@ -5,6 +5,6 @@ import retrofit2.http.POST;
 
 public interface RestService {
 
-    @POST("listEventsSort/")
+    @POST("event/listEventsSort/")
     Call<EventListDetails> getEventDetailedList();
 }

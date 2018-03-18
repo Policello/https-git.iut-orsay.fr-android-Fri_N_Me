@@ -9,11 +9,11 @@ import fr.iut_orsay.frinme.model.EventModel;
 
 public class EventListDetails {
 
-    @SerializedName("tabEventJO")
+    @SerializedName("eventsJO")
     @Expose
     private List<EventModel> eventsJo;
 
-    @SerializedName("tabEventUser")
+    @SerializedName("eventsUser")
     @Expose
     private List<EventModel> events;
 
