@@ -72,9 +72,8 @@ public class Location implements Comparable {
 
     @Override
     public int compareTo(@NonNull Object o) {
-        //TODO: implémenter la distance par rapport à la distance actuelle
-        //TODO: pour trier les évenements en fonction de leur proximité
-        return 0;
+        return Double.compare(this.distanceTo(new Location()),
+                ((Location)(o)).distanceTo(new Location()));
     }
 
     @Override
