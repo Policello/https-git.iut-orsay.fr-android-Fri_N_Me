@@ -136,6 +136,7 @@ public class EventModel implements Parcelable {
         out.writeString(desc);
         out.writeDouble(coordonnées.getLatitude());
         out.writeDouble(coordonnées.getLongitude());
+        out.writeTypedList(participants);
     }
 
     public static final Parcelable.Creator<EventModel> CREATOR
@@ -159,5 +160,7 @@ public class EventModel implements Parcelable {
         double longitude = in.readDouble();
         desc = in.readString();
         coordonnées = new Location(latitude, longitude);
+        participants = new ArrayList<>();
+        in.readTypedList(participants, ContactModel.CREATOR);
     }
 }

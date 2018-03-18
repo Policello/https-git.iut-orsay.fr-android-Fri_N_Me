@@ -20,7 +20,7 @@ public class ContactModel implements Parcelable {
     private Location lastLocalisation;
     private String lastEvent;
     private String notes;
-    private ArrayList<EventModel> listEvenement= new ArrayList<>();
+    private List<EventModel> listEvenement;
 
     public ContactModel(int id){
         this.id = id;
@@ -43,13 +43,11 @@ public class ContactModel implements Parcelable {
         this.lastLocalisation=lastLocalisation;
         this.lastEvent=lastEvent;
         this.notes=notes;
-
-        for (int i = 0; i < listEvenement.size(); i++) {
-            this.listEvenement.add(listEvenement.get(i));
-        }
-
+        this.listEvenement = new ArrayList<>();
+        this.listEvenement.addAll(listEvenement);
         //TODO: Récupérer les infos manquantes depuis le serveur
     }
+
     public ContactModel(int id, String nom, String prenom, String numeroTel, Location lastLocalisation, String lastEvent, String notes) {
         this.id = id;
         this.prenom = prenom;
@@ -65,9 +63,11 @@ public class ContactModel implements Parcelable {
         this.prenom=prenom;
         this.nom=nom;
     }
+
     public int getId() {
         return id;
     }
+
     public String getNom() {
         return nom;
     }
@@ -87,7 +87,6 @@ public class ContactModel implements Parcelable {
     public Location getCoordonnées() {
         return lastLocalisation;
     }
-
 
     public String getLastEvent() {
         return lastEvent;
@@ -119,7 +118,7 @@ public class ContactModel implements Parcelable {
         out.writeDouble(lastLocalisation.getLongitude());
         out.writeString(this.lastEvent);
         out.writeString(this.notes);
-        // out.writeTypedList(this.listEvenement);
+        out.writeTypedList(this.listEvenement);
     }
 
     public static final Parcelable.Creator<ContactModel> CREATOR = new Parcelable.Creator<ContactModel>() {
@@ -133,7 +132,8 @@ public class ContactModel implements Parcelable {
             return new ContactModel[size];
         }
     };
-    protected ContactModel(Parcel in) {
+
+    private ContactModel(Parcel in) {
         this.id = in.readInt();
         this.nom = in.readString();
         this.prenom = in.readString();
@@ -144,7 +144,8 @@ public class ContactModel implements Parcelable {
         double latitude = in.readDouble();
         double longitude = in.readDouble();
         lastLocalisation = new Location(latitude,longitude);
-        //this.listEvenement = in.createTypedArrayList(EventModel.CREATOR);
+        listEvenement = new ArrayList<>();
+        in.readTypedList(listEvenement, EventModel.CREATOR);
     }
 
 }
