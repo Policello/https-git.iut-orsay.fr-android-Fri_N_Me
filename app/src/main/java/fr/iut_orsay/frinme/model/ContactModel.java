@@ -4,6 +4,9 @@
         import android.os.Parcel;
         import android.os.Parcelable;
 
+        import com.google.gson.annotations.Expose;
+        import com.google.gson.annotations.SerializedName;
+
         import java.util.ArrayList;
         import java.util.Date;
         import java.util.List;
@@ -13,8 +16,14 @@
  */
 public class ContactModel implements Parcelable {
 
+    @SerializedName("NumUtilisateur")
+    @Expose
     private int id;
+
+    @SerializedName("Pseudo")
+    @Expose
     private String nom;
+
     private String prenom;
     private String numeroTel;
     private Location lastLocalisation;
@@ -102,6 +111,11 @@ public class ContactModel implements Parcelable {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public String toString() {
+        return nom;
     }
 
     @Override
