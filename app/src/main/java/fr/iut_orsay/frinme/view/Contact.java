@@ -3,25 +3,19 @@ package fr.iut_orsay.frinme.view;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import de.codecrafters.tableview.listeners.TableDataClickListener;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
-import fr.iut_orsay.frinme.model.Location;
 
 /**
  * Vue des détails de contacts
@@ -31,7 +25,7 @@ public class Contact extends Fragment {
 
     private ListView mListView;
     List<EventModel> testEvent;
-    List<String> listEvenements= new ArrayList<>();
+    List<String> listEvenements = new ArrayList<>();
     private ContactModel contactRecu;
     private boolean defaultValues = false;
 
@@ -57,7 +51,7 @@ public class Contact extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-       mListView = (ListView) view.findViewById(R.id.ListeEvenementsCommunDetails);
+        mListView = (ListView) view.findViewById(R.id.ListeEvenementsCommunDetails);
 
         final TextView PrenomContact = (TextView) view.findViewById(R.id.PrenomContact);
         final TextView nomContact = (TextView) view.findViewById(R.id.NomContact);

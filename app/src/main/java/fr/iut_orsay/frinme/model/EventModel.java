@@ -38,12 +38,12 @@ public class EventModel implements Parcelable {
     private Location coordonnées;
     private List<ContactModel> participants;
 
-    public EventModel(int id){
+    public EventModel(int id) {
         this.id = id;
         //TODO: Récupérer les infos manquantes depuis le serveur
     }
 
-    public EventModel(String nom, String type, Date date, String desc, Location coord){
+    public EventModel(String nom, String type, Date date, String desc, Location coord) {
         this.nom = nom;
         this.type = type;
         this.date = date;
@@ -52,7 +52,7 @@ public class EventModel implements Parcelable {
         this.participants = new ArrayList<>();
     }
 
-    public EventModel(String nom, String type, Date date, String desc, Location coord, ArrayList<ContactModel> participants){
+    public EventModel(String nom, String type, Date date, String desc, Location coord, ArrayList<ContactModel> participants) {
         this.nom = nom;
         this.type = type;
         this.date = date;
@@ -101,7 +101,7 @@ public class EventModel implements Parcelable {
         this.date = date;
     }
 
-    public void setDesc(String desc){
+    public void setDesc(String desc) {
         this.desc = desc;
     }
 
@@ -118,7 +118,7 @@ public class EventModel implements Parcelable {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return nom;
     }
 

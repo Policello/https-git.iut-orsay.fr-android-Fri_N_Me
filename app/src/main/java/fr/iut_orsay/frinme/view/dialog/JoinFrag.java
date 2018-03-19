@@ -3,7 +3,6 @@ package fr.iut_orsay.frinme.view.dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +69,8 @@ public class JoinFrag extends DialogFragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_join, container, false);
         getDialog().setTitle("Rejoindre l'événement");
-        Button btnValider = (Button)rootView.findViewById(R.id.btnValider);
-        Button btnAnnuler = (Button)rootView.findViewById(R.id.btnAnnuler);
+        Button btnValider = (Button) rootView.findViewById(R.id.btnValider);
+        Button btnAnnuler = (Button) rootView.findViewById(R.id.btnAnnuler);
         btnValider.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onButtonPressed(1);

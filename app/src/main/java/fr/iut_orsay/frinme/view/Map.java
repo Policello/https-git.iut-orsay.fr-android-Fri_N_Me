@@ -14,12 +14,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import android.support.v4.app.ActivityCompat;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -183,12 +182,9 @@ public class Map extends Fragment implements
         networkEnabled = net != null && net.isConnected();
 
 
-
-
         if (!networkEnabled) {
             redirectToSettings("Network not activated");
-        }
-        else {
+        } else {
             if (checkedPlayService(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()))) {
 
                 int locationMode = getLocationMode(getActivity());
@@ -204,7 +200,6 @@ public class Map extends Fragment implements
                     if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         //Mettre à jour la localisation
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
 
 
                     } else {
@@ -293,7 +288,7 @@ public class Map extends Fragment implements
         }
 
 
-        MarkerOptions options = new MarkerOptions().position(l).title("" + addresses.get(0).getLocality() ).icon(BitmapDescriptorFactory.defaultMarker(couleur));
+        MarkerOptions options = new MarkerOptions().position(l).title("" + addresses.get(0).getLocality()).icon(BitmapDescriptorFactory.defaultMarker(couleur));
         mMap.addMarker(options);
     }
 

@@ -10,7 +10,7 @@ public class RestUser {
 
     private static RestService service = null;
 
-    public static RestService get(){
+    public static RestService get() {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -18,7 +18,7 @@ public class RestUser {
                 .addInterceptor(interceptor)
                 .build();
 
-        if(service == null){
+        if (service == null) {
             final Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(API_URL)
                     .addConverterFactory(GsonConverterFactory.create())

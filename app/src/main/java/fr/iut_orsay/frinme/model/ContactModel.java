@@ -1,15 +1,13 @@
- package fr.iut_orsay.frinme.model;
+package fr.iut_orsay.frinme.model;
 
-        import android.os.Bundle;
-        import android.os.Parcel;
-        import android.os.Parcelable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-        import com.google.gson.annotations.Expose;
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-        import java.util.ArrayList;
-        import java.util.Date;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Représente un contact , les évenements auquels il participe et ses attributs.
@@ -31,7 +29,7 @@ public class ContactModel implements Parcelable {
     private String notes;
     private List<EventModel> listEvenement;
 
-    public ContactModel(int id){
+    public ContactModel(int id) {
         this.id = id;
         //TODO: Récupérer les infos manquantes depuis le serveur
     }
@@ -44,14 +42,14 @@ public class ContactModel implements Parcelable {
         this.numeroTel = numeroTel;
     }
 
-    public ContactModel(int id, String nom, String prenom, String numeroTel, Location lastLocalisation, String lastEvent, String notes, List<EventModel> listEvenement){
+    public ContactModel(int id, String nom, String prenom, String numeroTel, Location lastLocalisation, String lastEvent, String notes, List<EventModel> listEvenement) {
         this.id = id;
-        this.prenom=prenom;
-        this.nom=nom;
-        this.numeroTel=numeroTel;
-        this.lastLocalisation=lastLocalisation;
-        this.lastEvent=lastEvent;
-        this.notes=notes;
+        this.prenom = prenom;
+        this.nom = nom;
+        this.numeroTel = numeroTel;
+        this.lastLocalisation = lastLocalisation;
+        this.lastEvent = lastEvent;
+        this.notes = notes;
         this.listEvenement = new ArrayList<>();
         this.listEvenement.addAll(listEvenement);
         //TODO: Récupérer les infos manquantes depuis le serveur
@@ -68,9 +66,9 @@ public class ContactModel implements Parcelable {
     }
 
     // Pour tester la liste
-    public ContactModel(String nom,String prenom){
-        this.prenom=prenom;
-        this.nom=nom;
+    public ContactModel(String nom, String prenom) {
+        this.prenom = prenom;
+        this.nom = nom;
     }
 
     public int getId() {
@@ -157,7 +155,7 @@ public class ContactModel implements Parcelable {
         this.notes = in.readString();
         double latitude = in.readDouble();
         double longitude = in.readDouble();
-        lastLocalisation = new Location(latitude,longitude);
+        lastLocalisation = new Location(latitude, longitude);
         listEvenement = new ArrayList<>();
         in.readTypedList(listEvenement, EventModel.CREATOR);
     }

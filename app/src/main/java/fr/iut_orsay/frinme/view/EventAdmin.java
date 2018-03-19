@@ -1,9 +1,9 @@
 package fr.iut_orsay.frinme.view;
 
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import fr.iut_orsay.frinme.view.dialog.JoinFrag;
 import fr.iut_orsay.frinme.MainActivity;
-import fr.iut_orsay.frinme.view.dialog.QuitFrag;
 import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.view.dialog.JoinFrag;
+import fr.iut_orsay.frinme.view.dialog.QuitFrag;
 
 public class EventAdmin extends Fragment {
 

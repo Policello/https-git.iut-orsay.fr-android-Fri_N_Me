@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -11,7 +12,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -28,7 +28,7 @@ import fr.iut_orsay.frinme.view.dialog.QuitFrag;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        JoinFrag.OnFragmentInteractionListener, QuitFrag.OnFragmentInteractionListener{
+        JoinFrag.OnFragmentInteractionListener, QuitFrag.OnFragmentInteractionListener {
 
     public enum Status {
         EXTERNE,
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements
         fabEvent = (FloatingActionButton) findViewById(R.id.fabEvent);
 
         fab.setOnClickListener(v -> {
-            if(!isFabOpen) showFabMenu();
+            if (!isFabOpen) showFabMenu();
             else closeFabMenu();
         });
         fabContact.setOnClickListener(v -> {
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFragmentInteraction(int res){
+    public void onFragmentInteraction(int res) {
         if (res == 1) {
             userStatus = Status.INTERNE;
         } else if (res == 2) {
@@ -187,18 +187,18 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Déroule le menu flottant
      */
-    private void showFabMenu(){
-        isFabOpen=true;
+    private void showFabMenu() {
+        isFabOpen = true;
         fab.setImageResource(R.drawable.ic_close_black_24dp);
         fabContact.animate().translationY(-getResources().getDimension(R.dimen.fab_spacing));
-        fabEvent.animate().translationY(-getResources().getDimension(R.dimen.fab_spacing)*2);
+        fabEvent.animate().translationY(-getResources().getDimension(R.dimen.fab_spacing) * 2);
     }
 
     /**
      * Enroule le menu flottant
      */
-    private void closeFabMenu(){
-        isFabOpen=false;
+    private void closeFabMenu() {
+        isFabOpen = false;
         fab.setImageResource(R.drawable.ic_add_black_24dp);
         fabContact.animate().translationY(0);
         fabEvent.animate().translationY(0);
