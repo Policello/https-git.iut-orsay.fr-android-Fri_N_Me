@@ -1,9 +1,9 @@
 package fr.iut_orsay.frinme.view;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.codecrafters.tableview.SortableTableView;
@@ -24,7 +23,6 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
-import fr.iut_orsay.frinme.model.Location;
 import fr.iut_orsay.frinme.rest.EventListDetails;
 import fr.iut_orsay.frinme.rest.RestUser;
 import retrofit2.Call;
@@ -37,7 +35,7 @@ public class EventList extends Fragment {
     // Liste d'événements
     List<EventModel> testEvent;
     // Nom les colonnes du tableau
-    private static final String[] TABLE_HEADERS = { "Nom", "Type", "Date", "Coordonnées" };
+    private static final String[] TABLE_HEADERS = {"Nom", "Type", "Date", "Coordonnées"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +48,7 @@ public class EventList extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(isHidden()){
+        if (isHidden()) {
             getActivity().getFragmentManager().beginTransaction()
                     .show(EventList.this)
                     .commit();
@@ -61,11 +59,11 @@ public class EventList extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         sendRequest(view);
-        SortableTableView tableView = (SortableTableView ) view.findViewById(R.id.tableView);
+        SortableTableView tableView = (SortableTableView) view.findViewById(R.id.tableView);
         // Tableau de 4 colonnes
         tableView.setColumnCount(4);
         // Adaptateur pour l'affichage du contenu des cases
-        tableView.setDataAdapter(new EventTableAdaptater (getActivity(), testEvent));
+        tableView.setDataAdapter(new EventTableAdaptater(getActivity(), testEvent));
         // Header simple
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
         // Réaction au click
@@ -146,8 +144,8 @@ public class EventList extends Fragment {
                     final EventListDetails r = response.body();
                     Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                     testEvent.addAll(r.getEvents());
-                    SortableTableView tableView = (SortableTableView ) v.findViewById(R.id.tableView);
-                    tableView.setDataAdapter(new EventTableAdaptater (getActivity(), testEvent));
+                    SortableTableView tableView = (SortableTableView) v.findViewById(R.id.tableView);
+                    tableView.setDataAdapter(new EventTableAdaptater(getActivity(), testEvent));
                     Log.e("REST CALL", testEvent.toString());
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");

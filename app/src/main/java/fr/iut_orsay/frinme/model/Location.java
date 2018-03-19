@@ -24,34 +24,32 @@ public class Location implements Comparable {
     /**
      * Construit un point dont les coordonnées sont nulles
      */
-    public Location(){
+    public Location() {
         latitude = longitude = 0;
     }
 
     /**
      * Construit un point dont les coordonnées sont passées en paramètres
      *
-     * @param latitude latitude du point
+     * @param latitude  latitude du point
      * @param longitude longitude du point
      */
-    public Location(double latitude, double longitude){
+    public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
     /**
-     *
      * @return la longitude du point
      */
-    public double getLongitude(){
+    public double getLongitude() {
         return longitude;
     }
 
     /**
-     *
      * @return la latitude du point
      */
-    public double getLatitude(){
+    public double getLatitude() {
         return latitude;
     }
 
@@ -62,22 +60,22 @@ public class Location implements Comparable {
      * @param l Coordonnée géographique du second point
      * @return la distance entre deux coordonnées géographiques
      */
-    public double distanceTo(Location l){
+    public double distanceTo(Location l) {
         return RAYON_TERRE * Math.acos(
                 Math.sin(Math.toRadians(latitude)) * Math.sin(Math.toRadians(l.getLatitude()))
-                + Math.cos(Math.toRadians(latitude)) * Math.cos(Math.toRadians(l.getLatitude()))
-                * Math.cos(Math.toRadians(longitude) - Math.toRadians(l.getLongitude()))
+                        + Math.cos(Math.toRadians(latitude)) * Math.cos(Math.toRadians(l.getLatitude()))
+                        * Math.cos(Math.toRadians(longitude) - Math.toRadians(l.getLongitude()))
         );
     }
 
     @Override
     public int compareTo(@NonNull Object o) {
         return Double.compare(this.distanceTo(new Location()),
-                ((Location)(o)).distanceTo(new Location()));
+                ((Location) (o)).distanceTo(new Location()));
     }
 
     @Override
-    public String toString(){
-        return latitude+" ; "+longitude;
+    public String toString() {
+        return latitude + " ; " + longitude;
     }
 }

@@ -1,9 +1,9 @@
 package fr.iut_orsay.frinme.view;
 
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +13,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import fr.iut_orsay.frinme.MainActivity;
+import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.EventDetails;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.view.dialog.JoinFrag;
-import fr.iut_orsay.frinme.MainActivity;
 import fr.iut_orsay.frinme.view.dialog.QuitFrag;
-import fr.iut_orsay.frinme.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +39,7 @@ public class Event extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_main, container, false);
         if (getArguments() != null) {
-            currentEvent = ((EventModel)getArguments().getParcelable("event"));
+            currentEvent = ((EventModel) getArguments().getParcelable("event"));
         } else {
             defaultValues = true;
         }
@@ -97,7 +97,7 @@ public class Event extends Fragment {
                     final EventDetails r = response.body();
                     TextView tvDesc = (TextView) v.findViewById(R.id.desc);
                     tvDesc.setText(r.getDesc());
-                    if (r.getParticipants().size() != 0){
+                    if (r.getParticipants().size() != 0) {
                         final ArrayAdapter<ContactModel> adapter = new ArrayAdapter<>(getActivity(),
                                 android.R.layout.simple_list_item_1, r.getParticipants());
                         mListView.setAdapter(adapter);
