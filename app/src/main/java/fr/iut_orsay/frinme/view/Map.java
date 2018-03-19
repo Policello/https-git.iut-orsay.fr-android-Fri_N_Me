@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -41,7 +43,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.SettingsActivity;
@@ -201,6 +206,7 @@ public class Map extends Fragment implements
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
 
+
                     } else {
                         //Demander la permission
                         ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUTHORIZED_LOCATION);
@@ -277,8 +283,17 @@ public class Map extends Fragment implements
     }
 
     public void addMarkerLatLng(LatLng l, float couleur) {
-        MarkerOptions options = new MarkerOptions().position(l).title("" + l.latitude + " ; " + l.longitude).icon(BitmapDescriptorFactory.defaultMarker(couleur));
-        ;
+        Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
+
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(l.latitude, l.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        MarkerOptions options = new MarkerOptions().position(l).title("" + addresses.get(0).getLocality() ).icon(BitmapDescriptorFactory.defaultMarker(couleur));
         mMap.addMarker(options);
     }
 
