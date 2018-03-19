@@ -23,7 +23,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
-import fr.iut_orsay.frinme.rest.EventListDetails;
+import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import fr.iut_orsay.frinme.rest.RestUser;
 import retrofit2.Call;
 import retrofit2.Callback;

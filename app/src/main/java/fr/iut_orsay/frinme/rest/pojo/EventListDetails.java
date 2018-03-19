@@ -1,4 +1,4 @@
-package fr.iut_orsay.frinme.rest;
+package fr.iut_orsay.frinme.rest.pojo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

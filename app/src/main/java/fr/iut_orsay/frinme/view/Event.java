@@ -17,7 +17,7 @@ import fr.iut_orsay.frinme.MainActivity;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
-import fr.iut_orsay.frinme.rest.EventDetails;
+import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.view.dialog.JoinFrag;
 import fr.iut_orsay.frinme.view.dialog.QuitFrag;
