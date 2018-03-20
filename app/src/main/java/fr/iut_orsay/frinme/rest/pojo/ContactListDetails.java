@@ -11,16 +11,21 @@ import fr.iut_orsay.frinme.model.ContactModel;
 
 public class ContactListDetails {
 
-
-    @SerializedName("ContactUser")
+    @SerializedName("id")
     @Expose
-    private List<ContactModel> Contacts;
+    private int id;
+
+    @SerializedName("tab")
+    @Expose
+    private List<ContactModel> Contacts  ;
 
     @SerializedName("message")
     @Expose
     private String message;
 
-    private int id;
+    @SerializedName("success")
+    @Expose
+    private Boolean test;
 
     public List<ContactModel> getContacts() {
         return Contacts;
@@ -33,4 +38,7 @@ public class ContactListDetails {
     public int getid() {
         return id;
     }
+
+    public Boolean getSuccess() { return test; }
+
 }
