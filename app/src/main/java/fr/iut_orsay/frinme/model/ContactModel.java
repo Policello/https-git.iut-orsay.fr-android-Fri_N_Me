@@ -21,7 +21,11 @@ public class ContactModel implements Parcelable {
     @SerializedName("PseudoFriend")
     @Expose
     private String pseudo;
+
+    @SerializedName("Localisation")
+    @Expose
     private Location lastLocalisation;
+
     private String lastEvent;
     private String notes;
 
