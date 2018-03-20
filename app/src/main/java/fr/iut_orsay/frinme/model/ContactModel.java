@@ -24,25 +24,12 @@ public class ContactModel implements Parcelable {
     private Location lastLocalisation;
     private String lastEvent;
     private String notes;
-    private List<EventModel> listEvenement;
 
     public ContactModel(int id) {
         this.id = id;
         //TODO: Récupérer les infos manquantes depuis le serveur
     }
 
-
-
-    public ContactModel(int id, String pseudo, Location lastLocalisation, String lastEvent, String notes, List<EventModel> listEvenement) {
-        this.id = id;
-        this.pseudo = pseudo;
-        this.lastLocalisation = lastLocalisation;
-        this.lastEvent = lastEvent;
-        this.notes = notes;
-        this.listEvenement = new ArrayList<>();
-        this.listEvenement.addAll(listEvenement);
-        //TODO: Récupérer les infos manquantes depuis le serveur
-    }
 
     public ContactModel(int id, String pseudo, Location lastLocalisation, String lastEvent, String notes) {
         this.id = id;
@@ -106,7 +93,6 @@ public class ContactModel implements Parcelable {
         out.writeDouble(lastLocalisation.getLongitude());
         out.writeString(this.lastEvent);
         out.writeString(this.notes);
-        out.writeTypedList(this.listEvenement);
     }
 
     public static final Parcelable.Creator<ContactModel> CREATOR = new Parcelable.Creator<ContactModel>() {
@@ -130,8 +116,6 @@ public class ContactModel implements Parcelable {
         double latitude = in.readDouble();
         double longitude = in.readDouble();
         lastLocalisation = new Location(latitude, longitude);
-        listEvenement = new ArrayList<>();
-        in.readTypedList(listEvenement, EventModel.CREATOR);
     }
 
 }
