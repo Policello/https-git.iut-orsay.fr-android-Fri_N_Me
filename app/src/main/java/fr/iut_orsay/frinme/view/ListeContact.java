@@ -43,10 +43,10 @@ public class ListeContact extends Fragment {
         super.onCreate(savedInstanceState);
         testContact = new ArrayList<>();
         //ContactModel c1 = new ContactModel("nom1","prenom1");
-        ContactModel c2 = new ContactModel(1, "Salut", new Location(14.7, 15.7), "Test", "Notes test");
+       // ContactModel c2 = new ContactModel(1, "Salut", new Location(14.7, 15.7), "Test", "Notes test");
         //ContactModel c3 = new ContactModel("mon3","erpnom3");
         //testContact.add(c1);
-        testContact.add(c2);
+       // testContact.add(c2);
         //testContact.add(c3);
     }
 
@@ -123,7 +123,7 @@ public class ListeContact extends Fragment {
                     final ContactListDetails r = response.body();
                     Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                     testContact.addAll(r.getContacts());
-                    SortableTableView tableView = (SortableTableView) v.findViewById(R.id.tableView);
+                    SortableTableView tableView = (SortableTableView) v.findViewById(R.id.ListeContact);
                     tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
                     Log.e("REST CALL", testContact.toString());
                 } else {

@@ -14,11 +14,11 @@ import java.util.List;
  */
 public class ContactModel implements Parcelable {
 
-    @SerializedName("NumUtilisateur")
+    @SerializedName("UserFriend")
     @Expose
     private int id;
 
-    @SerializedName("Pseudo")
+    @SerializedName("PseudoFriend")
     @Expose
     private String pseudo;
     private Location lastLocalisation;

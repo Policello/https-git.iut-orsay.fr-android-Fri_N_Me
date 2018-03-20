@@ -17,8 +17,7 @@ public interface RestService {
     @POST("event/listEventsMapDetails/")
     Call<EventDetails> getEventDetails(@Field("nomEvent") String nomEvent);
 
-
     @FormUrlEncoded
-    @POST("contact/listContact/")
+    @POST("contact/listContact.php")
     Call<ContactListDetails> getContactDetailedList(@Field("idUser") int idUser);
 }
