@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -31,6 +34,12 @@ public class Event extends Fragment {
     private ListView mListView;
     private EventModel currentEvent;
     private boolean defaultValues = false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -83,6 +92,24 @@ public class Event extends Fragment {
             }
             dialogFragment.show(getFragmentManager(), "Popup");
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.topbar, menu);
+        menu.add(0, 200, 0, "JoinEvent").setIcon(R.drawable.ic_add_black_24dp)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 0:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void sendRequest(View v) {
