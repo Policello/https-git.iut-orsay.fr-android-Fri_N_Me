@@ -53,17 +53,13 @@ public class Contact extends Fragment {
 
         mListView = (ListView) view.findViewById(R.id.ListeEvenementsCommunDetails);
 
-        final TextView PrenomContact = (TextView) view.findViewById(R.id.PrenomContact);
-        final TextView nomContact = (TextView) view.findViewById(R.id.NomContact);
-        final TextView NumContactDetails = (TextView) view.findViewById(R.id.NumContactDetails);
+        final TextView PrenomContact = (TextView) view.findViewById(R.id.PseudoContact);
         final TextView LocalisationContactsDetails = (TextView) view.findViewById(R.id.LocalisationContactsDetails);
         final TextView LastEvenementsContactsDetails = (TextView) view.findViewById(R.id.LastEvenementsContactsDetails);
         final TextView NotesContactsDetails = (TextView) view.findViewById(R.id.NotesContactsDetails);
 
         if (!defaultValues) {
-            PrenomContact.setText(contactRecu.getPrenom());
-            nomContact.setText(contactRecu.getNom());
-            NumContactDetails.setText(contactRecu.getNumeroTel());
+            PrenomContact.setText(contactRecu.getPseudo());
             LocalisationContactsDetails.setText(contactRecu.getCoordonnées().toString());
             LastEvenementsContactsDetails.setText(contactRecu.getLastEvent());
             NotesContactsDetails.setText(contactRecu.getNotes());

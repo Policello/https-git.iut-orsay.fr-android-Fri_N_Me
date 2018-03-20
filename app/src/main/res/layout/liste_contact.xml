@@ -10,7 +10,7 @@
         android:layout_height="wrap_content" />
 
     <de.codecrafters.tableview.SortableTableView
-        app:tableView_columnCount="2"
+        app:tableView_columnCount="1"
         app:tableView_headerColor="#f56358"
 
         android:id="@+id/ListeContact"
