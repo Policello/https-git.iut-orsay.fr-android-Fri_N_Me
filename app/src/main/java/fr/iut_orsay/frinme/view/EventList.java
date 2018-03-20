@@ -33,7 +33,7 @@ import retrofit2.Response;
 public class EventList extends Fragment {
 
     // Liste d'événements
-    List<EventModel> testEvent;
+    List<EventModel> events;
     // Nom les colonnes du tableau
     private static final String[] TABLE_HEADERS = {"Nom", "Type", "Date", "Coordonnées"};
 
@@ -41,8 +41,8 @@ public class EventList extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Jeu de test d'événements
-        testEvent = new ArrayList<>();
+        // Initialisation de la liste d'événements
+        events = new ArrayList<>();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class EventList extends Fragment {
         // Tableau de 4 colonnes
         tableView.setColumnCount(4);
         // Adaptateur pour l'affichage du contenu des cases
-        tableView.setDataAdapter(new EventTableAdaptater(getActivity(), testEvent));
+        tableView.setDataAdapter(new EventTableAdaptater(getActivity(), events));
         // Header simple
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
         // Réaction au click
@@ -122,7 +122,7 @@ public class EventList extends Fragment {
         @Override
         public void onDataClicked(int rowIndex, EventModel event) {
             Bundle args = new Bundle();
-            args.putParcelable("event", testEvent.get(rowIndex));
+            args.putParcelable("event", events.get(rowIndex));
             Event EventFrag = new Event();
             EventFrag.setArguments(args);
             getActivity().getFragmentManager().beginTransaction()
@@ -143,10 +143,11 @@ public class EventList extends Fragment {
                 if (response.isSuccessful()) {
                     final EventListDetails r = response.body();
                     Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
-                    testEvent.addAll(r.getEvents());
+                    events.addAll(r.getEvents());
+                    events.addAll(r.getEventsJo());
                     SortableTableView tableView = (SortableTableView) v.findViewById(R.id.tableView);
-                    tableView.setDataAdapter(new EventTableAdaptater(getActivity(), testEvent));
-                    Log.e("REST CALL", testEvent.toString());
+                    tableView.setDataAdapter(new EventTableAdaptater(getActivity(), events));
+                    Log.e("REST CALL", events.toString());
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }

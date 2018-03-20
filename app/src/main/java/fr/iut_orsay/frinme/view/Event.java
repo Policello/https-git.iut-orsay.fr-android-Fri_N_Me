@@ -86,7 +86,7 @@ public class Event extends Fragment {
     }
 
     private void sendRequest(View v) {
-        Call<EventDetails> call = RestUser.get().getEventDetails(currentEvent.getId());
+        Call<EventDetails> call = RestUser.get().getEventDetails(currentEvent.getNom());
         call.enqueue(new Callback<EventDetails>() {
             @Override
             public void onResponse(Call<EventDetails> call, Response<EventDetails> response) {
