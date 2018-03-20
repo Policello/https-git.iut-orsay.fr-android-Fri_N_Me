@@ -14,6 +14,6 @@ public interface RestService {
 
     @FormUrlEncoded
     @POST("event/listEventsMapDetails/")
-    Call<EventDetails> getEventDetails(@Field("numEvent") int numEvent);
+    Call<EventDetails> getEventDetails(@Field("nomEvent") String nomEvent);
 
 }
