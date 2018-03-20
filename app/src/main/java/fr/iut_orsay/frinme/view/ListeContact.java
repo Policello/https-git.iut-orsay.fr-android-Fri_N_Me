@@ -115,7 +115,7 @@ public class ListeContact extends Fragment {
     }
 
     private void sendRequest(View v) {
-        Call<ContactListDetails> call = RestUser.get().getContactDetailedList();
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
         call.enqueue(new Callback<ContactListDetails>() {
             @Override
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
