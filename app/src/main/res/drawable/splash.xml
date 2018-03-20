@@ -5,11 +5,8 @@
     <item
         android:drawable="@color/colorPrimaryDark"/>
 
-    <item>
-        <bitmap
-            android:gravity="center"
-            app:srcCompat="@mipmap/ic_launcher_foreground"
-            android:src="@mipmap/ic_launcher" />
-    </item>
+    <item
+        android:drawable="@mipmap/ic_launcher"
+        android:gravity="center"/>
 
 </layer-list>
