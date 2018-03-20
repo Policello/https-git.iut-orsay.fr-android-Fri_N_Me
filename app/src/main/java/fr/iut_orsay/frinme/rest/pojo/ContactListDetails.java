@@ -17,7 +17,7 @@ public class ContactListDetails {
 
     @SerializedName("tab")
     @Expose
-    private List<ContactModel> Contacts  ;
+    private List<ContactModel> Contacts;
 
     @SerializedName("message")
     @Expose
