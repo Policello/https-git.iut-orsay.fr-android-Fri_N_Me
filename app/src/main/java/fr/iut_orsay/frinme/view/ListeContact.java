@@ -29,14 +29,14 @@ import fr.iut_orsay.frinme.model.Location;
 public class ListeContact extends Fragment {
 
     List<ContactModel> testContact;
-    private static final String[] TABLE_HEADERS = {"Nom", "prenom"};
+    private static final String[] TABLE_HEADERS = {"Pseudo"};
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         testContact = new ArrayList<>();
         //ContactModel c1 = new ContactModel("nom1","prenom1");
-        ContactModel c2 = new ContactModel(1, "Carlos", "Juan", "0102060405", new Location(14.7, 15.7), "Test", "Notes test");
+        ContactModel c2 = new ContactModel(1, "Salut", new Location(14.7, 15.7), "Test", "Notes test");
         //ContactModel c3 = new ContactModel("mon3","erpnom3");
         //testContact.add(c1);
         testContact.add(c2);
@@ -69,18 +69,11 @@ public class ListeContact extends Fragment {
             switch (columnIndex) {
                 case 0:
                     TextView tvName = new TextView(getContext());
-                    tvName.setText(contact.getNom());
+                    tvName.setText(contact.getPseudo());
                     tvName.setGravity(Gravity.CENTER);
                     renderedView = tvName;
                     break;
-                case 1:
-                    TextView tvType = new TextView(getContext());
-                    tvType.setText(contact.getPrenom());
-                    tvType.setGravity(Gravity.CENTER);
-                    renderedView = tvType;
-                    break;
             }
-
             return renderedView;
         }
 
@@ -93,8 +86,7 @@ public class ListeContact extends Fragment {
         tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
         tableView.addDataClickListener(new ListeContact.EventClickListener());
-        tableView.setColumnComparator(0, ContactComparator.getContactNomComparator());
-        tableView.setColumnComparator(1, ContactComparator.getContactPrenomComparator());
+        tableView.setColumnComparator(0, ContactComparator.getContactPseudoComparator());
     }
 
     private class EventClickListener implements TableDataClickListener<ContactModel> {
