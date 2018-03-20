@@ -8,28 +8,14 @@ import java.util.Comparator;
 
 public class ContactComparator {
 
-    public static Comparator<ContactModel> getContactNomComparator() {
-        return new ContactComparator.ContactNomComparator();
+    public static Comparator<ContactModel> getContactPseudoComparator() {
+        return new ContactComparator.ContactPseudoComparator();
     }
 
-    public static Comparator<ContactModel> getContactPrenomComparator() {
-        return new ContactComparator.ContactPrenomComparator();
-    }
-
-
-    private static class ContactNomComparator implements Comparator<ContactModel> {
+    private static class ContactPseudoComparator implements Comparator<ContactModel> {
         @Override
         public int compare(ContactModel contactModel, ContactModel t1) {
-            return contactModel.getNom().compareTo(t1.getNom());
-        }
-    }
-
-    private static class ContactPrenomComparator implements Comparator<ContactModel> {
-
-
-        @Override
-        public int compare(ContactModel contactModel, ContactModel t1) {
-            return contactModel.getPrenom().compareTo(t1.getPrenom());
+            return contactModel.getPseudo().compareTo(t1.getPseudo());
         }
     }
 

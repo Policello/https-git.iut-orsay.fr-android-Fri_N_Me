@@ -20,9 +20,7 @@ public class ContactModel implements Parcelable {
 
     @SerializedName("Pseudo")
     @Expose
-    private String nom;
-
-    private String prenom;
+    private String pseudo;
     private String numeroTel;
     private Location lastLocalisation;
     private String lastEvent;
@@ -42,10 +40,9 @@ public class ContactModel implements Parcelable {
         this.numeroTel = numeroTel;
     }
 
-    public ContactModel(int id, String nom, String prenom, String numeroTel, Location lastLocalisation, String lastEvent, String notes, List<EventModel> listEvenement) {
+    public ContactModel(int id, String pseudo, String numeroTel, Location lastLocalisation, String lastEvent, String notes, List<EventModel> listEvenement) {
         this.id = id;
-        this.prenom = prenom;
-        this.nom = nom;
+        this.pseudo = pseudo;
         this.numeroTel = numeroTel;
         this.lastLocalisation = lastLocalisation;
         this.lastEvent = lastEvent;
@@ -55,10 +52,9 @@ public class ContactModel implements Parcelable {
         //TODO: Récupérer les infos manquantes depuis le serveur
     }
 
-    public ContactModel(int id, String nom, String prenom, String numeroTel, Location lastLocalisation, String lastEvent, String notes) {
+    public ContactModel(int id, String pseudo, String numeroTel, Location lastLocalisation, String lastEvent, String notes) {
         this.id = id;
-        this.prenom = prenom;
-        this.nom = nom;
+        this.pseudo  = pseudo;
         this.numeroTel = numeroTel;
         this.lastLocalisation = lastLocalisation;
         this.lastEvent = lastEvent;
@@ -66,29 +62,20 @@ public class ContactModel implements Parcelable {
     }
 
     // Pour tester la liste
-    public ContactModel(String nom, String prenom) {
-        this.prenom = prenom;
-        this.nom = nom;
+    public ContactModel(String pseudo) {
+        this.pseudo=pseudo;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getNom() {
-        return nom;
+    public String getPseudo() {
+        return pseudo;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
     }
 
     public Location getCoordonnées() {
@@ -113,7 +100,7 @@ public class ContactModel implements Parcelable {
 
     @Override
     public String toString() {
-        return nom;
+        return pseudo;
     }
 
     @Override
@@ -123,8 +110,7 @@ public class ContactModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int i) {
-        out.writeString(this.nom);
-        out.writeString(this.prenom);
+        out.writeString(this.pseudo);
         out.writeString(this.numeroTel);
         out.writeDouble(lastLocalisation.getLatitude());
         out.writeDouble(lastLocalisation.getLongitude());
@@ -147,8 +133,7 @@ public class ContactModel implements Parcelable {
 
     private ContactModel(Parcel in) {
         this.id = in.readInt();
-        this.nom = in.readString();
-        this.prenom = in.readString();
+        this.pseudo = in.readString();
         this.numeroTel = in.readString();
         this.lastLocalisation = in.readParcelable(Location.class.getClassLoader());
         this.lastEvent = in.readString();
