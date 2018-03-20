@@ -18,7 +18,7 @@ public interface RestService {
     Call<EventDetails> getEventDetails(@Field("nomEvent") String nomEvent);
 
 
-
-    @POST("contact/listContactsSort/")
-    Call<ContactListDetails> getContactDetailedList();
+    @FormUrlEncoded
+    @POST("contact/listContact/")
+    Call<ContactListDetails> getContactDetailedList(@Field("idUser") int idUser);
 }
