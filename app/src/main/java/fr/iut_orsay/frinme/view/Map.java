@@ -49,6 +49,14 @@ import java.util.Locale;
 
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.SettingsActivity;
+import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.EventModel;
+import fr.iut_orsay.frinme.rest.RestUser;
+import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
+import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -66,6 +74,10 @@ public class Map extends Fragment implements
     private LocationRequest mLocationRequest;
     private LocationManager lm;
     private ArrayList<LatLng> tab;
+
+    private static List<ContactModel> tabContacts;
+    private static List<EventModel> tabEventJO;
+    private static List<EventModel> tabEventUser;
 
     TextView dialog_msg, dialog_title, dialog_ok;
     Dialog dialog;
@@ -384,6 +396,47 @@ public class Map extends Fragment implements
             //return -1;
         }
         return -1;
+    }
+
+    private static void fetchEvents() {
+        Call<EventListDetails> call = RestUser.get().getEventDetailedList();
+        call.enqueue(new Callback<EventListDetails>() {
+            @Override
+            public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
+                if (response.isSuccessful()) {
+                    final EventListDetails r = response.body();
+                    tabEventUser.addAll(r.getEvents());
+                    tabEventJO.addAll(r.getEventsJo());
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventListDetails> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
+    }
+
+    private static void fetchContacts() {
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
+        call.enqueue(new Callback<ContactListDetails>() {
+            @Override
+            public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
+                if (response.isSuccessful()) {
+                    final ContactListDetails r = response.body();
+                    tabContacts.addAll(r.getContacts());
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContactListDetails> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
     }
 
 }
