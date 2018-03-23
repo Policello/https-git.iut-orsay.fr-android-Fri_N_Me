@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class ContactModel implements Parcelable {
 
-    @SerializedName("UserF")
+    @SerializedName("NumUtilisateur")
     @Expose
     private int id;
 
