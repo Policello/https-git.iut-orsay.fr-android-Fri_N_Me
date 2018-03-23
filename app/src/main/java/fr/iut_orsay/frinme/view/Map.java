@@ -50,6 +50,8 @@ import java.util.Locale;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.SettingsActivity;
 
+import static android.R.id.content;
+
 public class Map extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
@@ -62,7 +64,7 @@ public class Map extends Fragment implements
     private LocationManager lm;
     private ArrayList<LatLng> tab;
 
-    TextView dialog_msg, dialog_title, dialog_ok;
+   TextView dialog_msg, dialog_title, dialog_ok;
     Dialog dialog;
     View view;
 
@@ -123,18 +125,24 @@ public class Map extends Fragment implements
         }
     }
 
-    public void showDialog(String  content) {
+    private View mInfoWindowContent = null;
+  //  public void showDialog(String  content) {
+        public void getmInfoWindowContent(Marker marker){
 
+            if(mInfoWindowContent==null){
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                mInfoWindowContent=inflater.inflate(R.layout.item_dialog, null);
+            }
         AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
 // 1.
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.item_dialog, null);
+       /* LayoutInflater inflater = LayoutInflater.from(getActivity());
+        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.item_dialog, null);*/
 
-        dialog_msg = (TextView) layout.findViewById(R.id.dialog_msg);
-        dialog_title = (TextView) layout.findViewById(R.id.dialog_title);
-        dialog_ok = (TextView) layout.findViewById(R.id.dialog_ok);
+        dialog_msg = (TextView) mInfoWindowContent.findViewById(R.id.dialog_msg);
+        dialog_title = (TextView) mInfoWindowContent.findViewById(R.id.dialog_title);
+        dialog_ok = (TextView) mInfoWindowContent.findViewById(R.id.dialog_ok);
         dialog_title.setText("information");
-        dialog_msg.setText(content);
+        dialog_msg.setText();
         dialog_ok.setText("voir les details");
 
         dialog_ok.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +169,7 @@ public class Map extends Fragment implements
             }
         });
 
-        builder.setView(layout);
+        builder.setView(mInfoWindowContent);
         dialog=builder.create();
         dialog.show();
     }
