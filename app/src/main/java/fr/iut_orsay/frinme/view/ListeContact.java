@@ -113,7 +113,7 @@ public class ListeContact extends Fragment {
                     .commit();
         }
     }
-
+//
     private void sendRequest(View v) {
         Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
         call.enqueue(new Callback<ContactListDetails>() {

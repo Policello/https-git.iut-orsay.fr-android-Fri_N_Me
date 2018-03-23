@@ -25,4 +25,5 @@ public interface RestService {
     @FormUrlEncoded
     @POST("contact/estAmi.php")
     Call<EstAmi> getEstAmi(@Field("idUser") int idUser, @Field("idFriend") int idFriend);
+    //
 }

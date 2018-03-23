@@ -46,7 +46,7 @@ public class ContactModel implements Parcelable {
         this.lastEvent = lastEvent;
         this.notes = notes;
     }
-
+//
     // Pour tester la liste
     public ContactModel(String pseudo) {
         this.pseudo=pseudo;

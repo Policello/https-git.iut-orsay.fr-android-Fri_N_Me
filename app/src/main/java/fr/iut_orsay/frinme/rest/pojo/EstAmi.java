@@ -12,6 +12,7 @@ public class EstAmi {
 
     @SerializedName("message")
     @Expose
+    //
     private boolean message;
 
     public boolean getMessage() {
