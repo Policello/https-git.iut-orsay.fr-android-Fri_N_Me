@@ -20,4 +20,6 @@ public interface RestService {
     @FormUrlEncoded
     @POST("contact/listContact.php")
     Call<ContactListDetails> getContactDetailedList(@Field("idUser") int idUser);
+
+
 }
