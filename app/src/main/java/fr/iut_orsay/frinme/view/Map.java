@@ -75,9 +75,9 @@ public class Map extends Fragment implements
     private LocationManager lm;
     private ArrayList<LatLng> tab;
 
-    private static List<ContactModel> tabContacts;
-    private static List<EventModel> tabEventJO;
-    private static List<EventModel> tabEventUser;
+    private  List<ContactModel> tabContacts;
+    private List<EventModel> tabEventJO;
+    private  List<EventModel> tabEventUser;
 
     TextView dialog_msg, dialog_title, dialog_ok;
     Dialog dialog;
@@ -117,6 +117,9 @@ public class Map extends Fragment implements
         mapFragment.getMapAsync(this);
 
         tab = new ArrayList<LatLng>();
+        tabContacts = new ArrayList<ContactModel>();
+        tabEventUser = new ArrayList<EventModel>();
+        tabEventJO = new ArrayList<EventModel>();
 
         //Nord
         tab.add(new LatLng(48.908612, 2.439712));
@@ -134,10 +137,14 @@ public class Map extends Fragment implements
         mMap = googleMap;
         Log.d(TAG, "onmapready");
         //Placer les autres marqueurs
-        for (LatLng l : tab) {
-            addMarkerLatLng(l, BitmapDescriptorFactory.HUE_GREEN);
-            Log.i("marker ", "" + l.latitude);
-        }
+
+
+        /*if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+            mMap.set
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            //return;
+        }*/
     }
 
     public void showDialog(String  content) {
@@ -217,6 +224,10 @@ public class Map extends Fragment implements
                     if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         //Mettre à jour la localisation
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                        //Remplir tableaux
+                        fetchContacts();
+                        fetchEvents();
+
 
 
                     } else {
@@ -280,7 +291,7 @@ public class Map extends Fragment implements
             myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("me"));
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(20));
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             firstLocationUpdate = false;
         } else {
             myLocattionMarker.setPosition(myLoc);
@@ -304,8 +315,15 @@ public class Map extends Fragment implements
             e.printStackTrace();
         }
 
+        MarkerOptions options;
 
-        MarkerOptions options = new MarkerOptions().position(l).title("" + addresses.get(0).getLocality()).icon(BitmapDescriptorFactory.defaultMarker(couleur));
+        if (addresses.get(0) != null) {
+             options = new MarkerOptions().position(l).title("" + addresses.get(0).getLocality()).icon(BitmapDescriptorFactory.defaultMarker(couleur));
+        }
+
+        else {
+             options = new MarkerOptions().position(l).title("titre").icon(BitmapDescriptorFactory.defaultMarker(couleur));
+        }
         mMap.addMarker(options);
     }
 
@@ -398,15 +416,20 @@ public class Map extends Fragment implements
         return -1;
     }
 
-    private static void fetchEvents() {
+    private void fetchEvents() {
         Call<EventListDetails> call = RestUser.get().getEventDetailedList();
         call.enqueue(new Callback<EventListDetails>() {
             @Override
             public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
                 if (response.isSuccessful()) {
                     final EventListDetails r = response.body();
+                    Log.e(TAG, r.getEvents().toString());
                     tabEventUser.addAll(r.getEvents());
                     tabEventJO.addAll(r.getEventsJo());
+                    for (EventModel e : tabEventUser) {
+                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN);
+                        //Log.i("marker ", "" + l.latitude);
+                    }
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }
@@ -419,14 +442,20 @@ public class Map extends Fragment implements
         });
     }
 
-    private static void fetchContacts() {
+
+    private  void fetchContacts() {
         Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
         call.enqueue(new Callback<ContactListDetails>() {
             @Override
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
                 if (response.isSuccessful()) {
                     final ContactListDetails r = response.body();
+                    Log.e(TAG, r.getContacts().toString());
                     tabContacts.addAll(r.getContacts());
+                    for (ContactModel c : tabContacts) {
+                        addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE);
+                        //Log.i("marker ", "" + l.latitude);
+                    }
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }
