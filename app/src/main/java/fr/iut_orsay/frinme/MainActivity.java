@@ -20,6 +20,7 @@ import android.view.MenuItem;
 
 import fr.iut_orsay.frinme.view.Contact;
 import fr.iut_orsay.frinme.view.Event;
+import fr.iut_orsay.frinme.view.EventAdd;
 import fr.iut_orsay.frinme.view.EventList;
 import fr.iut_orsay.frinme.view.ListeContact;
 import fr.iut_orsay.frinme.view.Map;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements
             fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
                             android.R.animator.fade_in, android.R.animator.fade_out)
-                    .replace(R.id.fragment_container, new Event())
+                    .replace(R.id.fragment_container, new EventAdd())
                     .addToBackStack(null)
                     .commit();
             closeFabMenu();
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements
                     .commit();
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         } else if (id == R.id.nav_map && !(currentFrag instanceof Map)) {
             fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
