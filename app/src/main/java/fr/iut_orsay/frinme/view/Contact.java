@@ -4,6 +4,9 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,6 +19,17 @@ import java.util.List;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
+import fr.iut_orsay.frinme.rest.RestUser;
+import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
+import fr.iut_orsay.frinme.rest.pojo.EstAmi;
+import retrofit2.Call;
+
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 /**
  * Vue des détails de contacts
@@ -29,12 +43,11 @@ public class Contact extends Fragment {
     private ContactModel contactRecu;
     private boolean defaultValues = false;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        for (int i = 0; i < testEvent.size(); i++) {
-//            listEvenements.add(testEvent.get(i).getNom());
-//        }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -75,5 +88,22 @@ public class Contact extends Fragment {
                 .addToBackStack(null)
                 .commit());
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.topbar, menu);
+        Call<EstAmi> call = RestUser.get().getEstAmi(23,23);
+
+
+        boolean ami = false;
+        if (ami == true) {
+            menu.add(0, 200, 0, "Supprimer un ami").setIcon(R.drawable.ic_close_black_24dp)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        } else if (ami == false) {
+            menu.add(0, 200, 0, "Ajouter un ami").setIcon(R.drawable.ic_person_add_black_24dp)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }
