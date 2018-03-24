@@ -50,7 +50,6 @@ import java.util.Locale;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.SettingsActivity;
 import fr.iut_orsay.frinme.model.ContactModel;
-import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
@@ -76,9 +75,9 @@ public class Map extends Fragment implements
     private LocationManager lm;
     private ArrayList<LatLng> tab;
 
-    private List<ContactModel> tabContacts;
+    private  List<ContactModel> tabContacts;
     private List<EventModel> tabEventJO;
-    private List<EventModel> tabEventUser;
+    private  List<EventModel> tabEventUser;
 
     TextView dialog_msg, dialog_title, dialog_ok;
     Dialog dialog;
@@ -148,9 +147,9 @@ public class Map extends Fragment implements
         }*/
     }
 
-    public void showDialog(String content) {
+    public void showDialog(String  content) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
 // 1.
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.item_dialog, null);
@@ -166,9 +165,10 @@ public class Map extends Fragment implements
             @Override
             public void onClick(View view) {
 //                这个MainActivity换成你要跳到的界面
-                Intent intent = null;
+                Intent intent =null;
 
-                switch (content) {
+                switch(content)
+                {
                     case "test":
                         intent = new Intent(getActivity(), Event.class);
                         break;
@@ -186,7 +186,7 @@ public class Map extends Fragment implements
         });
 
         builder.setView(layout);
-        dialog = builder.create();
+        dialog=builder.create();
         dialog.show();
     }
 
@@ -227,6 +227,7 @@ public class Map extends Fragment implements
                         //Remplir tableaux
                         fetchContacts();
                         fetchEvents();
+
 
 
                     } else {
@@ -287,13 +288,14 @@ public class Map extends Fragment implements
         Log.d(TAG, "" + firstLocationUpdate);
         if (firstLocationUpdate) {
 
-            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("me"));
+            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Me : "+ getInfoFromLatLng(myLoc)));
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             firstLocationUpdate = false;
         } else {
             myLocattionMarker.setPosition(myLoc);
+            myLocattionMarker.setTitle("Me : "+ getInfoFromLatLng(myLoc));
         }
     }
 
@@ -304,19 +306,9 @@ public class Map extends Fragment implements
         handleNewLocation(location);
     }
 
-    public void addMarkerLatLng(LatLng l, float couleur) {
-        Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
+    public void addMarkerLatLng(LatLng l, float couleur, String precision) {
 
-        List<Address> addresses = null;
-        try {
-            addresses = gcd.getFromLocation(l.latitude, l.longitude, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MarkerOptions options;
-        options = new MarkerOptions().position(l).title("titre").icon(BitmapDescriptorFactory.defaultMarker(couleur));
-        mMap.addMarker(options);
+        mMap.addMarker(new MarkerOptions().position(l).title(precision + " : " + getInfoFromLatLng(l)).icon(BitmapDescriptorFactory.defaultMarker(couleur)));
     }
 
 
@@ -325,7 +317,7 @@ public class Map extends Fragment implements
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
             case AUTHORIZED_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
+                // If request is cancelle d, the result arrays are empty.
                 if (grantResults.length > 0 && permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -409,21 +401,92 @@ public class Map extends Fragment implements
     }
 
     private void fetchEvents() {
-        tabEventUser.addAll(DataBase.getAppDatabase(getActivity()).eventDao().getAll());
-        Log.i("marker ", "" + tabEventUser.toString());
-        for (EventModel e : tabEventUser) {
-            addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN);
-            //Log.i("marker ", "" + l.latitude);
-        }
+        Call<EventListDetails> call = RestUser.get().getEventDetailedList();
+        call.enqueue(new Callback<EventListDetails>() {
+            @Override
+            public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
+                if (response.isSuccessful()) {
+                    final EventListDetails r = response.body();
+                    Log.e(TAG, r.getEvents().toString());
+                    tabEventUser.addAll(r.getEvents());
+                    tabEventJO.addAll(r.getEventsJo());
+                    for (EventModel e : tabEventJO) {
+                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_ORANGE, e.getNom());
+                        //Log.i("marker ", "" + l.latitude);
+                    }
+                    for (EventModel e : tabEventUser) {
+                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_YELLOW, e.getNom());
+                        //Log.i("marker ", "" + l.latitude);
+                    }
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventListDetails> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
     }
 
 
-    private void fetchContacts() {
-        tabContacts.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
-        Log.i("marker ", "" + tabContacts.toString());
-        for (ContactModel c : tabContacts) {
-            addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE);
-            //Log.i("marker ", "" + l.latitude);
-        }
+    private  void fetchContacts() {
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
+        call.enqueue(new Callback<ContactListDetails>() {
+            @Override
+            public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
+                if (response.isSuccessful()) {
+                    final ContactListDetails r = response.body();
+                    Log.e(TAG, r.getContacts().toString());
+                    tabContacts.addAll(r.getContacts());
+                    for (ContactModel c : tabContacts) {
+                        addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_CYAN, c.getPseudo());
+                        //Log.i("marker ", "" + l.latitude);
+                    }
+
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContactListDetails> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
     }
+
+    public String getInfoFromLatLng (LatLng l) {
+        Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
+
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(l.latitude, l.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "pas de résultats");
+        }
+
+        String lieu;
+
+        try {
+            Log.d(TAG, addresses.get(0).toString());
+            if (addresses.get(0).getLocality() != null){
+                lieu = addresses.get(0).getLocality();
+            }
+            else if (addresses.get(0).getCountryName() != null) {
+                lieu = addresses.get(0).getCountryName();
+            }
+            else {
+                lieu = "No info";
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            lieu = "No info";
+        }
+
+        return lieu;
+    }
+
 }
