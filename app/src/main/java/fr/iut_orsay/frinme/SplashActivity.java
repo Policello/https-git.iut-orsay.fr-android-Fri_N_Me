@@ -2,16 +2,11 @@ package fr.iut_orsay.frinme;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-
-import fr.iut_orsay.frinme.MainActivity;
-import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
@@ -31,13 +26,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         fetchEvents();
-        fetchContacts();
+        fetchContacts(MainActivity.getCurrentUserId());
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
-        finish();
+        new Handler().postDelayed(() -> {
+            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            SplashActivity.this.finish();
+        }, 2000);
     }
 
     private void fetchEvents() {
@@ -47,9 +41,10 @@ public class SplashActivity extends AppCompatActivity {
             public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
                 if (response.isSuccessful()) {
                     final EventListDetails r = response.body();
-                    if (response.body().getEvents().size() != DataBase.getAppDatabase(getApplicationContext()).eventDao().countEvents())
+                    if (response.body().getEvents().size() != DataBase.getAppDatabase(getApplicationContext()).eventDao().countEvents()) {
+                        DataBase.getAppDatabase(getApplicationContext()).eventDao().deleteAll();
                         DataBase.getAppDatabase(getApplicationContext()).eventDao().insertAll(r.getEvents());
-                    Log.e("WEW",DataBase.getAppDatabase(getApplicationContext()).eventDao().countEvents()+"");
+                    }
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }
@@ -62,15 +57,17 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    private  void fetchContacts() {
-        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
+    private void fetchContacts(int userId) {
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(userId);
         call.enqueue(new Callback<ContactListDetails>() {
             @Override
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
                 if (response.isSuccessful()) {
                     final ContactListDetails r = response.body();
-                    if (response.body().getContacts().size() != DataBase.getAppDatabase(getApplicationContext()).contactDao().countContacts())
+                    if (response.body().getContacts().size() != DataBase.getAppDatabase(getApplicationContext()).contactDao().countContacts()){
+                        DataBase.getAppDatabase(getApplicationContext()).contactDao().deleteAll();
                         DataBase.getAppDatabase(getApplicationContext()).contactDao().insertAll(r.getContacts());
+                    }
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }

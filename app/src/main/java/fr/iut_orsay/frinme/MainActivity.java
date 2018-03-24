@@ -37,7 +37,9 @@ public class MainActivity extends AppCompatActivity implements
         CREATEUR
     }
 
+    private static int currentUserId = -1;
     public static Status userStatus = Status.EXTERNE;
+
     private boolean isFabOpen = false;
     private FloatingActionButton fabContact;
     private FloatingActionButton fabEvent;
@@ -204,5 +206,13 @@ public class MainActivity extends AppCompatActivity implements
         fab.setImageResource(R.drawable.ic_add_black_24dp);
         fabContact.animate().translationY(0);
         fabEvent.animate().translationY(0);
+    }
+
+    public static int getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public static void setCurrentUserId(int currentUserId) {
+        MainActivity.currentUserId = currentUserId;
     }
 }

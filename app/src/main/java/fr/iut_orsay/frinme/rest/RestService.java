@@ -1,5 +1,6 @@
 package fr.iut_orsay.frinme.rest;
 
+import fr.iut_orsay.frinme.rest.pojo.Connexion;
 import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
@@ -20,6 +21,10 @@ public interface RestService {
     @FormUrlEncoded
     @POST("contact/listContact.php")
     Call<ContactListDetails> getContactDetailedList(@Field("idUser") int idUser);
+
+    @FormUrlEncoded
+    @POST("user/login/")
+    Call<Connexion> checkLogin(@Field("mail") String mail, @Field("mdpasse") String mdpasse);
 
 
 }
