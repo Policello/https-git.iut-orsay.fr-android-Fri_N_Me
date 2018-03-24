@@ -1,5 +1,10 @@
 package fr.iut_orsay.frinme.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,44 +17,67 @@ import java.util.List;
 /**
  * Représente un contact , les évenements auquels il participe et ses attributs.
  */
+
+@Entity(tableName = "contact")
 public class ContactModel implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("NumUtilisateur")
     @Expose
     private int id;
 
+    @ColumnInfo(name = "pseudo")
     @SerializedName("Pseudo")
     @Expose
     private String pseudo;
 
+    @ColumnInfo(name = "localisation")
+    @TypeConverters(Converters.LocationConverter.class)
     @SerializedName("Localisation")
     @Expose
     private Location lastLocalisation;
 
+    @Ignore
     private String lastEvent;
+
+    @Ignore
     private String notes;
 
+    @Ignore
     public ContactModel(int id) {
         this.id = id;
         //TODO: Récupérer les infos manquantes depuis le serveur
     }
 
+    public ContactModel(int id, String pseudo, Location lastLocalisation) {
+        this.id = id;
+        this.pseudo = pseudo;
+        this.lastLocalisation = lastLocalisation;
+        this.lastEvent = lastEvent;
+        this.notes = notes;
+    }
+
 
     public ContactModel(int id, String pseudo, Location lastLocalisation, String lastEvent, String notes) {
         this.id = id;
-        this.pseudo  = pseudo;
+        this.pseudo = pseudo;
         this.lastLocalisation = lastLocalisation;
         this.lastEvent = lastEvent;
         this.notes = notes;
     }
 
     // Pour tester la liste
+    @Ignore
     public ContactModel(String pseudo) {
-        this.pseudo=pseudo;
+        this.pseudo = pseudo;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPseudo() {
@@ -78,6 +106,14 @@ public class ContactModel implements Parcelable {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Location getLastLocalisation() {
+        return lastLocalisation;
+    }
+
+    public void setLastLocalisation(Location lastLocalisation) {
+        this.lastLocalisation = lastLocalisation;
     }
 
     @Override

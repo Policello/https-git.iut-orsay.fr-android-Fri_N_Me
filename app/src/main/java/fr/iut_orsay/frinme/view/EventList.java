@@ -21,6 +21,7 @@ import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
@@ -58,7 +59,7 @@ public class EventList extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        sendRequest(view);
+        events.addAll(DataBase.getAppDatabase(getActivity()).eventDao().getAll());
         SortableTableView tableView = (SortableTableView) view.findViewById(R.id.tableView);
         // Tableau de 4 colonnes
         tableView.setColumnCount(4);
@@ -134,30 +135,4 @@ public class EventList extends Fragment {
                     .commit();
         }
     }
-
-    private void sendRequest(View v) {
-        Call<EventListDetails> call = RestUser.get().getEventDetailedList();
-        call.enqueue(new Callback<EventListDetails>() {
-            @Override
-            public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
-                if (response.isSuccessful()) {
-                    final EventListDetails r = response.body();
-                    Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
-                    events.addAll(r.getEvents());
-                    events.addAll(r.getEventsJo());
-                    SortableTableView tableView = (SortableTableView) v.findViewById(R.id.tableView);
-                    tableView.setDataAdapter(new EventTableAdaptater(getActivity(), events));
-                    Log.e("REST CALL", events.toString());
-                } else {
-                    Log.e("REST CALL", "sendRequest not successful");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<EventListDetails> call, Throwable t) {
-                Log.e("REST CALL", t.getMessage());
-            }
-        });
-    }
-
 }

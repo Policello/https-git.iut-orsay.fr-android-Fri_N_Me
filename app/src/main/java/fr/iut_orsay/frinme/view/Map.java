@@ -50,6 +50,7 @@ import java.util.Locale;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.SettingsActivity;
 import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
@@ -75,9 +76,9 @@ public class Map extends Fragment implements
     private LocationManager lm;
     private ArrayList<LatLng> tab;
 
-    private  List<ContactModel> tabContacts;
+    private List<ContactModel> tabContacts;
     private List<EventModel> tabEventJO;
-    private  List<EventModel> tabEventUser;
+    private List<EventModel> tabEventUser;
 
     TextView dialog_msg, dialog_title, dialog_ok;
     Dialog dialog;
@@ -147,9 +148,9 @@ public class Map extends Fragment implements
         }*/
     }
 
-    public void showDialog(String  content) {
+    public void showDialog(String content) {
 
-        AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 // 1.
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.item_dialog, null);
@@ -165,10 +166,9 @@ public class Map extends Fragment implements
             @Override
             public void onClick(View view) {
 //                这个MainActivity换成你要跳到的界面
-                Intent intent =null;
+                Intent intent = null;
 
-                switch(content)
-                {
+                switch (content) {
                     case "test":
                         intent = new Intent(getActivity(), Event.class);
                         break;
@@ -186,7 +186,7 @@ public class Map extends Fragment implements
         });
 
         builder.setView(layout);
-        dialog=builder.create();
+        dialog = builder.create();
         dialog.show();
     }
 
@@ -227,7 +227,6 @@ public class Map extends Fragment implements
                         //Remplir tableaux
                         fetchContacts();
                         fetchEvents();
-
 
 
                     } else {
@@ -316,14 +315,7 @@ public class Map extends Fragment implements
         }
 
         MarkerOptions options;
-
-        if (addresses.get(0) != null) {
-             options = new MarkerOptions().position(l).title("" + addresses.get(0).getLocality()).icon(BitmapDescriptorFactory.defaultMarker(couleur));
-        }
-
-        else {
-             options = new MarkerOptions().position(l).title("titre").icon(BitmapDescriptorFactory.defaultMarker(couleur));
-        }
+        options = new MarkerOptions().position(l).title("titre").icon(BitmapDescriptorFactory.defaultMarker(couleur));
         mMap.addMarker(options);
     }
 
@@ -417,55 +409,21 @@ public class Map extends Fragment implements
     }
 
     private void fetchEvents() {
-        Call<EventListDetails> call = RestUser.get().getEventDetailedList();
-        call.enqueue(new Callback<EventListDetails>() {
-            @Override
-            public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
-                if (response.isSuccessful()) {
-                    final EventListDetails r = response.body();
-                    Log.e(TAG, r.getEvents().toString());
-                    tabEventUser.addAll(r.getEvents());
-                    tabEventJO.addAll(r.getEventsJo());
-                    for (EventModel e : tabEventUser) {
-                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN);
-                        //Log.i("marker ", "" + l.latitude);
-                    }
-                } else {
-                    Log.e("REST CALL", "sendRequest not successful");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<EventListDetails> call, Throwable t) {
-                Log.e("REST CALL", t.getMessage());
-            }
-        });
+        tabEventUser.addAll(DataBase.getAppDatabase(getActivity()).eventDao().getAll());
+        Log.i("marker ", "" + tabEventUser.toString());
+        for (EventModel e : tabEventUser) {
+            addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN);
+            //Log.i("marker ", "" + l.latitude);
+        }
     }
 
 
-    private  void fetchContacts() {
-        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
-        call.enqueue(new Callback<ContactListDetails>() {
-            @Override
-            public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
-                if (response.isSuccessful()) {
-                    final ContactListDetails r = response.body();
-                    Log.e(TAG, r.getContacts().toString());
-                    tabContacts.addAll(r.getContacts());
-                    for (ContactModel c : tabContacts) {
-                        addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE);
-                        //Log.i("marker ", "" + l.latitude);
-                    }
-                } else {
-                    Log.e("REST CALL", "sendRequest not successful");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ContactListDetails> call, Throwable t) {
-                Log.e("REST CALL", t.getMessage());
-            }
-        });
+    private void fetchContacts() {
+        tabContacts.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
+        Log.i("marker ", "" + tabContacts.toString());
+        for (ContactModel c : tabContacts) {
+            addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE);
+            //Log.i("marker ", "" + l.latitude);
+        }
     }
-
 }

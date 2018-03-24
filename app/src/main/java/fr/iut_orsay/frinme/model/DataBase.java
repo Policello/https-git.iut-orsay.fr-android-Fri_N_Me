@@ -1,55 +1,34 @@
 package fr.iut_orsay.frinme.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
+import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.List;
+import fr.iut_orsay.frinme.dao.ContactDao;
+import fr.iut_orsay.frinme.dao.EventDao;
 
-/**
- * Created by Martin on 23/03/2018.
- */
+@Database(entities = {EventModel.class, ContactModel.class} , version = 1, exportSchema = false)
+public abstract class DataBase extends RoomDatabase {
 
-public class DataBase {
+    private static DataBase INSTANCE;
 
+    public abstract EventDao eventDao();
+    public abstract ContactDao contactDao();
 
-
-    @SerializedName("id")
-    @Expose
-    private int id;
-
-    @SerializedName("tab")
-    @Expose
-    private List<ContactModel> tabContacts;
-
-    @SerializedName("tabEventJO")
-    @Expose
-    private List<EventModel> tabEventJO;
-
-    @SerializedName("tabEventUser")
-    @Expose
-    private List<EventModel> tabEventUser;;
-
-    @SerializedName("message")
-    @Expose
-    private String message;
-
-    @SerializedName("success")
-    @Expose
-    private Boolean test;
-
-    public List<EventModel> getTabEventUser() {
-
-        return tabEventUser;
+    public static DataBase getAppDatabase(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE =
+                    Room.databaseBuilder(context.getApplicationContext(), DataBase.class, "database")
+                            // allow queries on the main thread.
+                            // Don't do this on a real app! See PersistenceBasicSample for an example.
+                            .allowMainThreadQueries()
+                            .build();
+        }
+        return INSTANCE;
     }
 
-    public List<EventModel> getTabEventJO() {
-
-        return tabEventJO;
-    }
-
-    public List<ContactModel> getTabContact() {
-
-        return tabContacts;
+    public static void destroyInstance() {
+        INSTANCE = null;
     }
 }

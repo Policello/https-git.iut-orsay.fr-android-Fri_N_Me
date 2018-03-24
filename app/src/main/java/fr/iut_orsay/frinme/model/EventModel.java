@@ -1,11 +1,20 @@
 package fr.iut_orsay.frinme.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,29 +22,40 @@ import java.util.List;
 /**
  * Représente un événement et tous ses attributs
  */
+
+@Entity(tableName = "event")
 public class EventModel implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("NumEvenement")
     @Expose
     private int id;
 
+    @ColumnInfo(name = "nom")
     @SerializedName("NomEvenement")
     @Expose
     private String nom;
 
+    @ColumnInfo(name = "type")
     @SerializedName("NomTypeEvenement")
     @Expose
     private String type;
 
+    @ColumnInfo(name = "date")
+    @TypeConverters(Converters.DateConverter.class)
     @SerializedName("DateEvenement")
     @Expose
     private Date date;
 
     private String desc;
 
+    @ColumnInfo(name = "localisation")
+    @TypeConverters(Converters.LocationConverter.class)
     @SerializedName("Localisation")
     @Expose
     private Location coordonnées;
+
+    @Ignore
     private List<ContactModel> participants;
 
     public EventModel(int id) {

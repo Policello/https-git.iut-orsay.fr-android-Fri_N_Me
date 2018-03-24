@@ -22,6 +22,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactComparator;
 import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.Location;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
@@ -89,7 +90,7 @@ public class ListeContact extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        sendRequest(view);
+        testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
         SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
         tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
