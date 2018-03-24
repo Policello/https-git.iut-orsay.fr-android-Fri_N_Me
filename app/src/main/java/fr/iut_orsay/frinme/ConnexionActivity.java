@@ -17,6 +17,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static fr.iut_orsay.frinme.model.DataBase.fetchContacts;
+
 public class ConnexionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText ETmail, ETmdpasse;
@@ -52,6 +54,7 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
                     Toast.makeText(ConnexionActivity.this, r.message, Toast.LENGTH_LONG).show();
                     if (r.isSuccess()) {
                         SessionManagerPreferences.getSettings(getApplicationContext()).login(r.getId());
+                        fetchContacts(getApplicationContext(), SessionManagerPreferences.getSettings(getApplicationContext()).getUsrId());
                         Intent intent = new Intent(ConnexionActivity.this, MainActivity.class);
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
