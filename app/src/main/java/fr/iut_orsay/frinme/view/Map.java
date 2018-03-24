@@ -50,13 +50,8 @@ import java.util.Locale;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.SettingsActivity;
 import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
-import fr.iut_orsay.frinme.rest.RestUser;
-import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
-import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -401,60 +396,20 @@ public class Map extends Fragment implements
     }
 
     private void fetchEvents() {
-        Call<EventListDetails> call = RestUser.get().getEventDetailedList();
-        call.enqueue(new Callback<EventListDetails>() {
-            @Override
-            public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
-                if (response.isSuccessful()) {
-                    final EventListDetails r = response.body();
-                    Log.e(TAG, r.getEvents().toString());
-                    tabEventUser.addAll(r.getEvents());
-                    tabEventJO.addAll(r.getEventsJo());
-                    for (EventModel e : tabEventJO) {
-                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_ORANGE, e.getNom());
-                        //Log.i("marker ", "" + l.latitude);
-                    }
-                    for (EventModel e : tabEventUser) {
-                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_YELLOW, e.getNom());
-                        //Log.i("marker ", "" + l.latitude);
-                    }
-                } else {
-                    Log.e("REST CALL", "sendRequest not successful");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<EventListDetails> call, Throwable t) {
-                Log.e("REST CALL", t.getMessage());
-            }
-        });
+        tabEventUser.addAll(DataBase.getAppDatabase(getActivity()).eventDao().getAll());
+        Log.i("marker ", "" + tabEventUser.toString());
+        for (EventModel e : tabEventUser) {
+            addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN, e.getNom());
+        }
     }
 
 
-    private  void fetchContacts() {
-        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
-        call.enqueue(new Callback<ContactListDetails>() {
-            @Override
-            public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
-                if (response.isSuccessful()) {
-                    final ContactListDetails r = response.body();
-                    Log.e(TAG, r.getContacts().toString());
-                    tabContacts.addAll(r.getContacts());
-                    for (ContactModel c : tabContacts) {
-                        addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_CYAN, c.getPseudo());
-                        //Log.i("marker ", "" + l.latitude);
-                    }
-
-                } else {
-                    Log.e("REST CALL", "sendRequest not successful");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ContactListDetails> call, Throwable t) {
-                Log.e("REST CALL", t.getMessage());
-            }
-        });
+    private void fetchContacts() {
+        tabContacts.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
+        Log.i("marker ", "" + tabContacts.toString());
+        for (ContactModel c : tabContacts) {
+            addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE, c.getPseudo());
+        }
     }
 
     public String getInfoFromLatLng (LatLng l) {
