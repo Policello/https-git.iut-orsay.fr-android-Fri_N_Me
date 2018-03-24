@@ -8,6 +8,7 @@ import android.util.Log;
 
 
 import fr.iut_orsay.frinme.model.DataBase;
+import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
@@ -21,17 +22,27 @@ import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
 
+    private SessionManagerPreferences settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fetchEvents();
-        fetchContacts(MainActivity.getCurrentUserId());
+        settings = SessionManagerPreferences.getSettings(getApplicationContext());
 
-        new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            SplashActivity.this.finish();
-        }, 2000);
+        fetchEvents();
+        if (settings.getUsrId() != -1) {
+            fetchContacts(settings.getUsrId());
+            new Handler().postDelayed(() -> {
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                SplashActivity.this.finish();
+            }, 2000);
+        } else {
+            new Handler().postDelayed(() -> {
+                startActivity(new Intent(SplashActivity.this, ConnexionActivity.class));
+                SplashActivity.this.finish();
+            }, 2000);
+        }
     }
 
     private void fetchEvents() {

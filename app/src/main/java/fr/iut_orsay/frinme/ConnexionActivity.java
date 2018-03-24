@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
 import retrofit2.Call;
@@ -50,8 +51,8 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
                     final Connexion r = response.body();
                     Toast.makeText(ConnexionActivity.this, r.message, Toast.LENGTH_LONG).show();
                     if (r.isSuccess()) {
-                        MainActivity.setCurrentUserId(r.getId());
-                        Intent intent = new Intent(ConnexionActivity.this, SplashActivity.class);
+                        SessionManagerPreferences.getSettings(getApplicationContext()).login(r.getId());
+                        Intent intent = new Intent(ConnexionActivity.this, MainActivity.class);
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     }

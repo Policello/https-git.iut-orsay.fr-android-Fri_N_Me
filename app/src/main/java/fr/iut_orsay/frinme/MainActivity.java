@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.view.Contact;
 import fr.iut_orsay.frinme.view.Event;
 import fr.iut_orsay.frinme.view.EventAdd;
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements
         CREATEUR
     }
 
-    private static int currentUserId = -1;
     public static Status userStatus = Status.EXTERNE;
 
     private boolean isFabOpen = false;
@@ -123,7 +123,17 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.logout:
+                SessionManagerPreferences.getSettings(getApplicationContext()).logout();
+                startActivity(new Intent(MainActivity.this, ConnexionActivity.class));
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
     }
 
     @Override
@@ -208,11 +218,4 @@ public class MainActivity extends AppCompatActivity implements
         fabEvent.animate().translationY(0);
     }
 
-    public static int getCurrentUserId() {
-        return currentUserId;
-    }
-
-    public static void setCurrentUserId(int currentUserId) {
-        MainActivity.currentUserId = currentUserId;
-    }
 }
