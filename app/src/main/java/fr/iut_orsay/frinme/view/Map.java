@@ -288,13 +288,14 @@ public class Map extends Fragment implements
         Log.d(TAG, "" + firstLocationUpdate);
         if (firstLocationUpdate) {
 
-            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("me"));
+            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Me : "+ getInfoFromLatLng(myLoc)));
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             firstLocationUpdate = false;
         } else {
             myLocattionMarker.setPosition(myLoc);
+            myLocattionMarker.setTitle("Me : "+ getInfoFromLatLng(myLoc));
         }
     }
 
@@ -305,37 +306,9 @@ public class Map extends Fragment implements
         handleNewLocation(location);
     }
 
-    public void addMarkerLatLng(LatLng l, float couleur) {
-        Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
+    public void addMarkerLatLng(LatLng l, float couleur, String precision) {
 
-        List<Address> addresses = null;
-        try {
-            addresses = gcd.getFromLocation(l.latitude, l.longitude, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, "pas de résultats");
-        }
-
-        MarkerOptions options;
-        Log.d(TAG, addresses.toString());
-
-        //if (addresses.get(0) != null) {
-            try {
-                Log.d(TAG, addresses.get(0).toString());
-                if (addresses.get(0).getLocality() != null){
-                    options = new MarkerOptions().position(l).title("" + addresses.get(0).getLocality()).icon(BitmapDescriptorFactory.defaultMarker(couleur));
-                }
-                else if (addresses.get(0).getCountryName() != null){
-                    options = new MarkerOptions().position(l).title("" + addresses.get(0).getLocality()).icon(BitmapDescriptorFactory.defaultMarker(couleur));
-                }
-                else {
-                    options = new MarkerOptions().position(l).title("No info").icon(BitmapDescriptorFactory.defaultMarker(couleur));
-                }
-            }
-            catch (IndexOutOfBoundsException e) {
-                options = new MarkerOptions().position(l).title("No info").icon(BitmapDescriptorFactory.defaultMarker(couleur));
-        }
-        mMap.addMarker(options);
+        mMap.addMarker(new MarkerOptions().position(l).title(precision + " : " + getInfoFromLatLng(l)).icon(BitmapDescriptorFactory.defaultMarker(couleur)));
     }
 
 
@@ -437,8 +410,12 @@ public class Map extends Fragment implements
                     Log.e(TAG, r.getEvents().toString());
                     tabEventUser.addAll(r.getEvents());
                     tabEventJO.addAll(r.getEventsJo());
+                    for (EventModel e : tabEventJO) {
+                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_ORANGE, e.getNom());
+                        //Log.i("marker ", "" + l.latitude);
+                    }
                     for (EventModel e : tabEventUser) {
-                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN);
+                        addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_YELLOW, e.getNom());
                         //Log.i("marker ", "" + l.latitude);
                     }
                 } else {
@@ -464,9 +441,10 @@ public class Map extends Fragment implements
                     Log.e(TAG, r.getContacts().toString());
                     tabContacts.addAll(r.getContacts());
                     for (ContactModel c : tabContacts) {
-                        addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE);
+                        addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_CYAN, c.getPseudo());
                         //Log.i("marker ", "" + l.latitude);
                     }
+
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }
@@ -477,6 +455,38 @@ public class Map extends Fragment implements
                 Log.e("REST CALL", t.getMessage());
             }
         });
+    }
+
+    public String getInfoFromLatLng (LatLng l) {
+        Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
+
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(l.latitude, l.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "pas de résultats");
+        }
+
+        String lieu;
+
+        try {
+            Log.d(TAG, addresses.get(0).toString());
+            if (addresses.get(0).getLocality() != null){
+                lieu = addresses.get(0).getLocality();
+            }
+            else if (addresses.get(0).getCountryName() != null) {
+                lieu = addresses.get(0).getCountryName();
+            }
+            else {
+                lieu = "No info";
+            }
+        }
+        catch (IndexOutOfBoundsException e) {
+            lieu = "No info";
+        }
+
+        return lieu;
     }
 
 }
