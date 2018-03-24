@@ -99,7 +99,6 @@ public class Event extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.topbar, menu);
         menu.add(0, 200, 0, "JoinEvent").setIcon(R.drawable.ic_add_black_24dp)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onCreateOptionsMenu(menu,inflater);
