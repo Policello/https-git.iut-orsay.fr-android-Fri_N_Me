@@ -81,7 +81,8 @@
         android:text="Confirmer"
         android:textSize="18sp" />
 
-    <TextView
+    <Button
+        android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/register_btn_sure"
@@ -90,6 +91,7 @@
         android:layout_marginTop="15dp"
         android:textColor="#FFFFFF"
         android:text="ANNULER"
+        android:background="@android:color/transparent"
         android:textSize="18sp"
         android:textStyle="bold" />
 

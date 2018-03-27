@@ -22,7 +22,7 @@ import static fr.iut_orsay.frinme.model.DataBase.fetchContacts;
 public class ConnexionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText ETmail, ETmdpasse;
-    private Button btnValider;
+    private Button btnValider, btnInscription;
 
     private String mail;
     private String mdpasse;
@@ -34,11 +34,13 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
 
         //récupérer le bouton et l'editText
         btnValider = findViewById(R.id.btnValider);
+        btnInscription = findViewById(R.id.btnInscript);
         ETmail = findViewById(R.id.mail);
         ETmdpasse = findViewById(R.id.mdpasse);
 
-        //écouteurs sur le bouton
+        //écouteurs sur les boutons
         btnValider.setOnClickListener(this);
+        btnInscription.setOnClickListener(this);
     }
 
     //méthode faisant le travail de récupération des données JSON
@@ -86,6 +88,8 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
             } else {
                 Toast.makeText(ConnexionActivity.this, "Veuillez saisir vos informations.", Toast.LENGTH_LONG).show();
             }
+        } else if (v.getId() == R.id.btnInscript) {
+            startActivity(new Intent(ConnexionActivity.this, InscriptionActivity.class));
         }
     }
 }
