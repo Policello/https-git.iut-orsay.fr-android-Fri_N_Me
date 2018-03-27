@@ -33,7 +33,7 @@ public interface RestService {
     Call<DeleteContact> getDeleteFriend(@Field("idUser") int idUser, @Field("idUserDeleted") int idUserDeleted);
 
     @FormUrlEncoded
-    @POST("contact/deleteContact.php")
+    @POST("contact/addContact.php")
     Call<AddContact> getAddFriend(@Field("idUser") int idUser, @Field("idUserAdded") int idUserAdded);
     //
 }
