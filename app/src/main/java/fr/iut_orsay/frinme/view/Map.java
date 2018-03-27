@@ -66,6 +66,7 @@ public class Map extends Fragment implements
 
    TextView dialog_msg, dialog_title, dialog_ok;
     Dialog dialog;
+
     View view;
 
     private Location location;
@@ -127,7 +128,7 @@ public class Map extends Fragment implements
 
     private View mInfoWindowContent = null;
   //  public void showDialog(String  content) {
-        public void getmInfoWindowContent(Marker marker){
+        public void getmInfoWindowContent(Marker marker, ){
 
             if(mInfoWindowContent==null){
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
