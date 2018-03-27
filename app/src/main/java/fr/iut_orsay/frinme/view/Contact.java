@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.codecrafters.tableview.SortableTableView;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
@@ -26,6 +27,8 @@ import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.DeleteContact;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.http.DELETE;
 
 import android.view.Menu;
@@ -34,6 +37,7 @@ import android.view.MenuItem;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * Vue des détails de contacts
@@ -112,7 +116,23 @@ public class Contact extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 100:
-                Call<DeleteContact> supprimerContact = RestUser.get().getDeleteFriend(2,2);
+                Call<DeleteContact> call = RestUser.get().getDeleteFriend(2,2);
+                call.enqueue(new Callback<DeleteContact>() {
+                    @Override
+                    public void onResponse(Call<DeleteContact> call, Response<DeleteContact> response) {
+                        if (response.isSuccessful()) {
+                            final DeleteContact r = response.body();
+                            Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Log.e("REST CALL", "sendRequest not successful");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DeleteContact> call, Throwable t) {
+                        Log.e("REST CALL", t.getMessage());
+                    }
+                });
                 return true;
             case 200:
                 Call<AddContact> ajouterContact = RestUser.get().getAddFriend(2,2);
