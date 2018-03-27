@@ -3,6 +3,7 @@ package fr.iut_orsay.frinme.view;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,9 +21,12 @@ import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.RestUser;
+import fr.iut_orsay.frinme.rest.pojo.AddContact;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
+import fr.iut_orsay.frinme.rest.pojo.DeleteContact;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -94,11 +98,9 @@ public class Contact extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.topbar, menu);
         Call<EstAmi> call = RestUser.get().getEstAmi(23,23);
-
-
         boolean ami = false;
         if (ami == true) {
-            menu.add(0, 200, 0, "Supprimer un ami").setIcon(R.drawable.ic_close_black_24dp)
+            menu.add(0, 100, 0, "Supprimer un ami").setIcon(R.drawable.ic_close_black_24dp)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         } else if (ami == false) {
             menu.add(0, 200, 0, "Ajouter un ami").setIcon(R.drawable.ic_person_add_black_24dp)
@@ -106,4 +108,18 @@ public class Contact extends Fragment {
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 100:
+                Call<DeleteContact> supprimerContact = RestUser.get().getDeleteFriend(2,2);
+                return true;
+            case 200:
+                Call<AddContact> ajouterContact = RestUser.get().getAddFriend(2,2);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }
