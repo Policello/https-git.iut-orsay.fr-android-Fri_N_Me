@@ -1,8 +1,11 @@
 package fr.iut_orsay.frinme;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -125,8 +128,21 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
-                SessionManagerPreferences.getSettings(getApplicationContext()).logout();
-                startActivity(new Intent(MainActivity.this, ConnexionActivity.class));
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("Deconnexion");
+                alertDialog.setMessage("Voulez-vous vraiment vous déconnecter?");
+                alertDialog.setButton(Dialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SessionManagerPreferences.getSettings(getApplicationContext()).logout();
+                        startActivity(new Intent(MainActivity.this, ConnexionActivity.class));
+                    }
+                });
+                alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Annuler", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Annulé
+                    }
+                });
+                alertDialog.show();
                 return true;
 
             default:
