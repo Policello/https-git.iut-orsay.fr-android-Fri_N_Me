@@ -41,7 +41,7 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter{
         dialog_title = (TextView)view.findViewById(R.id.dialog_title);
         dialog_ok = (TextView) view.findViewById(R.id.dialog_ok);
         dialog_title.setText("information");
-        dialog_msg.setText();
+        //dialog_msg.setText();
         dialog_ok.setText("voir les details");
 
 

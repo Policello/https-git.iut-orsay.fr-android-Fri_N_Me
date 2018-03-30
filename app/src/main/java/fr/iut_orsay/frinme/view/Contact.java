@@ -107,7 +107,7 @@ public class Contact extends Fragment {
                                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                     }
                 } else {
-                    Log.e("REST CALL", "sendRequest not successful");
+                    Log.e("REST CALL", "sendRequest not successful Contact");
                 }
             }
             @Override
@@ -129,6 +129,7 @@ public class Contact extends Fragment {
                     public void onResponse(Call<DeleteContact> call, Response<DeleteContact> response) {
                         if (response.isSuccessful()) {
                             final DeleteContact r = response.body();
+                            getActivity().invalidateOptionsMenu();
                             Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
                             Log.e("REST CALL", "sendRequest not successful");
@@ -148,6 +149,7 @@ public class Contact extends Fragment {
                     public void onResponse(Call<AddContact> call, Response<AddContact> response) {
                         if (response.isSuccessful()) {
                             final AddContact r = response.body();
+                            getActivity().invalidateOptionsMenu();
                             Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
                             Log.e("REST CALL", "sendRequest not successful");

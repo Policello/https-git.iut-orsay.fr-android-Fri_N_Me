@@ -25,7 +25,7 @@ public interface RestService {
     Call<ContactListDetails> getContactDetailedList(@Field("idUser") int idUser);
 
     @FormUrlEncoded
-    @POST("contact/estAmi.php")
+    @POST("user/estAmi.php")
     Call<EstAmi> getEstAmi(@Field("idUser") int idUser, @Field("idFriend") int idFriend);
 
     @FormUrlEncoded
