@@ -13,31 +13,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.codecrafters.tableview.SortableTableView;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.AddContact;
-import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.DeleteContact;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.DELETE;
 
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 /**
  * Vue des détails de contacts
@@ -51,11 +42,11 @@ public class Contact extends Fragment {
     private ContactModel contactRecu;
     private boolean defaultValues = false;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -97,27 +88,43 @@ public class Contact extends Fragment {
                 .commit());
 
     }
-//
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.topbar, menu);
-        Call<EstAmi> call = RestUser.get().getEstAmi(23,23);
-        boolean ami = false;
-        if (ami == true) {
-            menu.add(0, 100, 0, "Supprimer un ami").setIcon(R.drawable.ic_close_black_24dp)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        } else if (ami == false) {
-            menu.add(0, 200, 0, "Ajouter un ami").setIcon(R.drawable.ic_person_add_black_24dp)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        }
+        Call<EstAmi> call = RestUser.get().getEstAmi(23, 20);
+        call.enqueue(new Callback<EstAmi>() {
+            @Override
+            public void onResponse(Call<EstAmi> call, Response<EstAmi> response) {
+                if (response.isSuccessful()) {
+                    final EstAmi r = response.body();
+                    Toast.makeText(getActivity(), r.getMessage() + "", Toast.LENGTH_LONG).show();
+                    boolean ami = r.getMessage();
+                    if (ami) {
+                        menu.add(0, 100, 0, "Supprimer un ami").setIcon(R.drawable.ic_close_black_24dp)
+                                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    } else if (!ami) {
+                        menu.add(0, 200, 0, "Ajouter un ami").setIcon(R.drawable.ic_person_add_black_24dp)
+                                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                    }
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful");
+                }
+            }
+            @Override
+            public void onFailure(Call<EstAmi> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
+
         super.onCreateOptionsMenu(menu, inflater);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 100:
-                Call<DeleteContact> call = RestUser.get().getDeleteFriend(2,2);
-                call.enqueue(new Callback<DeleteContact>() {
+                Call<DeleteContact> callDel = RestUser.get().getDeleteFriend(23, 20);
+                callDel.enqueue(new Callback<DeleteContact>() {
                     @Override
                     public void onResponse(Call<DeleteContact> call, Response<DeleteContact> response) {
                         if (response.isSuccessful()) {
@@ -135,7 +142,23 @@ public class Contact extends Fragment {
                 });
                 return true;
             case 200:
-                Call<AddContact> ajouterContact = RestUser.get().getAddFriend(2,2);
+                Call<AddContact> callAdd = RestUser.get().getAddFriend(23, 20);
+                callAdd.enqueue(new Callback<AddContact>() {
+                    @Override
+                    public void onResponse(Call<AddContact> call, Response<AddContact> response) {
+                        if (response.isSuccessful()) {
+                            final AddContact r = response.body();
+                            Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Log.e("REST CALL", "sendRequest not successful");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AddContact> call, Throwable t) {
+                        Log.e("REST CALL", t.getMessage());
+                    }
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
