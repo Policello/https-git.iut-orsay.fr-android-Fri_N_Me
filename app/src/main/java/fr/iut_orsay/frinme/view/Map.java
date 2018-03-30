@@ -52,6 +52,7 @@ import fr.iut_orsay.frinme.SettingsActivity;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
+import fr.iut_orsay.frinme.model.InfoWindowData;
 
 
 /**
@@ -131,6 +132,10 @@ public class Map extends Fragment implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         Log.d(TAG, "onmapready");
+
+        CustomInfoWindowGoogleMap dialog = new CustomInfoWindowGoogleMap(this.getActivity());
+        mMap.setInfoWindowAdapter(dialog);
+
         //Placer les autres marqueurs
 
 
@@ -283,9 +288,11 @@ public class Map extends Fragment implements
         Log.d(TAG, "" + firstLocationUpdate);
         if (firstLocationUpdate) {
 
-            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Me : "+ getInfoFromLatLng(myLoc)));
+            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Me ").snippet(getInfoFromLatLng(myLoc)));
 
+            myLocattionMarker.setTag(new InfoWindowData(new ContactModel("Me")));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
+
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             firstLocationUpdate = false;
         } else {
@@ -301,9 +308,10 @@ public class Map extends Fragment implements
         handleNewLocation(location);
     }
 
-    public void addMarkerLatLng(LatLng l, float couleur, String precision) {
-
-        mMap.addMarker(new MarkerOptions().position(l).title(precision + " : " + getInfoFromLatLng(l)).icon(BitmapDescriptorFactory.defaultMarker(couleur)));
+    public void addMarkerLatLng(LatLng l, float couleur, String precision, Object o) {
+        InfoWindowData info = new InfoWindowData(o);
+        Marker m = mMap.addMarker(new MarkerOptions().position(l).title(precision).snippet(getInfoFromLatLng(l)).icon(BitmapDescriptorFactory.defaultMarker(couleur)));
+        m.setTag(info);
     }
 
 
@@ -399,7 +407,8 @@ public class Map extends Fragment implements
         tabEventUser.addAll(DataBase.getAppDatabase(getActivity()).eventDao().getAll());
         Log.i("marker ", "" + tabEventUser.toString());
         for (EventModel e : tabEventUser) {
-            addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN, e.getNom());
+            Log.e(TAG, e.getNom());
+            addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN, e.getNom(), e);
         }
     }
 
@@ -408,7 +417,8 @@ public class Map extends Fragment implements
         tabContacts.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
         Log.i("marker ", "" + tabContacts.toString());
         for (ContactModel c : tabContacts) {
-            addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE, c.getPseudo());
+            addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE, c.getPseudo(), c);
+
         }
     }
 
