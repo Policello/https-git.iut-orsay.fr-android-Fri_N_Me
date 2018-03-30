@@ -21,6 +21,7 @@ import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.model.AbstractEvent;
 import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
@@ -34,7 +35,7 @@ import retrofit2.Response;
 public class EventList extends Fragment {
 
     // Liste d'événements
-    List<EventModel> events;
+    List<AbstractEvent> events;
     // Nom les colonnes du tableau
     private static final String[] TABLE_HEADERS = {"Nom", "Type", "Date", "Coordonnées"};
 
@@ -60,6 +61,7 @@ public class EventList extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         events.addAll(DataBase.getAppDatabase(getActivity()).eventDao().getAll());
+        events.addAll(DataBase.getAppDatabase(getActivity()).eventJoDao().getAll());
         SortableTableView tableView = (SortableTableView) view.findViewById(R.id.tableView);
         // Tableau de 4 colonnes
         tableView.setColumnCount(4);
@@ -76,15 +78,15 @@ public class EventList extends Fragment {
         tableView.setColumnComparator(3, EventComparator.getEventLocComparator());
     }
 
-    private class EventTableAdaptater extends TableDataAdapter<EventModel> {
+    private class EventTableAdaptater extends TableDataAdapter<AbstractEvent> {
 
-        EventTableAdaptater(Context context, List<EventModel> data) {
+        EventTableAdaptater(Context context, List<AbstractEvent> data) {
             super(context, data);
         }
 
         @Override
         public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-            EventModel evt = getRowData(rowIndex);
+            AbstractEvent evt = getRowData(rowIndex);
             View renderedView = null;
 
             switch (columnIndex) {
@@ -119,11 +121,17 @@ public class EventList extends Fragment {
 
     }
 
-    private class EventClickListener implements TableDataClickListener<EventModel> {
+    private class EventClickListener implements TableDataClickListener<AbstractEvent> {
         @Override
-        public void onDataClicked(int rowIndex, EventModel event) {
+        public void onDataClicked(int rowIndex, AbstractEvent event) {
             Bundle args = new Bundle();
-            args.putParcelable("event", events.get(rowIndex));
+
+            AbstractEvent evt = events.get(rowIndex);
+            if (evt instanceof EventModel) {
+                args.putParcelable("event", events.get(rowIndex));
+            } else {
+                args.putParcelable("event", events.get(rowIndex));
+            }
             Event EventFrag = new Event();
             EventFrag.setArguments(args);
             getActivity().getFragmentManager().beginTransaction()

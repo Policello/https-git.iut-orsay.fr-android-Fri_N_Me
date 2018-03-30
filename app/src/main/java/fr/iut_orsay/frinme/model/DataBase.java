@@ -8,18 +8,20 @@ import android.util.Log;
 
 import fr.iut_orsay.frinme.dao.ContactDao;
 import fr.iut_orsay.frinme.dao.EventDao;
+import fr.iut_orsay.frinme.dao.EventJoDao;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import retrofit2.Call;
 import retrofit2.Response;
 
-@Database(entities = {EventModel.class, ContactModel.class} , version = 1, exportSchema = false)
+@Database(entities = {EventModel.class, EventJoModel.class, ContactModel.class} , version = 1, exportSchema = false)
 public abstract class DataBase extends RoomDatabase {
 
     private static DataBase INSTANCE;
 
     public abstract EventDao eventDao();
+    public abstract EventJoDao eventJoDao();
     public abstract ContactDao contactDao();
 
     public static DataBase getAppDatabase(Context context) {
@@ -48,6 +50,10 @@ public abstract class DataBase extends RoomDatabase {
                     if (response.body().getEvents().size() != DataBase.getAppDatabase(c).eventDao().countEvents()) {
                         DataBase.getAppDatabase(c).eventDao().deleteAll();
                         DataBase.getAppDatabase(c).eventDao().insertAll(r.getEvents());
+                    }
+                    if (response.body().getEventsJo().size() != DataBase.getAppDatabase(c).eventJoDao().countEvents()) {
+                        DataBase.getAppDatabase(c).eventJoDao().deleteAll();
+                        DataBase.getAppDatabase(c).eventJoDao().insertAll(r.getEventsJo());
                     }
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");

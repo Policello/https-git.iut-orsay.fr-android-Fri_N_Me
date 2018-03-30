@@ -4,27 +4,23 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Représente un événement et tous ses attributs
+ * Représente un événement des Jo et tous ses attributs
  */
 
-@Entity(tableName = "event")
-public class EventModel implements Parcelable, AbstractEvent {
+@Entity(tableName = "eventJo")
+public class EventJoModel implements Parcelable, AbstractEvent {
 
     @PrimaryKey(autoGenerate = true)
     @SerializedName("NumEvenement")
@@ -37,7 +33,7 @@ public class EventModel implements Parcelable, AbstractEvent {
     private String nom;
 
     @ColumnInfo(name = "type")
-    @SerializedName("NomTypeEvenement")
+    @SerializedName("NomTypeEvenemen")
     @Expose
     private String type;
 
@@ -58,12 +54,12 @@ public class EventModel implements Parcelable, AbstractEvent {
     @Ignore
     private List<ContactModel> participants;
 
-    public EventModel(int id) {
+    public EventJoModel(int id) {
         this.id = id;
         //TODO: Récupérer les infos manquantes depuis le serveur
     }
 
-    public EventModel(String nom, String type, Date date, String desc, Location coord) {
+    public EventJoModel(String nom, String type, Date date, String desc, Location coord) {
         this.nom = nom;
         this.type = type;
         this.date = date;
@@ -72,7 +68,7 @@ public class EventModel implements Parcelable, AbstractEvent {
         this.participants = new ArrayList<>();
     }
 
-    public EventModel(String nom, String type, Date date, String desc, Location coord, ArrayList<ContactModel> participants) {
+    public EventJoModel(String nom, String type, Date date, String desc, Location coord, ArrayList<ContactModel> participants) {
         this.nom = nom;
         this.type = type;
         this.date = date;
@@ -159,18 +155,18 @@ public class EventModel implements Parcelable, AbstractEvent {
         out.writeTypedList(participants);
     }
 
-    public static final Parcelable.Creator<EventModel> CREATOR
-            = new Parcelable.Creator<EventModel>() {
-        public EventModel createFromParcel(Parcel in) {
-            return new EventModel(in);
+    public static final Parcelable.Creator<EventJoModel> CREATOR
+            = new Parcelable.Creator<EventJoModel>() {
+        public EventJoModel createFromParcel(Parcel in) {
+            return new EventJoModel(in);
         }
 
-        public EventModel[] newArray(int size) {
-            return new EventModel[size];
+        public EventJoModel[] newArray(int size) {
+            return new EventJoModel[size];
         }
     };
 
-    private EventModel(Parcel in) {
+    private EventJoModel(Parcel in) {
         id = in.readInt();
         nom = in.readString();
         type = in.readString();

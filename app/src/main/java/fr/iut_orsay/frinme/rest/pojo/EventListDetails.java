@@ -5,13 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import fr.iut_orsay.frinme.model.EventJoModel;
 import fr.iut_orsay.frinme.model.EventModel;
 
 public class EventListDetails {
 
     @SerializedName("tabEventJO")
     @Expose
-    private List<EventModel> eventsJo;
+    private List<EventJoModel> eventsJo;
 
     @SerializedName("tabEventUser")
     @Expose
@@ -21,7 +22,7 @@ public class EventListDetails {
     @Expose
     private String message;
 
-    public List<EventModel> getEventsJo() {
+    public List<EventJoModel> getEventsJo() {
         return eventsJo;
     }
 
