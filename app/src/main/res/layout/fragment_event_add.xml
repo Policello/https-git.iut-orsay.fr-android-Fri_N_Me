@@ -1,13 +1,63 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="fr.iut_orsay.frinme.view.EventAdd">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <EditText
+        android:id="@+id/editText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Test" />
+        android:layout_height="60dp"
+        android:hint="Entrez le nom d'evenement" />
 
-</FrameLayout>
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/editText"
+        android:background="@android:color/white">
+    </Spinner>
+
+
+    <EditText
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/spinner1"
+        android:layout_weight="1"
+        android:hint="Choisir la date" />
+
+
+    <EditText
+        android:id="@+id/timePicker"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/datePicker"
+        android:hint="Choissisez l'heure" />
+
+
+    <EditText
+        android:id="@+id/des"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/timePicker"
+        android:gravity="top"
+        android:hint="Entrez un descriptif"
+        android:lineSpacingMultiplier="1.5"
+        android:maxEms="120"
+        android:singleLine="false" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:text="Ajouter"
+        android:layout_alignParentBottom="true" />
+
+
+</RelativeLayout>
