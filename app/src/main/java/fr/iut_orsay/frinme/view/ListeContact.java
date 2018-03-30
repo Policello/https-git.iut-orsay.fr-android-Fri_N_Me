@@ -4,11 +4,14 @@ import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,11 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactComparator;
 import fr.iut_orsay.frinme.model.ContactModel;
-import fr.iut_orsay.frinme.model.DataBase;
+import fr.iut_orsay.frinme.rest.RestUser;
+import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by yyang5 on 13/03/2018.
@@ -30,6 +37,7 @@ public class ListeContact extends Fragment {
 
     List<ContactModel> testContact;
     private static final String[] TABLE_HEADERS = {"Pseudo"};
+    SearchView sv;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -76,8 +84,24 @@ public class ListeContact extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        testContact.clear();
-        testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
+        sendRequest(view);
+        sv = (SearchView) view.findViewById(R.id.SearchListeContact);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            //Inutile
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Toast.makeText(getActivity(), "OnQueryTextSubmit", Toast.LENGTH_LONG).show();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Toast.makeText(getActivity(), "OnQueryTextChange", Toast.LENGTH_LONG).show();
+
+                return false;
+            }
+        });
         SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
         tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
@@ -95,9 +119,59 @@ public class ListeContact extends Fragment {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
                             android.R.animator.fade_in, android.R.animator.fade_out)
-                    .replace(R.id.fragment_container, EventContact)
+                    .add(R.id.fragment_container, EventContact)
+                    .hide(ListeContact.this)
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    //
+    private void sendRequest(View v) {
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
+        call.enqueue(new Callback<ContactListDetails>() {
+            @Override
+            public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
+                if (response.isSuccessful()) {
+                    final ContactListDetails r = response.body();
+                    Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                    testContact.addAll(r.getContacts());
+                    SortableTableView tableView = (SortableTableView) v.findViewById(R.id.ListeContact);
+                    tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
+                    Log.e("REST CALL", testContact.toString());
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful listeContact");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContactListDetails> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
+    }
+
+    private void sendRequestDyna(View v) {
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
+        call.enqueue(new Callback<ContactListDetails>() {
+            @Override
+            public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
+                if (response.isSuccessful()) {
+                    final ContactListDetails r = response.body();
+                    Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                    testContact.addAll(r.getContacts());
+                    SortableTableView tableView = (SortableTableView) v.findViewById(R.id.ListeContact);
+                    tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
+                    Log.e("REST CALL", testContact.toString());
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful listeContact");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContactListDetails> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
     }
 }
