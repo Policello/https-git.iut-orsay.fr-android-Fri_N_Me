@@ -1,6 +1,7 @@
 package fr.iut_orsay.frinme.rest;
 
 import fr.iut_orsay.frinme.rest.pojo.AddContact;
+import fr.iut_orsay.frinme.rest.pojo.Categories;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
 import fr.iut_orsay.frinme.rest.pojo.DeleteContact;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
@@ -16,6 +17,9 @@ public interface RestService {
 
     @POST("event/listEventsSort/")
     Call<EventListDetails> getEventDetailedList();
+
+    @POST("event/listTypesActivites.php")
+    Call<Categories> getTypeActivities();
 
     @FormUrlEncoded
     @POST("event/listEventsMapDetails/")
