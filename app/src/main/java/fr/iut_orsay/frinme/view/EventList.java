@@ -123,8 +123,7 @@ public class EventList extends Fragment {
             getActivity().getFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
                             android.R.animator.fade_in, android.R.animator.fade_out)
-                    .add(R.id.fragment_container, EventFrag)
-                    .hide(EventList.this)
+                    .replace(R.id.fragment_container, EventFrag)
                     .addToBackStack(null)
                     .commit();
         }

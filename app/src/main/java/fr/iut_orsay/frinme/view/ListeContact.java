@@ -95,8 +95,7 @@ public class ListeContact extends Fragment {
             getActivity().getFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
                             android.R.animator.fade_in, android.R.animator.fade_out)
-                    .add(R.id.fragment_container, EventContact)
-                    .hide(ListeContact.this)
+                    .replace(R.id.fragment_container, EventContact)
                     .addToBackStack(null)
                     .commit();
         }
