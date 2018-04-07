@@ -8,7 +8,7 @@
          android:startColor="#CCCCCC" /> -->
     <!-- 设置圆角矩形 -->
     <corners
-        android:radius="30dp"
+        android:radius="40dp"
         android:topLeftRadius="40dp"
         android:topRightRadius="40dp"
         android:bottomLeftRadius="40dp"
