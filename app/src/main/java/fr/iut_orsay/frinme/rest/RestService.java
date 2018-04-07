@@ -1,5 +1,7 @@
 package fr.iut_orsay.frinme.rest;
 
+import java.util.Date;
+
 import fr.iut_orsay.frinme.rest.pojo.Categories;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
@@ -22,7 +24,12 @@ public interface RestService {
 
     @FormUrlEncoded
     @POST("event/addEvent.php")
-    Call<Message> addEvent();
+    Call<Message> addEvent(@Field("capaciteEvent") int capaciteEvent, @Field("heure") String heure,
+                           @Field("dateEvent") String dateEvent, @Field("NumUtilisateur") int NumUtilisateur,
+                           @Field("latitude") long latitude, @Field("longitude") long longitude,
+                           @Field("commentaireLieu") String commentaireLieu,
+                           @Field("nomTypeEvenement") String nomTypeEvenement,
+                           @Field("nomEvenement") String nomEvenement);
 
     @FormUrlEncoded
     @POST("event/listEventsMapDetails/")

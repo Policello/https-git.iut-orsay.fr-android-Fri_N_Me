@@ -5,28 +5,37 @@
     tools:context="fr.iut_orsay.frinme.view.EventAdd">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/eventName"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:hint="Entrez le nom d'evenement" />
+        android:hint="Entrez le nom de l'evenement" />
 
 
     <Spinner
         android:id="@+id/catPicker"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_below="@+id/editText"
-        android:background="@android:color/white">
+        android:layout_below="@+id/eventName"
+        android:hint="Choissez la catégorie de l'evenement" >
     </Spinner>
+
+    <Spinner
+        android:id="@+id/nbPersPicker"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/catPicker"
+        android:hint="Choisissez le nb de pers de l'evenement" >
+    </Spinner>
+
 
 
     <EditText
         android:id="@+id/datePicker"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_below="@+id/catPicker"
+        android:layout_below="@+id/nbPersPicker"
         android:layout_weight="1"
-        android:hint="Choisir la date" />
+        android:hint="Choisir la date de l'evenement" />
 
 
     <EditText
@@ -34,16 +43,14 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/datePicker"
-        android:hint="Choissisez l'heure" />
+        android:hint="Choissisez l'heure de l'evenement" />
 
 
     <EditText
         android:id="@+id/des"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/timePicker"
         android:gravity="top"
@@ -53,6 +60,7 @@
         android:singleLine="false" />
 
     <Button
+        android:id="@+id/validEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"

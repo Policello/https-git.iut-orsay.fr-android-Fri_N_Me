@@ -10,19 +10,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.Categories;
+import fr.iut_orsay.frinme.rest.pojo.Message;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -33,6 +43,7 @@ public class EventAdd extends Fragment {
 
     private EditText date_picker;
     private EditText time_picker;
+    private Button validEvent;
     private int mYear, mMonth, mDay;
     private int mHour, mMin;
     private List<String> categories;
@@ -51,6 +62,20 @@ public class EventAdd extends Fragment {
         categories = new ArrayList<>();
 
         getCategories();
+
+        List<Integer> nbChoices = new ArrayList<>();
+        for (int i = 1; i < 100; ++i) {
+            nbChoices.add(i);
+        }
+
+        Spinner nbPersPicker = v.findViewById(R.id.nbPersPicker);
+        final ArrayAdapter<Integer> aa = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_list_item_1, nbChoices);
+        nbPersPicker.setAdapter(aa);
+        nbPersPicker.setSelection(0); // éviter null pointer
+
+        validEvent = v.findViewById(R.id.validEvent);
+        validEvent.setOnClickListener(view -> addEvent());
 
         date_picker = v.findViewById(R.id.datePicker);
         date_picker.setOnClickListener(view -> {
@@ -110,6 +135,7 @@ public class EventAdd extends Fragment {
                     final ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(),
                             android.R.layout.simple_list_item_1, categories);
                     catPicker.setAdapter(aa);
+                    catPicker.setSelection(0); // éviter null pointer
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }
@@ -120,5 +146,38 @@ public class EventAdd extends Fragment {
                 Log.e("REST CALL", t.getMessage());
             }
         });
+    }
+
+    private void addEvent() {
+        String nom = ((EditText) Objects.requireNonNull(getView()).findViewById(R.id.eventName)).getText().toString();
+        String category = ((Spinner) getView().findViewById(R.id.catPicker)).getSelectedItem().toString();
+        int nbPers = (Integer) ((Spinner) getView().findViewById(R.id.nbPersPicker)).getSelectedItem();
+        String commentaire = ((EditText) getView().findViewById(R.id.des)).getText().toString();
+
+        if (nom.matches("\\s*") || category.matches("\\s*") || commentaire.matches("\\s*")) {
+            Toast.makeText(getActivity(), "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
+        } else {
+            Call<Message> call = RestUser.get().addEvent(nbPers,
+                    DateFormat.getTimeInstance().format(Calendar.getInstance().getTime()),
+                    DateFormat.getDateInstance().format(Calendar.getInstance().getTime()),
+                    SessionManagerPreferences.getSettings(getActivity()).getUsrId(),
+                    0, 0, commentaire, category, nom);
+            call.enqueue(new retrofit2.Callback<Message>() {
+                @Override
+                public void onResponse(Call<Message> call, Response<Message> response) {
+                    final Message r = response.body();
+                    if (r != null && response.isSuccessful()) {
+                        Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Log.e("REST CALL", "sendRequest not successful");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Message> call, Throwable t) {
+                    Log.e("REST CALL", t.getMessage());
+                }
+            });
+        }
     }
 }
