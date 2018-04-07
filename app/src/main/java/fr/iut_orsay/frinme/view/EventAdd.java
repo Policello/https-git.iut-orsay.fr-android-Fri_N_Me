@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+import es.dmoral.toasty.Toasty;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
@@ -155,7 +156,7 @@ public class EventAdd extends Fragment {
         String commentaire = ((EditText) getView().findViewById(R.id.des)).getText().toString();
 
         if (nom.matches("\\s*") || category.matches("\\s*") || commentaire.matches("\\s*")) {
-            Toast.makeText(getActivity(), "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
+            Toasty.warning(getActivity(), "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
         } else {
             Call<Message> call = RestUser.get().addEvent(nbPers,
                     DateFormat.getTimeInstance().format(Calendar.getInstance().getTime()),
@@ -167,7 +168,7 @@ public class EventAdd extends Fragment {
                 public void onResponse(Call<Message> call, Response<Message> response) {
                     final Message r = response.body();
                     if (r != null && response.isSuccessful()) {
-                        Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                        Toasty.success(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                     } else {
                         Log.e("REST CALL", "sendRequest not successful");
                     }
