@@ -4,21 +4,24 @@
     android:background="#00000000" >
 
     <RelativeLayout
-        android:id="@+id/rl_dialog_content"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/edit_stylenew"
-        android:padding="8dp" >
 
+        android:id="@+id/rl_dialog_content"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:background="@drawable/edit_style"
+        android:padding="8dp" >
 
         <TextView
             android:id="@+id/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="15dp"
+            android:background="#fa7342"
             android:gravity="center"
-            android:textColor="#ffffff"
             android:text="infomation"
-            android:background="#123834"
+            android:textColor="#e6b5dd"
             android:textSize="18sp" />
 
 
@@ -31,7 +34,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="68dp"
             android:gravity="center"
-            android:maxLines="3"
+            android:maxLines="4"
             android:text="infomation"
             android:textSize="18sp" />
 
@@ -51,7 +54,7 @@
                 android:textSize="18sp"
                 android:textColor="#ffffff"
                 android:gravity="center"
-                android:background="#6495ED"
+                android:background="#ed8664"
                 />
 
         </LinearLayout>
@@ -73,6 +76,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="45dp"
             android:text="TextView" />
+
     </RelativeLayout>
 
 </RelativeLayout>
