@@ -66,18 +66,14 @@ public class JoinFrag extends DialogFragment {
         getDialog().setTitle("Rejoindre l'événement");
         Button btnValider = (Button) rootView.findViewById(R.id.btnValider);
         Button btnAnnuler = (Button) rootView.findViewById(R.id.btnAnnuler);
-        btnValider.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onButtonPressed(1);
-                dismiss();
-            }
+        btnValider.setOnClickListener(v -> {
+            onButtonPressed(1);
+            dismiss();
         });
 
-        btnAnnuler.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onButtonPressed(0);
-                dismiss();
-            }
+        btnAnnuler.setOnClickListener(v -> {
+            onButtonPressed(0);
+            dismiss();
         });
 
         return rootView;

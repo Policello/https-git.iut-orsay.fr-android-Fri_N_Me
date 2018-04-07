@@ -6,8 +6,6 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
 
-import java.util.Objects;
-
 import fr.iut_orsay.frinme.dao.ContactDao;
 import fr.iut_orsay.frinme.dao.EventDao;
 import fr.iut_orsay.frinme.rest.RestUser;

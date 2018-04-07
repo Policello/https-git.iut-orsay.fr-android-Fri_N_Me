@@ -65,18 +65,14 @@ public class QuitFrag extends DialogFragment {
         getDialog().setTitle("Quitter l'événement");
         Button btnValider = (Button) rootView.findViewById(R.id.btnValider);
         Button btnAnnuler = (Button) rootView.findViewById(R.id.btnAnnuler);
-        btnValider.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onButtonPressed(2);
-                dismiss();
-            }
+        btnValider.setOnClickListener(v -> {
+            onButtonPressed(2);
+            dismiss();
         });
 
-        btnAnnuler.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onButtonPressed(0);
-                dismiss();
-            }
+        btnAnnuler.setOnClickListener(v -> {
+            onButtonPressed(0);
+            dismiss();
         });
 
         return rootView;

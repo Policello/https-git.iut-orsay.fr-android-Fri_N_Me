@@ -1,5 +1,6 @@
 package fr.iut_orsay.frinme.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -7,19 +8,18 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class SessionManagerPreferences {
 
+    @SuppressLint("StaticFieldLeak")
     private static SessionManagerPreferences instance = null;
 
-    private Context context = null;
-    private SharedPreferences sharedPreferences = null;
-    private SharedPreferences.Editor editor = null;
+    private SharedPreferences sharedPreferences ;
+    private SharedPreferences.Editor editor;
 
     private SessionManagerPreferences(Context context){
-        this.context = context;
-        this.sharedPreferences = this.context.getSharedPreferences("LOGIN_SETTINGS", MODE_PRIVATE);
+        this.sharedPreferences = context.getSharedPreferences("LOGIN_SETTINGS", MODE_PRIVATE);
         this.editor = this.sharedPreferences.edit();
     }
 
-    public static SessionManagerPreferences getSettings(Context context) {
+    public synchronized static SessionManagerPreferences getSettings(Context context) {
         if (instance == null){
             instance = new SessionManagerPreferences(context);
         }

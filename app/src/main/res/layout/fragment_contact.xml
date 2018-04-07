@@ -5,114 +5,123 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="fr.iut_orsay.frinme.MainActivity">
-        <RelativeLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.6">
+
         <ImageView
-            android:layout_centerInParent="true"
             android:id="@+id/ImageProfil"
             android:layout_width="2000dp"
             android:layout_height="1000dp"
+            android:layout_centerInParent="true"
             android:src="@drawable/common_google_signin_btn_icon_dark"
             tools:layout_constraintLeft_creator="1"
-            tools:layout_constraintTop_creator="1"/>
-         </RelativeLayout>
+            tools:layout_constraintTop_creator="1" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/PseudoContact"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Pseudo"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/LocalisationContacts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derniére Localisation" />
+
+            <TextView
+                android:id="@+id/LocalisationContactsDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textPersonName"
+                android:text="XXXXXXXXX" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/LastEvenementsContacts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Derniére Evenement participé :" />
+
+            <TextView
+                android:id="@+id/LastEvenementsContactsDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textPersonName"
+                android:text="XXXXXXXXX" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="2"
             android:orientation="vertical">
-            <LinearLayout
+
+            <TextView
+                android:id="@+id/NotesContacts"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Notes :" />
+
+            <TextView
+                android:id="@+id/NotesContactsDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:text="XXXXXXXXX \n " />
+        </LinearLayout>
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/PseudoContact"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Pseudo"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-            </LinearLayout>
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                            android:id="@+id/LocalisationContacts"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Derniére Localisation"/>
-
-                    <TextView
-                            android:id="@+id/LocalisationContactsDetails"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:inputType="textPersonName"
-                            android:text="XXXXXXXXX"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                            android:id="@+id/LastEvenementsContacts"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Derniére Evenement participé :" />
-
-                    <TextView
-                            android:id="@+id/LastEvenementsContactsDetails"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:inputType="textPersonName"
-                            android:text="XXXXXXXXX" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="2">
-                <TextView
-                    android:id="@+id/NotesContacts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Notes :"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:id="@+id/NotesContactsDetails"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:text="XXXXXXXXX \n "
-                    android:gravity="center"/>
-            </LinearLayout>
-            </LinearLayout>
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
+
         <ListView
             android:id="@+id/ListeEvenementsCommunDetails"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:scrollbars="horizontal"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            android:scrollbars="horizontal" />
 
     </LinearLayout>
 

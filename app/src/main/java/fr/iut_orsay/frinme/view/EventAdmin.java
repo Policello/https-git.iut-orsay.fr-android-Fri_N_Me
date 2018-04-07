@@ -44,7 +44,7 @@ public class EventAdmin extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mListView = (ListView) view.findViewById(R.id.listView);
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, prenoms);
         mListView.setAdapter(adapter);
 

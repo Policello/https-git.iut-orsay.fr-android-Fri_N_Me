@@ -15,8 +15,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static fr.iut_orsay.frinme.model.DataBase.fetchContacts;
-
 public class InscriptionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText pseudo, mail, mdp, mdpConfirm;

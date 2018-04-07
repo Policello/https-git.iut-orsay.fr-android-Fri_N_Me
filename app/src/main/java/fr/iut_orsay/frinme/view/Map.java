@@ -71,9 +71,9 @@ public class Map extends Fragment implements
     private LocationManager lm;
     private ArrayList<LatLng> tab;
 
-    private  List<ContactModel> tabContacts;
+    private List<ContactModel> tabContacts;
     private List<EventModel> tabEventJO;
-    private  List<EventModel> tabEventUser;
+    private List<EventModel> tabEventUser;
 
     TextView dialog_msg, dialog_title, dialog_ok;
     Dialog dialog;
@@ -112,10 +112,10 @@ public class Map extends Fragment implements
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment.getMapAsync(this);
 
-        tab = new ArrayList<LatLng>();
-        tabContacts = new ArrayList<ContactModel>();
-        tabEventUser = new ArrayList<EventModel>();
-        tabEventJO = new ArrayList<EventModel>();
+        tab = new ArrayList<>();
+        tabContacts = new ArrayList<>();
+        tabEventUser = new ArrayList<>();
+        tabEventJO = new ArrayList<>();
 
         //Nord
         tab.add(new LatLng(48.908612, 2.439712));
@@ -147,9 +147,9 @@ public class Map extends Fragment implements
         }*/
     }
 
-    public void showDialog(String  content) {
+    public void showDialog(String content) {
 
-        AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 // 1.
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.item_dialog, null);
@@ -161,32 +161,28 @@ public class Map extends Fragment implements
         dialog_msg.setText(content);
         dialog_ok.setText("voir les details");
 
-        dialog_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        dialog_ok.setOnClickListener(view -> {
 //                这个MainActivity换成你要跳到的界面
-                Intent intent =null;
+            Intent intent = null;
 
-                switch(content)
-                {
-                    case "test":
-                        intent = new Intent(getActivity(), Event.class);
-                        break;
-                    case "test2":
-                        intent = new Intent(getActivity(), Contact.class);
-                        break;
-                }
-
-                intent.putExtra("data", dialog_msg.getText().toString());
-                startActivity(intent);
-                dialog.dismiss();
-                getActivity().finish();
-
+            switch (content) {
+                case "test":
+                    intent = new Intent(getActivity(), Event.class);
+                    break;
+                case "test2":
+                    intent = new Intent(getActivity(), Contact.class);
+                    break;
             }
+
+            intent.putExtra("data", dialog_msg.getText().toString());
+            startActivity(intent);
+            dialog.dismiss();
+            getActivity().finish();
+
         });
 
         builder.setView(layout);
-        dialog=builder.create();
+        dialog = builder.create();
         dialog.show();
     }
 
@@ -227,7 +223,6 @@ public class Map extends Fragment implements
                         //Remplir tableaux
                         fetchContacts();
                         fetchEvents();
-
 
 
                     } else {
@@ -288,7 +283,7 @@ public class Map extends Fragment implements
         Log.d(TAG, "" + firstLocationUpdate);
         if (firstLocationUpdate) {
 
-            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Me ").snippet(getInfoFromLatLng(myLoc)));
+            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Me").snippet(getInfoFromLatLng(myLoc)));
 
             myLocattionMarker.setTag(new InfoWindowData(new ContactModel("Me")));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
@@ -297,7 +292,7 @@ public class Map extends Fragment implements
             firstLocationUpdate = false;
         } else {
             myLocattionMarker.setPosition(myLoc);
-            myLocattionMarker.setTitle("Me : "+ getInfoFromLatLng(myLoc));
+            myLocattionMarker.setTitle("Me : " + getInfoFromLatLng(myLoc));
         }
     }
 
@@ -310,14 +305,21 @@ public class Map extends Fragment implements
 
     public void addMarkerLatLng(LatLng l, float couleur, String precision, Object o) {
         InfoWindowData info = new InfoWindowData(o);
-        Marker m = mMap.addMarker(new MarkerOptions().position(l).title(precision).snippet(getInfoFromLatLng(l)).icon(BitmapDescriptorFactory.defaultMarker(couleur)));
+        Marker m = mMap.addMarker(new MarkerOptions().position(l).title(precision).snippet("").icon(BitmapDescriptorFactory.defaultMarker(couleur)));
+        mMap.setOnMarkerClickListener(marker -> {
+            if (marker.getSnippet().equals("")) {
+                marker.setSnippet(getInfoFromLatLng(marker.getPosition()));
+            }
+            marker.showInfoWindow();
+            return true;
+        });
         m.setTag(info);
     }
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case AUTHORIZED_LOCATION: {
                 // If request is cancelle d, the result arrays are empty.
@@ -418,11 +420,10 @@ public class Map extends Fragment implements
         Log.i("marker ", "" + tabContacts.toString());
         for (ContactModel c : tabContacts) {
             addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE, c.getPseudo(), c);
-
         }
     }
 
-    public String getInfoFromLatLng (LatLng l) {
+    public String getInfoFromLatLng(LatLng l) {
         Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
 
         List<Address> addresses = null;
@@ -437,17 +438,14 @@ public class Map extends Fragment implements
 
         try {
             Log.d(TAG, addresses.get(0).toString());
-            if (addresses.get(0).getLocality() != null){
+            if (addresses.get(0).getLocality() != null) {
                 lieu = addresses.get(0).getLocality();
-            }
-            else if (addresses.get(0).getCountryName() != null) {
+            } else if (addresses.get(0).getCountryName() != null) {
                 lieu = addresses.get(0).getCountryName();
-            }
-            else {
+            } else {
                 lieu = "No info";
             }
-        }
-        catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             lieu = "No info";
         }
 

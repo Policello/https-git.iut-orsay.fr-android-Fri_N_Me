@@ -4,13 +4,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +21,6 @@ import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactComparator;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.DataBase;
-import fr.iut_orsay.frinme.model.Location;
-import fr.iut_orsay.frinme.rest.RestUser;
-import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by yyang5 on 13/03/2018.

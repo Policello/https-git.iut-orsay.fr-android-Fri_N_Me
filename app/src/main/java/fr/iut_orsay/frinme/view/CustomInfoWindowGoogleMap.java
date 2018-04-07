@@ -2,7 +2,6 @@ package fr.iut_orsay.frinme.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,7 +9,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
@@ -58,7 +56,6 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
         dialog_cap = (TextView) view.findViewById(R.id.dialog_cap);
 
 
-
         dialog_title.setText(marker.getTitle());
         dialog_msg.setText(marker.getSnippet());
         dialog_ok.setText("voir les details");
@@ -66,26 +63,23 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
         InfoWindowData info = (InfoWindowData) marker.getTag();
 
 
-         switch (info.getObject().getClass().getSimpleName()) {
+        switch (info.getObject().getClass().getSimpleName()) {
             case "EventModel":
                 this.event = (EventModel) info.getObject();
                 //Log.d("DATE", event.toString());
                 //DateFormat df = new SimpleDateFormat("dd/MM/YY HH:mm");
                 DateFormat df = DateFormat.getDateInstance();
                 String date = df.format(event.getDate());
-                String s = ""+date;
+                String s = "" + date;
                 dialog_date.setText(s);
                 //dialog_date.setText("TEST");
                 break;
             case "ContactModel":
                 this.contact = (ContactModel) o;
                 break;
-             default:
-                 dialog_ok.setClickable(false);
+            default:
+                dialog_ok.setClickable(false);
         }
-
-
-
 
 
         return view;

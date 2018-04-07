@@ -23,7 +23,6 @@ import android.view.MenuItem;
 
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.view.Contact;
-import fr.iut_orsay.frinme.view.Event;
 import fr.iut_orsay.frinme.view.EventAdd;
 import fr.iut_orsay.frinme.view.EventList;
 import fr.iut_orsay.frinme.view.ListeContact;
@@ -131,16 +130,12 @@ public class MainActivity extends AppCompatActivity implements
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 alertDialog.setTitle("Deconnexion");
                 alertDialog.setMessage("Voulez-vous vraiment vous déconnecter?");
-                alertDialog.setButton(Dialog.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SessionManagerPreferences.getSettings(getApplicationContext()).logout();
-                        startActivity(new Intent(MainActivity.this, ConnexionActivity.class));
-                    }
+                alertDialog.setButton(Dialog.BUTTON_POSITIVE, "Ok", (dialog, id) -> {
+                    SessionManagerPreferences.getSettings(getApplicationContext()).logout();
+                    startActivity(new Intent(MainActivity.this, ConnexionActivity.class));
                 });
-                alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Annuler", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Annulé
-                    }
+                alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Annuler", (dialog, id) -> {
+                    // Annulé
                 });
                 alertDialog.show();
                 return true;

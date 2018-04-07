@@ -1,7 +1,5 @@
 package fr.iut_orsay.frinme.rest;
 
-import java.util.Date;
-
 import fr.iut_orsay.frinme.rest.pojo.Categories;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
