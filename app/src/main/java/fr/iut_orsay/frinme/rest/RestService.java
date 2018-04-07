@@ -1,9 +1,7 @@
 package fr.iut_orsay.frinme.rest;
 
-import fr.iut_orsay.frinme.rest.pojo.AddContact;
 import fr.iut_orsay.frinme.rest.pojo.Categories;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
-import fr.iut_orsay.frinme.rest.pojo.DeleteContact;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
 import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
@@ -36,11 +34,11 @@ public interface RestService {
 
     @FormUrlEncoded
     @POST("contact/deleteContact.php")
-    Call<DeleteContact> getDeleteFriend(@Field("idUser") int idUser, @Field("idUserDeleted") int idUserDeleted);
+    Call<Message> getDeleteFriend(@Field("idUser") int idUser, @Field("idUserDeleted") int idUserDeleted);
 
     @FormUrlEncoded
     @POST("contact/addContact.php")
-    Call<AddContact> getAddFriend(@Field("idUser") int idUser, @Field("idUserAdded") int idUserAdded);
+    Call<Message> getAddFriend(@Field("idUser") int idUser, @Field("idUserAdded") int idUserAdded);
 
     @FormUrlEncoded
     @POST("user/estAmi.php")

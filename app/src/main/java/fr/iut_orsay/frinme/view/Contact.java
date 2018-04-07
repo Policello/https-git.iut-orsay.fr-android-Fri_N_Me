@@ -22,9 +22,8 @@ import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.RestUser;
-import fr.iut_orsay.frinme.rest.pojo.AddContact;
-import fr.iut_orsay.frinme.rest.pojo.DeleteContact;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
+import fr.iut_orsay.frinme.rest.pojo.Message;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,7 +101,7 @@ public class Contact extends Fragment {
                     if (ami) {
                         menu.add(0, 100, 0, "Supprimer un ami").setIcon(R.drawable.ic_close_black_24dp)
                                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                    } else if (!ami) {
+                    } else {
                         menu.add(0, 200, 0, "Ajouter un ami").setIcon(R.drawable.ic_person_add_black_24dp)
                                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                     }
@@ -124,11 +123,11 @@ public class Contact extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 100:
-                Call<DeleteContact> callDel = RestUser.get().getDeleteFriend(23, 20);
-                callDel.enqueue(new Callback<DeleteContact>() {
+                Call<Message> callDel = RestUser.get().getDeleteFriend(23, 20);
+                callDel.enqueue(new Callback<Message>() {
                     @Override
-                    public void onResponse(Call<DeleteContact> call, Response<DeleteContact> response) {
-                        final DeleteContact r = response.body();
+                    public void onResponse(Call<Message> call, Response<Message> response) {
+                        final Message r = response.body();
                         if (r != null && response.isSuccessful()) {
                             Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
@@ -137,17 +136,17 @@ public class Contact extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<DeleteContact> call, Throwable t) {
+                    public void onFailure(Call<Message> call, Throwable t) {
                         Log.e("REST CALL", t.getMessage());
                     }
                 });
                 return true;
             case 200:
-                Call<AddContact> callAdd = RestUser.get().getAddFriend(23, 20);
-                callAdd.enqueue(new Callback<AddContact>() {
+                Call<Message> callAdd = RestUser.get().getAddFriend(23, 20);
+                callAdd.enqueue(new Callback<Message>() {
                     @Override
-                    public void onResponse(Call<AddContact> call, Response<AddContact> response) {
-                        final AddContact r = response.body();
+                    public void onResponse(Call<Message> call, Response<Message> response) {
+                        final Message r = response.body();
                         if (r != null && response.isSuccessful()) {
                             Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
@@ -156,7 +155,7 @@ public class Contact extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<AddContact> call, Throwable t) {
+                    public void onFailure(Call<Message> call, Throwable t) {
                         Log.e("REST CALL", t.getMessage());
                     }
                 });
