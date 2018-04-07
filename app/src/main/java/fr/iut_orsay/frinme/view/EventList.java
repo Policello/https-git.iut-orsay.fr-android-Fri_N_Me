@@ -59,6 +59,7 @@ public class EventList extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        events.clear();
         events.addAll(DataBase.getAppDatabase(getActivity()).eventDao().getAll());
         SortableTableView tableView = (SortableTableView) view.findViewById(R.id.tableView);
         // Tableau de 4 colonnes

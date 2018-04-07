@@ -101,7 +101,7 @@ public class Event extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.add(0, 200, 0, "JoinEvent").setIcon(R.drawable.ic_add_black_24dp)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -119,8 +119,8 @@ public class Event extends Fragment {
         call.enqueue(new Callback<EventDetails>() {
             @Override
             public void onResponse(Call<EventDetails> call, Response<EventDetails> response) {
-                if (response.isSuccessful()) {
-                    final EventDetails r = response.body();
+                final EventDetails r = response.body();
+                if (r != null && response.isSuccessful()) {
                     TextView tvDesc = (TextView) v.findViewById(R.id.desc);
                     tvDesc.setText(r.getDesc());
                     if (r.getParticipants().size() != 0) {

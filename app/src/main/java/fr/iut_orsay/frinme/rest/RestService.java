@@ -1,12 +1,12 @@
 package fr.iut_orsay.frinme.rest;
 
-import fr.iut_orsay.frinme.rest.pojo.AddContact;
+import fr.iut_orsay.frinme.rest.pojo.Categories;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
-import fr.iut_orsay.frinme.rest.pojo.DeleteContact;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
 import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
+import fr.iut_orsay.frinme.rest.pojo.Message;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -16,6 +16,13 @@ public interface RestService {
 
     @POST("event/listEventsSort/")
     Call<EventListDetails> getEventDetailedList();
+
+    @POST("event/listTypesActivites.php")
+    Call<Categories> getTypeActivities();
+
+    @FormUrlEncoded
+    @POST("event/addEvent.php")
+    Call<Message> addEvent();
 
     @FormUrlEncoded
     @POST("event/listEventsMapDetails/")
@@ -27,11 +34,11 @@ public interface RestService {
 
     @FormUrlEncoded
     @POST("contact/deleteContact.php")
-    Call<DeleteContact> getDeleteFriend(@Field("idUser") int idUser, @Field("idUserDeleted") int idUserDeleted);
+    Call<Message> getDeleteFriend(@Field("idUser") int idUser, @Field("idUserDeleted") int idUserDeleted);
 
     @FormUrlEncoded
     @POST("contact/addContact.php")
-    Call<AddContact> getAddFriend(@Field("idUser") int idUser, @Field("idUserAdded") int idUserAdded);
+    Call<Message> getAddFriend(@Field("idUser") int idUser, @Field("idUserAdded") int idUserAdded);
 
     @FormUrlEncoded
     @POST("user/estAmi.php")

@@ -53,8 +53,8 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
                 if (response.isSuccessful()) {
                     //Recupérer le corps de la reponse que Retrofit s'est chargé de désérialiser à notre place l'aide du convertor Gson
                     final Connexion r = response.body();
-                    Toast.makeText(ConnexionActivity.this, r.message, Toast.LENGTH_LONG).show();
-                    if (r.isSuccess()) {
+                    if (r != null && r.isSuccess()) {
+                        Toast.makeText(ConnexionActivity.this, r.getMessage(), Toast.LENGTH_LONG).show();
                         SessionManagerPreferences.getSettings(getApplicationContext()).login(r.getId());
                         fetchContacts(getApplicationContext(), SessionManagerPreferences.getSettings(getApplicationContext()).getUsrId());
                         Intent intent = new Intent(ConnexionActivity.this, MainActivity.class);

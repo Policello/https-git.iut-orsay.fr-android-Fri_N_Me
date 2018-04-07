@@ -9,7 +9,7 @@ import fr.iut_orsay.frinme.model.ContactModel;
 
 
 
-public class ContactListDetails {
+public class ContactListDetails extends Message {
 
     @SerializedName("id")
     @Expose
@@ -19,20 +19,12 @@ public class ContactListDetails {
     @Expose
     private List<ContactModel> Contacts;
 
-    @SerializedName("message")
-    @Expose
-    private String message;
-
     @SerializedName("success")
     @Expose
     private Boolean test;
 
     public List<ContactModel> getContacts() {
         return Contacts;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public int getid() {
