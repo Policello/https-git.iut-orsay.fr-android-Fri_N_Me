@@ -7,7 +7,7 @@ import java.util.List;
 
 import fr.iut_orsay.frinme.model.ContactModel;
 
-public class EventDetails {
+public class EventDetails extends Message{
 
     @SerializedName("Description")
     @Expose
@@ -16,10 +16,6 @@ public class EventDetails {
     @SerializedName("Participants")
     @Expose
     private List<ContactModel> participants;
-
-    @SerializedName("message")
-    @Expose
-    private String message;
 
     @SerializedName("success")
     @Expose
@@ -31,10 +27,6 @@ public class EventDetails {
 
     public List<ContactModel> getParticipants() {
         return participants;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public boolean isSuccess() {

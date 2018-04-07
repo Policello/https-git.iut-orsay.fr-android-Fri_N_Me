@@ -7,7 +7,7 @@ import java.util.List;
 
 import fr.iut_orsay.frinme.model.EventModel;
 
-public class EventListDetails {
+public class EventListDetails extends Message{
 
     @SerializedName("tabEventJO")
     @Expose
@@ -17,19 +17,11 @@ public class EventListDetails {
     @Expose
     private List<EventModel> events;
 
-    @SerializedName("message")
-    @Expose
-    private String message;
-
     public List<EventModel> getEventsJo() {
         return eventsJo;
     }
 
     public List<EventModel> getEvents() {
         return events;
-    }
-
-    public String getMessage() {
-        return message;
     }
 }

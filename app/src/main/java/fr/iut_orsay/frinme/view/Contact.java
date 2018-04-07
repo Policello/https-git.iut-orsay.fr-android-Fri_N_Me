@@ -95,8 +95,8 @@ public class Contact extends Fragment {
         call.enqueue(new Callback<EstAmi>() {
             @Override
             public void onResponse(Call<EstAmi> call, Response<EstAmi> response) {
-                if (response.isSuccessful()) {
-                    final EstAmi r = response.body();
+                final EstAmi r = response.body();
+                if (r != null && response.isSuccessful()) {
                     Toast.makeText(getActivity(), r.getMessage() + "", Toast.LENGTH_LONG).show();
                     boolean ami = r.getMessage();
                     if (ami) {
@@ -110,6 +110,7 @@ public class Contact extends Fragment {
                     Log.e("REST CALL", "sendRequest not successful");
                 }
             }
+
             @Override
             public void onFailure(Call<EstAmi> call, Throwable t) {
                 Log.e("REST CALL", t.getMessage());
@@ -127,8 +128,8 @@ public class Contact extends Fragment {
                 callDel.enqueue(new Callback<DeleteContact>() {
                     @Override
                     public void onResponse(Call<DeleteContact> call, Response<DeleteContact> response) {
-                        if (response.isSuccessful()) {
-                            final DeleteContact r = response.body();
+                        final DeleteContact r = response.body();
+                        if (r != null && response.isSuccessful()) {
                             Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
                             Log.e("REST CALL", "sendRequest not successful");
@@ -146,8 +147,8 @@ public class Contact extends Fragment {
                 callAdd.enqueue(new Callback<AddContact>() {
                     @Override
                     public void onResponse(Call<AddContact> call, Response<AddContact> response) {
-                        if (response.isSuccessful()) {
-                            final AddContact r = response.body();
+                        final AddContact r = response.body();
+                        if (r != null && response.isSuccessful()) {
                             Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
                             Log.e("REST CALL", "sendRequest not successful");

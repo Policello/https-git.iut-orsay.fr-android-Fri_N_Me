@@ -1,26 +1,17 @@
 package fr.iut_orsay.frinme.rest.pojo;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Connexion {
+public class Connexion extends Message{
 
     @SerializedName("id")
-    public int id;
-
-    @SerializedName("message")
-    public final String message;
+    @Expose
+    private int id;
 
     @SerializedName("success")
-    private final boolean success;
-
-    public Connexion(String message, boolean success) {
-        this.message = message;
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
+    @Expose
+    private boolean success;
 
     public int getId() {
         return id;

@@ -41,7 +41,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.register_btn_sure) {
-            if (mdp.getText().toString().equals(mdpConfirm.getText().toString())){
+            if (mdp.getText().toString().equals(mdpConfirm.getText().toString())) {
                 inscription(mail.getText().toString(), mdp.getText().toString(), pseudo.getText().toString(), "", null, null);
             } else {
                 Toast.makeText(getApplicationContext(), "Mot de passe non identique", Toast.LENGTH_LONG).show();
@@ -61,10 +61,9 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(Call<Connexion> call, Response<Connexion> response) {
                 if (response.isSuccessful()) {
-
                     final Connexion r = response.body();
-                    Toast.makeText(InscriptionActivity.this, r.message, Toast.LENGTH_LONG).show();
-                    if (r.isSuccess()) {
+                    if (r != null && r.isSuccess()) {
+                        Toast.makeText(InscriptionActivity.this, r.getMessage(), Toast.LENGTH_LONG).show();
                         SessionManagerPreferences.getSettings(getApplicationContext()).login(r.getId());
                         Intent intent = new Intent(InscriptionActivity.this, MainActivity.class);
                         startActivity(intent);

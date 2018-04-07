@@ -8,6 +8,7 @@ import fr.iut_orsay.frinme.rest.pojo.EstAmi;
 import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
+import fr.iut_orsay.frinme.rest.pojo.Message;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -20,6 +21,10 @@ public interface RestService {
 
     @POST("event/listTypesActivites.php")
     Call<Categories> getTypeActivities();
+
+    @FormUrlEncoded
+    @POST("event/addEvent.php")
+    Call<Message> addEvent();
 
     @FormUrlEncoded
     @POST("event/listEventsMapDetails/")

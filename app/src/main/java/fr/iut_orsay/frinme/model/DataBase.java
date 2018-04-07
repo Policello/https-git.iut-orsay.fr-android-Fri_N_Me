@@ -6,6 +6,8 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Objects;
+
 import fr.iut_orsay.frinme.dao.ContactDao;
 import fr.iut_orsay.frinme.dao.EventDao;
 import fr.iut_orsay.frinme.rest.RestUser;
@@ -43,9 +45,9 @@ public abstract class DataBase extends RoomDatabase {
         call.enqueue(new retrofit2.Callback<EventListDetails>() {
             @Override
             public void onResponse(Call<EventListDetails> call, Response<EventListDetails> response) {
-                if (response.isSuccessful()) {
-                    final EventListDetails r = response.body();
-                    if (response.body().getEvents().size() != DataBase.getAppDatabase(c).eventDao().countEvents()) {
+                final EventListDetails r = response.body();
+                if (r != null && response.isSuccessful()) {
+                    if (r.getEvents().size() != DataBase.getAppDatabase(c).eventDao().countEvents()) {
                         DataBase.getAppDatabase(c).eventDao().deleteAll();
                         DataBase.getAppDatabase(c).eventDao().insertAll(r.getEvents());
                     }
@@ -66,9 +68,9 @@ public abstract class DataBase extends RoomDatabase {
         call.enqueue(new retrofit2.Callback<ContactListDetails>() {
             @Override
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
-                if (response.isSuccessful()) {
-                    final ContactListDetails r = response.body();
-                    if (response.body().getContacts().size() != DataBase.getAppDatabase(c).contactDao().countContacts()){
+                final ContactListDetails r = response.body();
+                if (r != null && response.isSuccessful()) {
+                    if (r.getContacts().size() != DataBase.getAppDatabase(c).contactDao().countContacts()){
                         DataBase.getAppDatabase(c).contactDao().deleteAll();
                         DataBase.getAppDatabase(c).contactDao().insertAll(r.getContacts());
                     }
