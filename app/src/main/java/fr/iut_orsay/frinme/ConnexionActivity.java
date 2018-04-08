@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import es.dmoral.toasty.Toasty;
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
@@ -62,13 +63,13 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     }
                 } else {
-                    Toast.makeText(ConnexionActivity.this, "Erreur rencontrée", Toast.LENGTH_LONG).show();
+                    Toasty.error(ConnexionActivity.this, "Erreur rencontrée", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Connexion> call, Throwable t) {
-                Toast.makeText(ConnexionActivity.this, "FAILURE", Toast.LENGTH_LONG).show();
+                Toasty.error(ConnexionActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

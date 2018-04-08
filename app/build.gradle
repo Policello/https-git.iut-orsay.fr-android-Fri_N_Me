@@ -35,10 +35,11 @@ dependencies {
     implementation 'com.android.support:support-vector-drawable:27.1.1'
     implementation "android.arch.lifecycle:common-java8:1.1.1"
     implementation 'com.github.GrenderG:Toasty:1.2.8'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'de.codecrafters.tableview:tableview:2.8.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.4.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     compile 'android.arch.persistence.room:runtime:1.1.0-beta2'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.0-beta2'
 }
