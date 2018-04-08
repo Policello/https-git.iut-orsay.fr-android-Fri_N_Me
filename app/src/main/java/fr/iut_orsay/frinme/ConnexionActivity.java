@@ -54,22 +54,25 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
                 if (response.isSuccessful()) {
                     //Recupérer le corps de la reponse que Retrofit s'est chargé de désérialiser à notre place l'aide du convertor Gson
                     final Connexion r = response.body();
-                    if (r != null && r.isSuccess()) {
-                        Toast.makeText(ConnexionActivity.this, r.getMessage(), Toast.LENGTH_LONG).show();
-                        SessionManagerPreferences.getSettings(getApplicationContext()).login(r.getId());
-                        fetchContacts(getApplicationContext(), SessionManagerPreferences.getSettings(getApplicationContext()).getUsrId());
-                        Intent intent = new Intent(ConnexionActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    if (r != null) {
+                        Toasty.info(getApplicationContext(), r.getMessage(), Toast.LENGTH_LONG).show();
+                        if (r.isSuccess()) {
+                            SessionManagerPreferences.getSettings(getApplicationContext()).login(r.getId());
+                            fetchContacts(getApplicationContext(), SessionManagerPreferences.getSettings(getApplicationContext()).getUsrId());
+                            Intent intent = new Intent(ConnexionActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        }
                     }
+
                 } else {
-                    Toasty.error(ConnexionActivity.this, "Erreur rencontrée", Toast.LENGTH_LONG).show();
+                    Toasty.error(getApplicationContext(), "Erreur rencontrée", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Connexion> call, Throwable t) {
-                Toasty.error(ConnexionActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                Toasty.error(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -87,7 +90,7 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
                 Log.i("DEBUG", "mot de passe saisit : " + mdpasse);
                 sendRequest(mail, mdpasse);
             } else {
-                Toast.makeText(ConnexionActivity.this, "Veuillez saisir vos informations.", Toast.LENGTH_LONG).show();
+                Toasty.warning(getApplicationContext(), "Veuillez saisir vos informations.", Toast.LENGTH_LONG).show();
             }
         } else if (v.getId() == R.id.btnInscript) {
             startActivity(new Intent(ConnexionActivity.this, InscriptionActivity.class));
