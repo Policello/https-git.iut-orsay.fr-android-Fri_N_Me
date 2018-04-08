@@ -54,6 +54,10 @@ import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.model.InfoWindowData;
+import fr.iut_orsay.frinme.model.SessionManagerPreferences;
+import fr.iut_orsay.frinme.rest.RestUser;
+import fr.iut_orsay.frinme.rest.pojo.Message;
+import retrofit2.Call;
 
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
@@ -286,7 +290,7 @@ public class Map extends Fragment implements
 
         /*
          * Réglage de la caméra :
-         *  - si c'est la première fois, c'est le placement sur la carte, on centre sur le marqueur
+         *  - si c'est la première fois, c'est le placement sur la carte, donc on centre sur le marqueur
          *  - sinon, c'est une mise à jour, on ne bouge pas la caméra
          */
         Log.d(TAG, "" + firstLocationUpdate);
@@ -303,6 +307,14 @@ public class Map extends Fragment implements
             myLocattionMarker.setPosition(myLoc);
             myLocattionMarker.setTitle("Me : " + getInfoFromLatLng(myLoc));
         }
+
+    try {
+        Call<Message> callDel = RestUser.get().updateLoc(SessionManagerPreferences.getSettings(getActivity()).getUsrId(), location.getLatitude(),location.getLongitude());
+    }
+    catch (NullPointerException e) {
+        e.printStackTrace();
+    }
+
     }
 
 

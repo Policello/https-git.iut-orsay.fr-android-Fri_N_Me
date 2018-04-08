@@ -9,13 +9,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class LocaliDetails {
 
-    @SerializedName("Description")
+    /*@SerializedName("Description")
     @Expose
     private String desc;
 
-    /*@SerializedName("Participants")
-    @Expose
-    private List<ContactModel> participants;
 
     @SerializedName("message")
     @Expose
@@ -28,16 +25,13 @@ public class LocaliDetails {
     public String getDesc() {
         return desc;
     }
-
-    public List<ContactModel> getParticipants() {
-        return participants;
-    }
+    public boolean
 
     public String getMessage() {
         return message;
-    }*/
+    }
 
     //public boolean isSuccess() {
         //return success;
-    //}
+    //}*/
 }
