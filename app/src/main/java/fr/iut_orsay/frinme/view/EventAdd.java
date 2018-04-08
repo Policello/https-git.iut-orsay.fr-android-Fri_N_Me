@@ -71,6 +71,7 @@ public class EventAdd extends Fragment {
         nbPersPicker.setSelection(0); // éviter null pointer
 
         validEvent = v.findViewById(R.id.validEvent);
+        validEvent.setEnabled(false);
         validEvent.setOnClickListener(view -> addEvent());
 
         date_picker = v.findViewById(R.id.datePicker);
@@ -132,6 +133,7 @@ public class EventAdd extends Fragment {
                             android.R.layout.simple_list_item_1, categories);
                     catPicker.setAdapter(aa);
                     catPicker.setSelection(0); // éviter null pointer
+                    validEvent.setEnabled(true);
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");
                 }

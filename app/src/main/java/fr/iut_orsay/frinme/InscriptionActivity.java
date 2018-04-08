@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import es.dmoral.toasty.Toasty;
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
@@ -42,7 +43,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
             if (mdp.getText().toString().equals(mdpConfirm.getText().toString())) {
                 inscription(mail.getText().toString(), mdp.getText().toString(), pseudo.getText().toString(), "", null, null);
             } else {
-                Toast.makeText(getApplicationContext(), "Mot de passe non identique", Toast.LENGTH_LONG).show();
+                Toasty.warning(getApplicationContext(), "Mot de passe non identique", Toast.LENGTH_LONG).show();
             }
 
         } else if (v.getId() == R.id.btnCancel) {
@@ -60,21 +61,23 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
             public void onResponse(Call<Connexion> call, Response<Connexion> response) {
                 if (response.isSuccessful()) {
                     final Connexion r = response.body();
-                    if (r != null && r.isSuccess()) {
-                        Toast.makeText(InscriptionActivity.this, r.getMessage(), Toast.LENGTH_LONG).show();
-                        SessionManagerPreferences.getSettings(getApplicationContext()).login(r.getId());
-                        Intent intent = new Intent(InscriptionActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    if (r != null) {
+                        Toasty.info(getApplicationContext(), r.getMessage(), Toast.LENGTH_LONG).show();
+                        if (r.isSuccess()) {
+                            SessionManagerPreferences.getSettings(getApplicationContext()).login(r.getId());
+                            Intent intent = new Intent(InscriptionActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        }
                     }
                 } else {
-                    Toast.makeText(InscriptionActivity.this, "Erreur rencontrée", Toast.LENGTH_LONG).show();
+                    Toasty.error(getApplicationContext(), "Erreur rencontrée", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Connexion> call, Throwable t) {
-                Toast.makeText(InscriptionActivity.this, "FAILURE", Toast.LENGTH_LONG).show();
+                Toasty.error(getApplicationContext(), "FAILURE", Toast.LENGTH_LONG).show();
             }
         });
     }
