@@ -1,5 +1,6 @@
 package fr.iut_orsay.frinme.rest;
 
+import fr.iut_orsay.frinme.rest.pojo.AfficherUser;
 import fr.iut_orsay.frinme.rest.pojo.Categories;
 import fr.iut_orsay.frinme.rest.pojo.Connexion;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
@@ -59,5 +60,7 @@ public interface RestService {
                             @Field("pseudo") String pseudo, @Field("commentaire") String commentaire,
                             @Field("latitude") Long latitude, @Field("longitude") Long longitude);
 
-
+    @FormUrlEncoded
+    @POST("user/afficherUser.php")
+    Call<AfficherUser> infoEvenementsUtilisateurs (@Field("idUser") int idUser);
 }

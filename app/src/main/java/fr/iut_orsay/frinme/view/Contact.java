@@ -1,8 +1,8 @@
 package fr.iut_orsay.frinme.view;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,12 +10,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.iut_orsay.frinme.R;
@@ -33,11 +34,11 @@ import retrofit2.Response;
  * Vue des détails de contacts
  * utilisateur quelconque
  */
-public class Contact extends Fragment {
+public class Contact extends Fragment implements AdapterView.OnItemClickListener {
 
     private ListView mListView;
-    List<EventModel> testEvent;
-    List<String> listEvenements = new ArrayList<>();
+    List<EventModel> eventListe;
+    List<String> eventNomListe;
     private ContactModel contactRecu;
     private boolean defaultValues = false;
 
@@ -78,14 +79,28 @@ public class Contact extends Fragment {
 
         ImageView img = (ImageView) view.findViewById(R.id.ImageProfil);
         img.setImageResource(R.drawable.ic_menu_camera);
+        /*for (EventModel event : eventListe) {
+            eventNomListe.add(event.getNom());
+        }
+        final ArrayAdapter<String> adapter;
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, eventNomListe);
+        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(this);
+        */
 
-        // final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,listEvenements );
-        // mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener((a, v, position, id) -> getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new Event())
+    }
+
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Bundle args = new Bundle();
+        args.putParcelable("event", eventListe.get(position));
+        Event EventFrag = new Event();
+        EventFrag.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                        android.R.animator.fade_in, android.R.animator.fade_out)
+                .replace(R.id.fragment_container, EventFrag)
                 .addToBackStack(null)
-                .commit());
-
+                .commit();
     }
 
     @Override
@@ -116,6 +131,7 @@ public class Contact extends Fragment {
             }
         });
 
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -129,6 +145,7 @@ public class Contact extends Fragment {
                     public void onResponse(Call<Message> call, Response<Message> response) {
                         final Message r = response.body();
                         if (r != null && response.isSuccessful()) {
+                            getActivity().invalidateOptionsMenu();
                             Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
                             Log.e("REST CALL", "sendRequest not successful");
@@ -148,6 +165,7 @@ public class Contact extends Fragment {
                     public void onResponse(Call<Message> call, Response<Message> response) {
                         final Message r = response.body();
                         if (r != null && response.isSuccessful()) {
+                            getActivity().invalidateOptionsMenu();
                             Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                         } else {
                             Log.e("REST CALL", "sendRequest not successful");
@@ -164,5 +182,4 @@ public class Contact extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
