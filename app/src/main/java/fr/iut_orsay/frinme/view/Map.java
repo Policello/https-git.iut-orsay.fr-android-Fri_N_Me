@@ -67,6 +67,7 @@ public class Map extends Fragment implements
     private GoogleApiClient mGoogleApiClient;
     public static final String TAG = "Map";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private MapFragment mapFragment;
     private LocationRequest mLocationRequest;
     private LocationManager lm;
     private ArrayList<LatLng> tab;
@@ -108,10 +109,11 @@ public class Map extends Fragment implements
                 .setFastestInterval(2 * 1000); // seconds, in milliseconds
 
 
-        MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        mapFragment.getMapAsync(this);
-
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+            mapFragment.getMapAsync(this);
+        }
         tab = new ArrayList<>();
         tabContacts = new ArrayList<>();
         tabEventUser = new ArrayList<>();
@@ -124,6 +126,7 @@ public class Map extends Fragment implements
         //Est
         tab.add(new LatLng(48.848579, 2.5526099999999587));
 
+        getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
 
         return view;
     }
@@ -331,7 +334,7 @@ public class Map extends Fragment implements
                         try {
                             Log.i(TAG, "API Connected");
                             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-                            //handleNewLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+                            handleNewLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
 
                         } catch (SecurityException ex) {
                             ex.printStackTrace();
