@@ -16,17 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/eventName"
-        android:hint="Choissez la catégorie de l'evenement" >
-    </Spinner>
+        android:hint="Choissez la catégorie de l'evenement" />
 
     <Spinner
         android:id="@+id/nbPersPicker"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/catPicker"
-        android:hint="Choisissez le nb de pers de l'evenement" >
-    </Spinner>
-
+        android:hint="Choisissez le nb de pers de l'evenement" />
 
 
     <EditText
@@ -34,7 +31,10 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/nbPersPicker"
-        android:hint="Choisir la date de l'evenement" />
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="Choisir la date de l'evenement"
+        android:inputType="date" />
 
 
     <EditText
@@ -43,7 +43,10 @@
         android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/datePicker"
-        android:hint="Choissisez l'heure de l'evenement" />
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="Choissisez l'heure de l'evenement"
+        android:inputType="datetime" />
 
 
     <EditText
@@ -62,9 +65,8 @@
         android:id="@+id/validEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/colorAccent"
-        android:text="Ajouter"
-        android:layout_alignParentBottom="true" />
-
+        android:text="Ajouter" />
 
 </RelativeLayout>
