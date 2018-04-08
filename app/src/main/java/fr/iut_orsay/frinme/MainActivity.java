@@ -2,10 +2,9 @@ package fr.iut_orsay.frinme;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements
     private FloatingActionButton fabContact;
     private FloatingActionButton fabEvent;
     private FloatingActionButton fab;
-    private final FragmentManager fragmentManager = getFragmentManager();
+    private final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        Fragment currentFrag = getFragmentManager().findFragmentById(R.id.fragment_container);
+        Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragment_container);
 
         // Gère le changement de fragment dans le drawer
         int id = item.getItemId();

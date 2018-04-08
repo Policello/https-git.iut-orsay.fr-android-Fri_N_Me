@@ -1,6 +1,6 @@
 package fr.iut_orsay.frinme.view;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -43,7 +43,7 @@ public class EventList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (isHidden()) {
-            getActivity().getFragmentManager().beginTransaction()
+            getActivity().getSupportFragmentManager().beginTransaction()
                     .show(EventList.this)
                     .commit();
         }
@@ -120,7 +120,7 @@ public class EventList extends Fragment {
             args.putParcelable("event", events.get(rowIndex));
             Event EventFrag = new Event();
             EventFrag.setArguments(args);
-            getActivity().getFragmentManager().beginTransaction()
+            getActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
                             android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.fragment_container, EventFrag)

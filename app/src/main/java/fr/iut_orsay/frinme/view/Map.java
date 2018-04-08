@@ -3,7 +3,7 @@ package fr.iut_orsay.frinme.view;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +36,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -47,12 +47,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import es.dmoral.toasty.Toasty;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.SettingsActivity;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.model.InfoWindowData;
+
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 
 /**
@@ -67,7 +70,7 @@ public class Map extends Fragment implements
     private GoogleApiClient mGoogleApiClient;
     public static final String TAG = "Map";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private MapFragment mapFragment;
+    private SupportMapFragment mapFragment;
     private LocationRequest mLocationRequest;
     private LocationManager lm;
     private ArrayList<LatLng> tab;
@@ -90,6 +93,12 @@ public class Map extends Fragment implements
     private boolean networkEnabled;
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.activity_maps, container, false);
@@ -110,7 +119,7 @@ public class Map extends Fragment implements
 
 
         if (mapFragment == null) {
-            mapFragment = MapFragment.newInstance();
+            mapFragment = SupportMapFragment.newInstance();
             // Obtain the SupportMapFragment and get notified when the map is ready to be used.
             mapFragment.getMapAsync(this);
         }
@@ -190,7 +199,6 @@ public class Map extends Fragment implements
     }
 
 
-    @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Location services connected.");
 
@@ -219,18 +227,17 @@ public class Map extends Fragment implements
                     startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 } else {
 
-                    //Voir si on  la permission
-                    if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    //Voir si on a la permission
+                    if (checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         //Mettre à jour la localisation
                         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
                         //Remplir tableaux
                         fetchContacts();
                         fetchEvents();
 
-
                     } else {
                         //Demander la permission
-                        ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUTHORIZED_LOCATION);
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, AUTHORIZED_LOCATION);
                     }
                 }
             }
@@ -259,7 +266,6 @@ public class Map extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        mGoogleApiClient.connect();
     }
 
     @Override
@@ -329,6 +335,7 @@ public class Map extends Fragment implements
                 if (grantResults.length > 0 && permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                    mGoogleApiClient.connect();
                     if (mGoogleApiClient.isConnected()) {
                         // Permsission granted
                         try {
@@ -339,10 +346,11 @@ public class Map extends Fragment implements
                         } catch (SecurityException ex) {
                             ex.printStackTrace();
                         }
+                    } else {
+                        Log.e(TAG, "Api not connected");
                     }
                 } else {
-                    //System.exit(0);
-                    Log.d(TAG, "Error permissions not granted");
+                    Log.e(TAG, "Error permissions not granted");
                 }
             }
         }
@@ -392,7 +400,7 @@ public class Map extends Fragment implements
      * @param text : texte à afficher à l'utilisateur
      */
     private void redirectToSettings(String text) {
-        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
+        Toasty.error(getActivity(), text, Toast.LENGTH_LONG).show();
         Log.d("TAG", text);
         Intent i = new Intent(getActivity(), SettingsActivity.class);
         startActivity(i);

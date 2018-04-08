@@ -1,6 +1,6 @@
 package fr.iut_orsay.frinme.view;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -81,7 +81,7 @@ public class Contact extends Fragment {
 
         // final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,listEvenements );
         // mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener((a, v, position, id) -> getActivity().getFragmentManager().beginTransaction()
+        mListView.setOnItemClickListener((a, v, position, id) -> getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new Event())
                 .addToBackStack(null)
                 .commit());

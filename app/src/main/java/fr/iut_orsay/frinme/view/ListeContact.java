@@ -1,6 +1,6 @@
 package fr.iut_orsay.frinme.view;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,7 +40,7 @@ public class ListeContact extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         if (isHidden()) {
-            getActivity().getFragmentManager().beginTransaction()
+            getActivity().getSupportFragmentManager().beginTransaction()
                     .show(ListeContact.this)
                     .commit();
         }
@@ -92,7 +92,7 @@ public class ListeContact extends Fragment {
             args.putParcelable("Contact", testContact.get(rowIndex));
             Contact EventContact = new Contact();
             EventContact.setArguments(args);
-            getActivity().getFragmentManager().beginTransaction()
+            getActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
                             android.R.animator.fade_in, android.R.animator.fade_out)
                     .replace(R.id.fragment_container, EventContact)
