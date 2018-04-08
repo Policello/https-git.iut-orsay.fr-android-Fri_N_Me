@@ -54,6 +54,10 @@ import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.model.InfoWindowData;
+import fr.iut_orsay.frinme.model.SessionManagerPreferences;
+import fr.iut_orsay.frinme.rest.RestUser;
+import fr.iut_orsay.frinme.rest.pojo.Message;
+import retrofit2.Call;
 
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
@@ -303,6 +307,30 @@ public class Map extends Fragment implements
             myLocattionMarker.setPosition(myLoc);
             myLocattionMarker.setTitle("Me : " + getInfoFromLatLng(myLoc));
         }
+
+        /*try {
+            Call<Message> callUpLoc = RestUser.get().updateLoc(SessionManagerPreferences.getSettings(getActivity()).getUsrId(), location.getLatitude(), location.getLongitude());
+            callUpLoc.enqueue(new Callback<Message>() {
+                @Override
+                public void onResponse(Call<Message> call, Response<Message> response) {
+                    final Message r = response.body();
+                    if (r != null && response.isSuccessful()) {
+                        Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        Log.e("REST CALL", "sendRequest not successful");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Message> call, Throwable t) {
+                    Log.e("REST CALL", t.getMessage());
+                }
+            });
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }*/
+
     }
 
 

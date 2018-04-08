@@ -15,6 +15,9 @@ import retrofit2.http.POST;
 
 public interface RestService {
 
+    @POST("user/updateLoc.php")
+    Call<Message> updateLoc(@Field("idUser") int idUser, @Field("latitude") double latitude, @Field("longitude") double longitude);
+
     @POST("event/listEventsSort/")
     Call<EventListDetails> getEventDetailedList();
 

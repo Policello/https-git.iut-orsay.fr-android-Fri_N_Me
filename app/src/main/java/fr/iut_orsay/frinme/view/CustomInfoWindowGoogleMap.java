@@ -72,10 +72,14 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
                 String date = df.format(event.getDate());
                 String s = "" + date;
                 dialog_date.setText(s);
+                dialog_cap.setText("");
                 //dialog_date.setText("TEST");
                 break;
             case "ContactModel":
                 this.contact = (ContactModel) o;
+                dialog_date.setText("");
+                dialog_date.setText("");
+                dialog_cap.setText("");
                 break;
             default:
                 dialog_ok.setClickable(false);
