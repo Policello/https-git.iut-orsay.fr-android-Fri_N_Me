@@ -4,6 +4,7 @@ package fr.iut_orsay.frinme.view;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +51,7 @@ public class EventAdd extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_event_add, container, false);
@@ -166,6 +167,7 @@ public class EventAdd extends Fragment {
                     final Message r = response.body();
                     if (r != null && response.isSuccessful()) {
                         Toasty.success(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                        getFragmentManager().popBackStack();
                     } else {
                         Log.e("REST CALL", "sendRequest not successful");
                     }
