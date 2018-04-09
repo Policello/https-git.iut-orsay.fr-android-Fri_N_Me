@@ -1,5 +1,6 @@
 package fr.iut_orsay.frinme.view;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ public class Event extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_main, container, false);
         if (getArguments() != null) {
             currentEvent = ((EventModel) getArguments().getParcelable("event"));
@@ -56,7 +57,7 @@ public class Event extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mListView = (ListView) view.findViewById(R.id.listView);
 
         // Remplissage de la liste d'amis
@@ -85,29 +86,34 @@ public class Event extends Fragment {
         // TODO: Récupérer l'image depuis le serveur
         ImageView img = (ImageView) view.findViewById(R.id.imageView);
 
-        // Dialogs permettant de se (de)inscrire aux evts
-        img.setOnClickListener(diag -> {
-            DialogFragment dialogFragment;
-            if (MainActivity.userStatus == MainActivity.Status.EXTERNE) {
-                dialogFragment = new JoinFrag();
-            } else {
-                dialogFragment = new QuitFrag();
-            }
-            dialogFragment.show(getFragmentManager(), "Popup");
-        });
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(0, 200, 0, "JoinEvent").setIcon(R.drawable.ic_add_black_24dp)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        if (MainActivity.userStatus == MainActivity.Status.EXTERNE) {
+            menu.add(0, 200, 0, "JoinEvent").setIcon(R.drawable.ic_add_black_24dp)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        } else {
+            menu.add(0, 300, 0, "QuitEvent").setIcon(R.drawable.ic_close_black_24dp)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case 0:
+            case 200:
+                // Dialogs permettant de s'inscrire aux evts
+                DialogFragment joinFragment;
+                joinFragment = new JoinFrag();
+                joinFragment.show(getFragmentManager(), "PopupJoin");
+                return true;
+            case 300:
+                // Dialogs permettant de se de-inscrire aux evts
+                DialogFragment quitFrag;
+                quitFrag = new QuitFrag();
+                quitFrag.show(getFragmentManager(), "PopupJoin");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

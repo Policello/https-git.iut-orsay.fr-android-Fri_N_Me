@@ -190,8 +190,10 @@ public class MainActivity extends AppCompatActivity implements
     public void onFragmentInteraction(int res) {
         if (res == 1) {
             userStatus = Status.INTERNE;
+            invalidateOptionsMenu();
         } else if (res == 2) {
             userStatus = Status.EXTERNE;
+            invalidateOptionsMenu();
         }
         Log.e("STATUS", userStatus.toString());
     }
