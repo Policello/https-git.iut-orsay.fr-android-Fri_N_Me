@@ -120,8 +120,8 @@ public class Map extends Fragment implements
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(2 * 1000); // seconds, in milliseconds
+                .setInterval(120 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(20 * 1000); // seconds, in milliseconds
 
 
         if (mapFragment == null) {
@@ -240,6 +240,7 @@ public class Map extends Fragment implements
                         //Remplir tableaux
                         fetchContacts();
                         fetchEvents();
+
 
                     } else {
                         //Demander la permission
@@ -372,6 +373,8 @@ public class Map extends Fragment implements
                             Log.i(TAG, "API Connected");
                             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
                             handleNewLocation(LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient));
+                            fetchContacts();
+                            fetchEvents();
 
                         } catch (SecurityException ex) {
                             ex.printStackTrace();
