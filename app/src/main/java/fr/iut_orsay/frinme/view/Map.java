@@ -58,6 +58,8 @@ import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.Message;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
@@ -308,7 +310,7 @@ public class Map extends Fragment implements
             myLocattionMarker.setTitle("Me : " + getInfoFromLatLng(myLoc));
         }
 
-        /*try {
+        try {
             Call<Message> callUpLoc = RestUser.get().updateLoc(SessionManagerPreferences.getSettings(getActivity()).getUsrId(), location.getLatitude(), location.getLongitude());
             callUpLoc.enqueue(new Callback<Message>() {
                 @Override
@@ -329,7 +331,7 @@ public class Map extends Fragment implements
 
         } catch (NullPointerException e) {
             e.printStackTrace();
-        }*/
+        }
 
     }
 
