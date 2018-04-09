@@ -1,5 +1,7 @@
 package fr.iut_orsay.frinme.view;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +19,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
@@ -80,14 +86,46 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
 
         if (!defaultValues) {
             PrenomContact.setText(contactRecu.getPseudo());
+
             LocalisationContactsDetails.setText(contactRecu.getCoordonnées().toString());
             LastEvenementsContactsDetails.setText(contactRecu.getLastEvent());
             NotesContactsDetails.setText(contactRecu.getNotes());
+            LatLng myLoc = new LatLng(contactRecu.getCoordonnées().getLatitude(), contactRecu.getCoordonnées().getLongitude());
+            LocalisationContactsDetails.setText(getInfoFromLatLng(myLoc));
+
         }
 
         ImageView img = (ImageView) view.findViewById(R.id.ImageProfil);
         img.setImageResource(R.drawable.ic_menu_camera);
         RecupererContact();
+    }
+    public String getInfoFromLatLng(LatLng l) {
+        Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
+
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(l.latitude, l.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "pas de résultats");
+        }
+
+        String lieu;
+
+        try {
+            Log.d(TAG, addresses.get(0).toString());
+            if (addresses.get(0).getLocality() != null) {
+                lieu = addresses.get(0).getLocality();
+            } else if (addresses.get(0).getCountryName() != null) {
+                lieu = addresses.get(0).getCountryName();
+            } else {
+                lieu = "Pas d'infos de lieu";
+            }
+        } catch (IndexOutOfBoundsException e) {
+            lieu = "Pas d'infos de lieu";
+        }
+
+        return lieu;
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
