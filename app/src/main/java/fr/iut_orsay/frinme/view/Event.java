@@ -85,6 +85,77 @@ public class Event extends Fragment {
         // Affiche l'aimge associée à l'événement
         // TODO: Récupérer l'image depuis le serveur
         ImageView img = (ImageView) view.findViewById(R.id.imageView);
+        switch (currentEvent.getType()) {
+            case "Athlétisme":
+                img.setImageResource(R.drawable.athletisme);
+                break;
+            case "Autre":
+                img.setImageResource(R.drawable.autre);
+                break;
+            case "Badminton":
+                img.setImageResource(R.drawable.badminton);
+                break;
+            case "BasketBall":
+                img.setImageResource(R.drawable.basketball);
+                break;
+            case "Boxe":
+                img.setImageResource(R.drawable.boxe);
+                break;
+            case "Ctriterum":
+                img.setImageResource(R.drawable.criterium);
+                break;
+            case "Cyclisme sur piste":
+                img.setImageResource(R.drawable.cyclismesurpiste);
+                break;
+            case "Escrime":
+                img.setImageResource(R.drawable.escrime);
+                break;
+            case "Football":
+                img.setImageResource(R.drawable.football);
+                break;
+            case "Gymnastique":
+                img.setImageResource(R.drawable.gymnastique);
+                break;
+            case "HandBall":
+                img.setImageResource(R.drawable.handball);
+                break;
+            case "Hockey":
+                img.setImageResource(R.drawable.hockey);
+                break;
+            case "Judo":
+                img.setImageResource(R.drawable.judo);
+                break;
+            case "Remise de médailles":
+                img.setImageResource(R.drawable.medaille);
+                break;
+            case "Natation":
+                img.setImageResource(R.drawable.natation);
+                break;
+            case "Ouverture":
+                img.setImageResource(R.drawable.ouverture);
+                break;
+            case "Fermeture et remise des coupes":
+                img.setImageResource(R.drawable.remisecoupes);
+                break;
+            case "Rugby":
+                img.setImageResource(R.drawable.rugby);
+                break;
+            case "Tennis":
+                img.setImageResource(R.drawable.tennis);
+                break;
+            case "Tennis de table":
+                img.setImageResource(R.drawable.tennisdetable);
+                break;
+            case "VolleyBall":
+                img.setImageResource(R.drawable.volleyball);
+                break;
+            case "Water-polo":
+                img.setImageResource(R.drawable.waterpolo);
+                break;
+            default:
+                img.setImageResource(R.drawable.bike);
+                break;
+        }
 
     }
 
