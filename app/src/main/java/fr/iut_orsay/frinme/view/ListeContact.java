@@ -23,6 +23,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactComparator;
 import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
@@ -85,7 +86,8 @@ public class ListeContact extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        sendRequest(view);
+        testContact.clear();
+        testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
         sv = (SearchView) view.findViewById(R.id.SearchListeContact);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             //Inutile
@@ -120,8 +122,7 @@ public class ListeContact extends Fragment {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
                             android.R.animator.fade_in, android.R.animator.fade_out)
-                    .add(R.id.fragment_container, EventContact)
-                    .hide(ListeContact.this)
+                    .replace(R.id.fragment_container, EventContact)
                     .addToBackStack(null)
                     .commit();
         }
