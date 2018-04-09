@@ -17,14 +17,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.RestUser;
+import fr.iut_orsay.frinme.rest.pojo.AfficherUser;
+import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
+import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.pojo.Message;
+import fr.iut_orsay.frinme.rest.pojo.StringBD;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,9 +41,10 @@ import retrofit2.Response;
  */
 public class Contact extends Fragment implements AdapterView.OnItemClickListener {
 
+    private static final String TAG = "tag";
     private ListView mListView;
-    List<EventModel> eventListe;
-    List<String> eventNomListe;
+    private static List<StringBD> eventNomListe;
+    private List<String> eventNomListeCancer;
     private ContactModel contactRecu;
     private boolean defaultValues = false;
 
@@ -54,6 +60,9 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
         if (getArguments() != null) {
             contactRecu = ((ContactModel) getArguments().getParcelable("Contact"));
+            eventNomListeCancer = new ArrayList<>();
+            eventNomListe = new ArrayList<>();
+            Log.e(TAG, "onCreateView: "+contactRecu.getId() );
         } else {
             defaultValues = true;
         }
@@ -62,7 +71,6 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
         mListView = (ListView) view.findViewById(R.id.ListeEvenementsCommunDetails);
 
         final TextView PrenomContact = (TextView) view.findViewById(R.id.PseudoContact);
@@ -79,33 +87,79 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
 
         ImageView img = (ImageView) view.findViewById(R.id.ImageProfil);
         img.setImageResource(R.drawable.ic_menu_camera);
-        /*for (EventModel event : eventListe) {
-            eventNomListe.add(event.getNom());
-        }
-        final ArrayAdapter<String> adapter;
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, eventNomListe);
-        mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(this);
-        */
-
+        RecupererContact();
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Bundle args = new Bundle();
-        args.putParcelable("event", eventListe.get(position));
-        Event EventFrag = new Event();
-        EventFrag.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
-                        android.R.animator.fade_in, android.R.animator.fade_out)
-                .replace(R.id.fragment_container, EventFrag)
-                .addToBackStack(null)
-                .commit();
+            Call<EventDetails> call = RestUser.get().getEventDetails(parent.getItemAtPosition(position).toString());
+            call.enqueue(new Callback<EventDetails>() {
+                @Override
+                public void onResponse(Call<EventDetails> call, Response<EventDetails> response) {
+                    final EventDetails r = response.body();
+                    if (r != null && response.isSuccessful()) {
+                        EventModel eventModel = new EventModel(r.getNomEvent(),r.getType(),r.getDateEvent(),r.getDesc(),r.getParticipants());
+                        Bundle args = new Bundle();
+                        args.putParcelable("event", eventModel);
+                        // args.putParcelable("event", eventListe.get(position));
+                        Event EventFrag = new Event();
+                        EventFrag.setArguments(args);
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                                        android.R.animator.fade_in, android.R.animator.fade_out)
+                                .replace(R.id.fragment_container, EventFrag)
+                                .addToBackStack(null)
+                                .commit();
+
+                    } else {
+                        Log.e("REST CALL", "sendRequest not successful");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<EventDetails> call, Throwable t) {
+                    Log.e("REST CALL", t.getMessage());
+                }
+            });
+        }
+
+    private void RecupererContact() {
+        Call<fr.iut_orsay.frinme.rest.pojo.AfficherUser> call = RestUser.get().getInfoEvenementsUtilisateurs(contactRecu.getId());
+        call.enqueue(new Callback<fr.iut_orsay.frinme.rest.pojo.AfficherUser>() {
+            @Override
+            public void onResponse(Call<fr.iut_orsay.frinme.rest.pojo.AfficherUser> call, Response<fr.iut_orsay.frinme.rest.pojo.AfficherUser> response) {
+                if (response.isSuccessful()) {
+                    final AfficherUser r = response.body();
+                    eventNomListe.addAll(r.getEvent());
+                    Log.e(TAG, "onResponse: "+eventNomListe.size() );
+                    Log.e(TAG, "onResponse: "+eventNomListe.toString() );
+                    if(eventNomListe.size()!=0) {
+                        for (StringBD cancer : eventNomListe) {
+                            eventNomListeCancer.add(cancer.getCancer());
+                            Log.e(TAG, "Creation array " + cancer.getCancer());
+                        }
+                        final ArrayAdapter<String> adapter;
+                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, eventNomListeCancer);
+                        mListView.setAdapter(adapter);
+                    }
+
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful listeContact");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<fr.iut_orsay.frinme.rest.pojo.AfficherUser> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
+        mListView.setOnItemClickListener(this);
+
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Call<EstAmi> call = RestUser.get().getEstAmi(23, 20);
+        Call<EstAmi> call = RestUser.get().getEstAmi(fr.iut_orsay.frinme.model.SessionManagerPreferences.getSettings(getActivity()).getUsrId()
+                , contactRecu.getId());
         call.enqueue(new Callback<EstAmi>() {
             @Override
             public void onResponse(Call<EstAmi> call, Response<EstAmi> response) {

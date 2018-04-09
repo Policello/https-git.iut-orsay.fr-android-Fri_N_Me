@@ -66,7 +66,7 @@ public interface RestService {
 
     @FormUrlEncoded
     @POST("user/afficherUser.php")
-    Call<AfficherUser> infoEvenementsUtilisateurs (@Field("idUser") int idUser);
+    Call<AfficherUser> getInfoEvenementsUtilisateurs (@Field("idUser") int idUser);
 
 
 

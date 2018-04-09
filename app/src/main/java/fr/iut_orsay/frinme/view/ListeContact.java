@@ -23,6 +23,7 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactComparator;
 import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import retrofit2.Call;
@@ -128,7 +129,7 @@ public class ListeContact extends Fragment {
 
     //
     private void sendRequest(View v) {
-        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(SessionManagerPreferences.getSettings(getActivity()).getUsrId());
         call.enqueue(new Callback<ContactListDetails>() {
             @Override
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
@@ -152,7 +153,8 @@ public class ListeContact extends Fragment {
     }
 
     private void sendRequestDyna(View v) {
-        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(23);
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(SessionManagerPreferences.getSettings(getActivity()).getUsrId()
+);
         call.enqueue(new Callback<ContactListDetails>() {
             @Override
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {

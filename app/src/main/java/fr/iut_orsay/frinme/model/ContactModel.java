@@ -19,6 +19,7 @@ import com.google.gson.annotations.SerializedName;
 public class ContactModel implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     @SerializedName("NumUtilisateur")
     @Expose
     private int id;

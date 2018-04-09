@@ -76,6 +76,14 @@ public class EventModel implements Parcelable {
         this.coordonnées = coord;
         this.participants = new ArrayList<>(participants);
     }
+    public EventModel(String nom, String type, Date date, String desc, List<ContactModel> participants) {
+        this.nom = nom;
+        this.type = type;
+        this.date = date;
+        this.desc = desc;
+        this.coordonnées = new Location(0.0,0.0);
+        this.participants = new ArrayList<>(participants);
+    }
 
     public int getId() {
         return id;
