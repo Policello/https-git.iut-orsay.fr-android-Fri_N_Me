@@ -96,4 +96,9 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
             startActivity(new Intent(ConnexionActivity.this, InscriptionActivity.class));
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }

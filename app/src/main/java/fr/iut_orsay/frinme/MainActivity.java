@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements
                 alertDialog.setMessage("Voulez-vous vraiment vous déconnecter?");
                 alertDialog.setButton(Dialog.BUTTON_POSITIVE, "Ok", (dialog, id) -> {
                     SessionManagerPreferences.getSettings(getApplicationContext()).logout();
+                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     startActivity(new Intent(MainActivity.this, ConnexionActivity.class));
                 });
                 alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Annuler", (dialog, id) -> {
