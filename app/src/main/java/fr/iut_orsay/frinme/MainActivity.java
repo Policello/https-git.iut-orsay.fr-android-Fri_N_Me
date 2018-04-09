@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements
     public static Status userStatus = Status.EXTERNE;
 
     private boolean isFabOpen = false;
-    private FloatingActionButton fabContact;
     private FloatingActionButton fabEvent;
     private FloatingActionButton fab;
     private final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -65,29 +64,22 @@ public class MainActivity extends AppCompatActivity implements
 
         // Mise en place du menu flottant
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fabContact = (FloatingActionButton) findViewById(R.id.fabContact);
         fabEvent = (FloatingActionButton) findViewById(R.id.fabEvent);
 
         fab.setOnClickListener(v -> {
             if (!isFabOpen) showFabMenu();
             else closeFabMenu();
         });
-        fabContact.setOnClickListener(v -> {
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
-                            android.R.animator.fade_in, android.R.animator.fade_out)
-                    .replace(R.id.fragment_container, new Contact())
-                    .addToBackStack(null)
-                    .commit();
-            closeFabMenu();
-        });
         fabEvent.setOnClickListener(v -> {
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
-                            android.R.animator.fade_in, android.R.animator.fade_out)
-                    .replace(R.id.fragment_container, new EventAdd())
-                    .addToBackStack(null)
-                    .commit();
+            Fragment currentFrag = fragmentManager.findFragmentById(R.id.fragment_container);
+            if (!(currentFrag instanceof EventAdd)) {
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                                android.R.animator.fade_in, android.R.animator.fade_out)
+                        .replace(R.id.fragment_container, new EventAdd())
+                        .addToBackStack(null)
+                        .commit();
+            }
             closeFabMenu();
         });
 
@@ -217,8 +209,7 @@ public class MainActivity extends AppCompatActivity implements
     private void showFabMenu() {
         isFabOpen = true;
         fab.setImageResource(R.drawable.ic_close_black_24dp);
-        fabContact.animate().translationY(-getResources().getDimension(R.dimen.fab_spacing));
-        fabEvent.animate().translationY(-getResources().getDimension(R.dimen.fab_spacing) * 2);
+        fabEvent.animate().translationY(-getResources().getDimension(R.dimen.fab_spacing));
     }
 
     /**
@@ -227,7 +218,6 @@ public class MainActivity extends AppCompatActivity implements
     private void closeFabMenu() {
         isFabOpen = false;
         fab.setImageResource(R.drawable.ic_add_black_24dp);
-        fabContact.animate().translationY(0);
         fabEvent.animate().translationY(0);
     }
 
