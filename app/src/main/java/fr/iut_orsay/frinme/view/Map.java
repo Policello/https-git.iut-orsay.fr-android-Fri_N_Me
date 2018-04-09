@@ -112,6 +112,8 @@ public class Map extends Fragment implements
         //Gestionnaire de localisation pour verifier que la localisation est activée
         lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
+
+        //Met en place le service de localisation
         mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -151,6 +153,8 @@ public class Map extends Fragment implements
         mMap = googleMap;
         Log.d(TAG, "onmapready");
 
+
+        //Met en place la fenêtre de marker personnalisée
         CustomInfoWindowGoogleMap dialog = new CustomInfoWindowGoogleMap(this.getActivity());
         mMap.setInfoWindowAdapter(dialog);
 
@@ -285,7 +289,8 @@ public class Map extends Fragment implements
     }
 
     /**
-     * @param location : nnew location to mark
+     * Met à jour le marker de position de l'utilisateur sur la carte et dans la base de données
+     * @param location : new location to mark
      */
     private void handleNewLocation(Location location) {
         Log.d(TAG, location.toString());
@@ -312,6 +317,7 @@ public class Map extends Fragment implements
         }
 
         try {
+            //Met à jour la position dans la Base de Données
             Call<Message> callUpLoc = RestUser.get().updateLoc(SessionManagerPreferences.getSettings(getActivity()).getUsrId(), location.getLatitude(), location.getLongitude());
             callUpLoc.enqueue(new Callback<Message>() {
                 @Override
@@ -343,6 +349,13 @@ public class Map extends Fragment implements
         handleNewLocation(location);
     }
 
+    /**
+     * Ajoute un marker personnalisé en fonction de :
+     * @param l : coordonnées
+     * @param couleur
+     * @param precision : nom de lieu
+     * @param o : objet (Contact ou Evenement)
+     */
     public void addMarkerLatLng(LatLng l, float couleur, String precision, Object o) {
         InfoWindowData info = new InfoWindowData(o);
         Marker m = mMap.addMarker(new MarkerOptions().position(l).title(precision).snippet("").icon(BitmapDescriptorFactory.defaultMarker(couleur)));
@@ -439,6 +452,7 @@ public class Map extends Fragment implements
         startActivity(i);
     }
 
+
     public int getLocationMode(Context c) {
         try {
             return Settings.Secure.getInt(getActivity().getContentResolver(), Settings.Secure.LOCATION_MODE);
@@ -449,24 +463,39 @@ public class Map extends Fragment implements
         return -1;
     }
 
+    /**
+     * Récupère les données des évènements stockés depuis la SplashActivity
+     * Ajoute les markers associés
+     */
     private void fetchEvents() {
         tabEventUser.addAll(DataBase.getAppDatabase(getActivity()).eventDao().getAll());
         Log.i("marker ", "" + tabEventUser.toString());
         for (EventModel e : tabEventUser) {
             Log.e(TAG, e.getNom());
-            addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_GREEN, e.getNom(), e);
+            addMarkerLatLng(new LatLng(e.getCoordonnées().getLatitude(), e.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_YELLOW, e.getNom(), e);
         }
     }
 
-
+    /**
+     * Récupère les données des contacts stockés depuis la SplashActivity
+     * Ajoute les markers associés
+     */
     private void fetchContacts() {
         tabContacts.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
         Log.i("marker ", "" + tabContacts.toString());
         for (ContactModel c : tabContacts) {
-            addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_BLUE, c.getPseudo(), c);
+            addMarkerLatLng(new LatLng(c.getCoordonnées().getLatitude(), c.getCoordonnées().getLongitude()), BitmapDescriptorFactory.HUE_ORANGE, c.getPseudo(), c);
         }
     }
 
+    /**
+     * Renvoie un nom de lieu à partir de coordonées
+     * @param l : coordonnées
+     * @return :
+     *  - Nom de ville si possible
+     *  - Sinon, nom de pays
+     *  - Sinon, "pas d'infos de lieu"
+     */
     public String getInfoFromLatLng(LatLng l) {
         Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
 
@@ -487,10 +516,10 @@ public class Map extends Fragment implements
             } else if (addresses.get(0).getCountryName() != null) {
                 lieu = addresses.get(0).getCountryName();
             } else {
-                lieu = "No info";
+                lieu = "Pas d'infos de lieu";
             }
         } catch (IndexOutOfBoundsException e) {
-            lieu = "No info";
+            lieu = "Pas d'infos de lieu";
         }
 
         return lieu;
