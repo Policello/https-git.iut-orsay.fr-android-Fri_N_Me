@@ -550,19 +550,23 @@ public class Map extends Fragment implements
                 // Affichage du fragment par défaut
                 fm = getFragmentManager();
                 contact = (ContactModel) info.getObject();
+                if (!contact.getPseudo().equals("Me")) {
+                    Log.e(TAG, "************");
+                    Log.e(TAG, contact.toString() + " "+ contact.getCoordonnées() + " " + contact.getId());
+                    Log.e(TAG, "************");
+                    args = new Bundle();
+                    args.putParcelable("Contact", contact);
+                    // args.putParcelable("event", eventListe.get(position));
+                    cntct = new Contact();
+                    cntct.setArguments(args);
+                    fm.beginTransaction()
+                            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                                    android.R.animator.fade_in, android.R.animator.fade_out)
+                            .replace(R.id.fragment_container, cntct)
+                            .addToBackStack(null)
+                            .commit();
+                }
 
-
-                args = new Bundle();
-                args.putParcelable("contact", contact);
-                // args.putParcelable("event", eventListe.get(position));
-                cntct = new Contact();
-                cntct.setArguments(args);
-                fm.beginTransaction()
-                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
-                                android.R.animator.fade_in, android.R.animator.fade_out)
-                        .replace(R.id.fragment_container, cntct)
-                        .addToBackStack(null)
-                        .commit();
 
                 break;
         }
