@@ -19,26 +19,31 @@
 
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait"
             android:theme="@style/AppBarTheme"> </activity>
         <activity
             android:name=".InscriptionActivity"
             android:label="Inscription"
+            android:screenOrientation="portrait"
             android:theme="@style/AppBarTheme"> </activity>
         <activity
             android:name=".ConnexionActivity"
             android:label="Connexion"
+            android:screenOrientation="portrait"
             android:theme="@style/AppBarTheme">
         </activity>
     </application>
