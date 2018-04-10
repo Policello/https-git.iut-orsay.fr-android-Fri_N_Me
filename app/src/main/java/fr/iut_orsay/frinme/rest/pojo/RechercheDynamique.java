@@ -32,4 +32,5 @@ public class RechercheDynamique {
     public List<ContactModel> getContacts() {
         return contacts;
     }
+    //
 }

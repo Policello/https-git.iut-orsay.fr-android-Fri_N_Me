@@ -122,6 +122,7 @@ public class ListeContact extends Fragment {
                                 tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
                                 Log.e("REST CALL", testContact.toString());
                             } else {
+                                //
                                 Log.e("REST CALL", "sendRequest not successful listeContact");
                             }
 
