@@ -69,7 +69,7 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter, V
 
         dialog_title.setText(marker.getTitle());
         dialog_msg.setText(marker.getSnippet());
-        dialog_ok.setText("Clicker pour plus de details");
+        dialog_ok.setText("Cliquer pour plus de détails");
 
         info = (InfoWindowData) marker.getTag();
 
