@@ -40,6 +40,10 @@ public interface RestService {
     Call<EventDetails> getEventDetails(@Field("nomEvent") String nomEvent);
 
     @FormUrlEncoded
+    @POST("contact/listContactNamed.php")
+    Call<ContactListDetails> getContactList(@Field("nameUser") String nameUser);
+
+    @FormUrlEncoded
     @POST("contact/listContact.php")
     Call<ContactListDetails> getContactDetailedList(@Field("idUser") int idUser);
 
@@ -67,12 +71,11 @@ public interface RestService {
 
     @FormUrlEncoded
     @POST("user/afficherUser.php")
-    Call<AfficherUser> getInfoEvenementsUtilisateurs (@Field("idUser") int idUser);
+    Call<AfficherUser> getInfoEvenementsUtilisateurs(@Field("idUser") int idUser);
 
     @FormUrlEncoded
-    @POST("user/search.php")
-    Call<RechercheDynamique> getRechercheDynamique (@Field("pieceOfUser") String pieceOfUser);
-
+    @POST("contact/search.php")
+    Call<RechercheDynamique> getRechercheDynamique(@Field("pieceOfUser") String pieceOfUser);
 
 
 }

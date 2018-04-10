@@ -116,8 +116,8 @@ public class ListeContact extends Fragment {
                         public void onResponse(Call<RechercheDynamique> call, Response<RechercheDynamique> response) {
                             if (response.isSuccessful()) {
                                 final RechercheDynamique r = response.body();
-                                r.setContacts(r.getMessage());
-                                testContact.addAll(r.getContacts());
+                                testContact.clear();
+                                testContact.addAll(r.getMessage());
                                 SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
                                 tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
                                 Log.e("REST CALL", testContact.toString());
@@ -130,7 +130,7 @@ public class ListeContact extends Fragment {
 
                         @Override
                         public void onFailure(Call<RechercheDynamique> call, Throwable t) {
-                            Log.e("REST CALL", "ERROR");
+                            Log.e("REST CALL", t.getMessage());
                         }
 
                     });

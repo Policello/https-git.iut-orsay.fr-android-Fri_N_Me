@@ -15,22 +15,10 @@ public class RechercheDynamique {
 
     @SerializedName("message")
     @Expose
-    private List<String> message;
+    private List<ContactModel> message;
 
-    private List<ContactModel> contacts;
-
-    public void setContacts(List<String> message){
-        contacts.clear();
-        for (String i:message) {
-                contacts.add(new ContactModel(i));
-        }
-    }
-
-    public List<String> getMessage() {
+    public List<ContactModel> getMessage() {
         return message;
     }
-    public List<ContactModel> getContacts() {
-        return contacts;
-    }
-    //
+
 }
