@@ -2,6 +2,13 @@ package fr.iut_orsay.frinme.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,16 +26,19 @@ import fr.iut_orsay.frinme.model.InfoWindowData;
  * Created by cyan on 27/03/2018.
  */
 
-public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
+public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter, View.OnClickListener{
     private Context context;
     private Object o;
     private EventModel event;
     private ContactModel contact;
+    private InfoWindowData info;
+    private String TAG = getClass().getSimpleName();
 
     TextView dialog_msg, dialog_title, dialog_ok, dialog_date, dialog_cap;
 
     public CustomInfoWindowGoogleMap(Context ctx) {
         context = ctx;
+
         //this.o = o;
     }
 
@@ -49,6 +59,7 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
         }*/
 
         View view = ((Activity) context).getLayoutInflater().inflate(R.layout.item_dialog, null);
+        view.setOnClickListener(this);
         dialog_msg = (TextView) view.findViewById(R.id.dialog_msg);
         dialog_title = (TextView) view.findViewById(R.id.dialog_title);
         dialog_ok = (TextView) view.findViewById(R.id.dialog_ok);
@@ -58,9 +69,9 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
 
         dialog_title.setText(marker.getTitle());
         dialog_msg.setText(marker.getSnippet());
-        dialog_ok.setText("voir les details");
+        dialog_ok.setText("Clicker pour plus de details");
 
-        InfoWindowData info = (InfoWindowData) marker.getTag();
+        info = (InfoWindowData) marker.getTag();
 
 
         switch (info.getObject().getClass().getSimpleName()) {
@@ -85,12 +96,16 @@ public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter {
                 dialog_ok.setClickable(false);
         }
 
+       return view;
 
-        return view;
+
     }
 
     public Object getObject() {
         return (this.o);
     }
 
-}
+    @Override
+    public void onClick(View v) {
+        }
+    }

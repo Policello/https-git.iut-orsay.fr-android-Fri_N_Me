@@ -4,6 +4,7 @@ public class InfoWindowData {
 
     private Object o;
 
+
     public InfoWindowData(Object o) {
         this.o = o;
     }

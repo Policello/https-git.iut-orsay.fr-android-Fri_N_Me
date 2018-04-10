@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +72,7 @@ import static android.support.v4.content.ContextCompat.checkSelfPermission;
  */
 public class Map extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -84,6 +86,8 @@ public class Map extends Fragment implements
     private List<ContactModel> tabContacts;
     private List<EventModel> tabEventJO;
     private List<EventModel> tabEventUser;
+
+    private Marker curInfoMarker;
 
     TextView dialog_msg, dialog_title, dialog_ok;
     Dialog dialog;
@@ -157,6 +161,7 @@ public class Map extends Fragment implements
         //Met en place la fenêtre de marker personnalisée
         CustomInfoWindowGoogleMap dialog = new CustomInfoWindowGoogleMap(this.getActivity());
         mMap.setInfoWindowAdapter(dialog);
+        mMap.setOnInfoWindowClickListener(this);
 
         //Placer les autres marqueurs
 
@@ -169,9 +174,9 @@ public class Map extends Fragment implements
         }*/
     }
 
-    public void showDialog(String content) {
+    /*public void showDialog(String content) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 // 1.
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.item_dialog, null);
@@ -183,31 +188,15 @@ public class Map extends Fragment implements
         dialog_msg.setText(content);
         dialog_ok.setText("voir les details");
 
-        dialog_ok.setOnClickListener(view -> {
-//                这个MainActivity换成你要跳到的界面
-            Intent intent = null;
 
-            switch (content) {
-                case "test":
-                    intent = new Intent(getActivity(), Event.class);
-                    break;
-                case "test2":
-                    intent = new Intent(getActivity(), Contact.class);
-                    break;
-            }
-
-            intent.putExtra("data", dialog_msg.getText().toString());
-            startActivity(intent);
-            dialog.dismiss();
-            getActivity().finish();
 
         });
 
-        builder.setView(layout);
+       builder.setView(layout);
         dialog = builder.create();
         dialog.show();
     }
-
+    */
 
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Location services connected.");
@@ -524,5 +513,76 @@ public class Map extends Fragment implements
 
         return lieu;
     }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.e(TAG, "On a clické sur la View");
+        Bundle args;
+        Event EventFrag;
+        Contact cntct;
+        FragmentManager fm;
+        InfoWindowData info;
+        info = (InfoWindowData) marker.getTag();
+        ContactModel contact;
+        EventModel event;
+
+        switch (info.getObject().getClass().getSimpleName()) {
+
+
+            case "EventModel":
+                fm = getFragmentManager();
+                event = (EventModel) info.getObject();
+
+                args = new Bundle();
+                args.putParcelable("event", event);
+                // args.putParcelable("event", eventListe.get(position));
+                EventFrag = new Event();
+                EventFrag.setArguments(args);
+                fm.beginTransaction()
+                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                                android.R.animator.fade_in, android.R.animator.fade_out)
+                        .replace(R.id.fragment_container, EventFrag)
+                        .addToBackStack(null)
+                        .commit();
+
+                break;
+            case "ContactModel":
+                // Affichage du fragment par défaut
+                fm = getFragmentManager();
+                contact = (ContactModel) info.getObject();
+
+
+                args = new Bundle();
+                args.putParcelable("contact", contact);
+                // args.putParcelable("event", eventListe.get(position));
+                cntct = new Contact();
+                cntct.setArguments(args);
+                fm.beginTransaction()
+                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                                android.R.animator.fade_in, android.R.animator.fade_out)
+                        .replace(R.id.fragment_container, cntct)
+                        .addToBackStack(null)
+                        .commit();
+
+                break;
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick (Marker marker){
+        curInfoMarker = marker;
+        return true;
+    }
+
+    @Override
+    public void onMapClick(LatLng l){
+        if (curInfoMarker != null) {
+            curInfoMarker.hideInfoWindow();
+        }
+    }
+
+
+
+
 
 }
