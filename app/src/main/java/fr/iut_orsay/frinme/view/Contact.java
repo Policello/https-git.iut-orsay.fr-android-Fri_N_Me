@@ -28,6 +28,7 @@ import java.util.Locale;
 
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.AfficherUser;
@@ -68,7 +69,7 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
             contactRecu = ((ContactModel) getArguments().getParcelable("Contact"));
             eventNomListeCancer = new ArrayList<>();
             eventNomListe = new ArrayList<>();
-            Log.e(TAG, "onCreateView: "+contactRecu.getId() );
+            Log.e(TAG, "onCreateView: " + contactRecu.getId());
         } else {
             defaultValues = true;
         }
@@ -99,6 +100,7 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
         img.setImageResource(R.drawable.ic_menu_camera);
         RecupererContact();
     }
+
     public String getInfoFromLatLng(LatLng l) {
         Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
 
@@ -129,36 +131,19 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Call<EventDetails> call = RestUser.get().getEventDetails(parent.getItemAtPosition(position).toString());
-            call.enqueue(new Callback<EventDetails>() {
-                @Override
-                public void onResponse(Call<EventDetails> call, Response<EventDetails> response) {
-                    final EventDetails r = response.body();
-                    if (r != null && response.isSuccessful()) {
-                        EventModel eventModel = new EventModel(r.getNomEvent(),r.getType(),r.getDateEvent(),r.getDesc(),r.getParticipants());
-                        Bundle args = new Bundle();
-                        args.putParcelable("event", eventModel);
-                        // args.putParcelable("event", eventListe.get(position));
-                        Event EventFrag = new Event();
-                        EventFrag.setArguments(args);
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
-                                        android.R.animator.fade_in, android.R.animator.fade_out)
-                                .replace(R.id.fragment_container, EventFrag)
-                                .addToBackStack(null)
-                                .commit();
+        Bundle args = new Bundle();
+        args.putParcelable("event", DataBase.getAppDatabase(getActivity()).eventDao().findByName(parent.getItemAtPosition(position).toString()));
+        // args.putParcelable("event", eventListe.get(position));
+        Event EventFrag = new Event();
+        EventFrag.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                        android.R.animator.fade_in, android.R.animator.fade_out)
+                .replace(R.id.fragment_container, EventFrag)
+                .addToBackStack(null)
+                .commit();
 
-                    } else {
-                        Log.e("REST CALL", "sendRequest not successful");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<EventDetails> call, Throwable t) {
-                    Log.e("REST CALL", t.getMessage());
-                }
-            });
-        }
+    }
 
     private void RecupererContact() {
         Call<fr.iut_orsay.frinme.rest.pojo.AfficherUser> call = RestUser.get().getInfoEvenementsUtilisateurs(contactRecu.getId());
@@ -168,9 +153,9 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
                 if (response.isSuccessful()) {
                     final AfficherUser r = response.body();
                     eventNomListe.addAll(r.getEvent());
-                    Log.e(TAG, "onResponse: "+eventNomListe.size() );
-                    Log.e(TAG, "onResponse: "+eventNomListe.toString() );
-                    if(eventNomListe.size()!=0) {
+                    Log.e(TAG, "onResponse: " + eventNomListe.size());
+                    Log.e(TAG, "onResponse: " + eventNomListe.toString());
+                    if (eventNomListe.size() != 0) {
                         for (StringBD cancer : eventNomListe) {
                             eventNomListeCancer.add(cancer.getCancer());
                             Log.e(TAG, "Creation array " + cancer.getCancer());

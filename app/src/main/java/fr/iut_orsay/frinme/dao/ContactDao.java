@@ -15,7 +15,7 @@ public interface ContactDao {
     @Query("SELECT * FROM contact")
     List<ContactModel> getAll();
 
-    @Query("SELECT * FROM contact where pseudo LIKE  :name")
+    @Query("SELECT * FROM contact where pseudo LIKE :name")
     ContactModel findByName(String name);
 
     @Query("SELECT COUNT(*) from contact")

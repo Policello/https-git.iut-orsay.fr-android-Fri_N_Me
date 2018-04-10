@@ -23,7 +23,6 @@ import java.util.List;
 public class EventModel implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    @SerializedName("NumEvenement")
     @Expose
     private int id;
 

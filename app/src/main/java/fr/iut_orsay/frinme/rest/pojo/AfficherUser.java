@@ -7,13 +7,17 @@ import java.util.List;
 
 public class AfficherUser {
 
-    @SerializedName("id")
+    @SerializedName("Evenements")
     @Expose
     private List<StringBD> event;
 
     @SerializedName("message")
     @Expose
     private String message;
+
+    @SerializedName("success")
+    @Expose
+    private boolean success;
 
     public List<StringBD> getEvent() {
         return event;
@@ -38,9 +42,5 @@ public class AfficherUser {
     public void setSuccess(boolean success) {
         this.success = success;
     }
-
-    @SerializedName("success")
-    @Expose
-    private boolean success;
 
 }

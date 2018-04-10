@@ -48,6 +48,7 @@ public abstract class DataBase extends RoomDatabase {
                     if (r.getEvents().size() != DataBase.getAppDatabase(c).eventDao().countEvents()) {
                         DataBase.getAppDatabase(c).eventDao().deleteAll();
                         DataBase.getAppDatabase(c).eventDao().insertAll(r.getEvents());
+                        DataBase.getAppDatabase(c).eventDao().insertAll(r.getEventsJo());
                     }
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");

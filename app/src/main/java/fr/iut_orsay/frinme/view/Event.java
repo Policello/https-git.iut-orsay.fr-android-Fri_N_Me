@@ -24,6 +24,7 @@ import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
+import fr.iut_orsay.frinme.model.Location;
 import fr.iut_orsay.frinme.rest.pojo.AfficherUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventDetails;
@@ -255,7 +256,7 @@ public class Event extends Fragment implements AdapterView.OnItemClickListener {
                 final AfficherUser r = response.body();
                 if (r != null && response.isSuccessful()) {
                     Bundle args = new Bundle();
-                    args.putParcelable("Contact", new ContactModel(""));
+                    args.putParcelable("Contact", new ContactModel(1,"test",new Location(0,0)));
                     Contact ContactFrag = new Contact();
                     ContactFrag.setArguments(args);
                     getActivity().getSupportFragmentManager().beginTransaction()
