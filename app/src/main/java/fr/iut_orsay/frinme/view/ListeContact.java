@@ -108,8 +108,8 @@ public class ListeContact extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                //Toast.makeText(getActivity(), "OnQueryTextChange", Toast.LENGTH_LONG).show();
-                if (!TextUtils.isEmpty(s)){
+                Toast.makeText(getActivity(), "OnQueryTextChange", Toast.LENGTH_LONG).show();
+                if (!TextUtils.isEmpty(s)) {
                     Call<RechercheDynamique> call = RestUser.get().getRechercheDynamique(s);
                     call.enqueue(new Callback<RechercheDynamique>() {
                         @Override
@@ -117,23 +117,25 @@ public class ListeContact extends Fragment {
                             if (response.isSuccessful()) {
                                 final RechercheDynamique r = response.body();
                                 testContact.addAll(r.getMessage());
-                                SortableTableView tableView = (SortableTableView) v.findViewById(R.id.ListeContact);
+                                SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
                                 tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
                                 Log.e("REST CALL", testContact.toString());
                             } else {
                                 Log.e("REST CALL", "sendRequest not successful listeContact");
                             }
 
-                }
+                        }
 
                         @Override
                         public void onFailure(Call<RechercheDynamique> call, Throwable t) {
-
+                            Log.e("REST CALL", "ERROR");
                         }
 
-            });
-        }
+                    });
+                }
                 return false;
+            }
+        });
     }
 
     private class EventClickListener implements TableDataClickListener<ContactModel> {
@@ -178,8 +180,7 @@ public class ListeContact extends Fragment {
     }
 
     private void sendRequestDyna(View v) {
-        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(SessionManagerPreferences.getSettings(getActivity()).getUsrId()
-);
+        Call<ContactListDetails> call = RestUser.get().getContactDetailedList(SessionManagerPreferences.getSettings(getActivity()).getUsrId());
         call.enqueue(new Callback<ContactListDetails>() {
             @Override
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
