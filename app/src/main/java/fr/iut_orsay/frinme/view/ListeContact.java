@@ -116,7 +116,8 @@ public class ListeContact extends Fragment {
                         public void onResponse(Call<RechercheDynamique> call, Response<RechercheDynamique> response) {
                             if (response.isSuccessful()) {
                                 final RechercheDynamique r = response.body();
-                                testContact.addAll(r.getMessage());
+                                r.setContacts(r.getMessage());
+                                testContact.addAll(r.getContacts());
                                 SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
                                 tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
                                 Log.e("REST CALL", testContact.toString());
