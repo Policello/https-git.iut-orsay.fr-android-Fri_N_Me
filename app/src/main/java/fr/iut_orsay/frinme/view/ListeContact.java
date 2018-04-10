@@ -39,7 +39,7 @@ import retrofit2.Response;
 
 public class ListeContact extends Fragment {
 
-    List<ContactModel> testContact;
+    List<ContactModel> testContact, tempTestContact;
     private static final String[] TABLE_HEADERS = {"Pseudo"};
     SearchView sv;
 
@@ -47,6 +47,7 @@ public class ListeContact extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         testContact = new ArrayList<>();
+        tempTestContact = new ArrayList<>();
     }
 
     @Override
@@ -116,6 +117,8 @@ public class ListeContact extends Fragment {
                         public void onResponse(Call<RechercheDynamique> call, Response<RechercheDynamique> response) {
                             if (response.isSuccessful()) {
                                 final RechercheDynamique r = response.body();
+                                if (tempTestContact.size() == 0)
+                                    tempTestContact.addAll(testContact);
                                 testContact.clear();
                                 testContact.addAll(r.getMessage());
                                 SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
@@ -134,6 +137,9 @@ public class ListeContact extends Fragment {
                         }
 
                     });
+                } else {
+                    testContact.clear();
+                    testContact.addAll(tempTestContact);
                 }
                 return false;
             }
