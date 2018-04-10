@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/degrade"
+    android:gravity="center_horizontal"
+    android:weightSum="1" >
+
+    <EditText
+        android:id="@+id/resetpwd_edit_name"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:drawableLeft="@android:drawable/ic_menu_myplaces"
+        android:drawableStart="@android:drawable/ic_menu_myplaces"
+        android:ems="10"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="5dp"
+        android:hint="Entrez votre pseudo"
+        android:inputType="textPersonName" />
+
+
+    <EditText
+        android:id="@+id/resetpwd_edit_mail"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/resetpwd_edit_name"
+        android:drawableLeft="@android:drawable/sym_action_email"
+        android:drawableStart="@android:drawable/sym_action_email"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="5dp"
+        android:hint="Entrez votre mail" />
+
+    <EditText
+
+        android:id="@+id/resetpwd_edit_pwd_old"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/resetpwd_edit_mail"
+        android:drawableLeft="@android:drawable/ic_secure"
+        android:drawableStart="@android:drawable/ic_secure"
+        android:ems="10"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="15dp"
+        android:hint="Entrez votre mot de passe"
+        android:inputType="textPassword" />
+
+    <EditText
+
+        android:id="@+id/resetpwd_edit_pwd_new"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/resetpwd_edit_pwd_old"
+        android:drawableLeft="@android:drawable/ic_secure"
+        android:drawableStart="@android:drawable/ic_secure"
+        android:ems="10"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="15dp"
+        android:hint="Confirmez votre mot de passe"
+        android:inputType="textPassword"
+        android:layout_marginBottom="20dp"/>
+
+
+    <Button
+        android:id="@+id/register_btn_sure"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/resetpwd_edit_pwd_new"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/border"
+        android:backgroundTint="@android:color/background_light"
+        android:text="Confirmer"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_btn_sure"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:textColor="#FFFFFF"
+        android:text="ANNULER"
+        android:background="@android:color/transparent"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
+
