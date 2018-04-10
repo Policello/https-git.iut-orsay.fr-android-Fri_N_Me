@@ -17,6 +17,14 @@ import retrofit2.http.POST;
 public interface RestService {
 
     @FormUrlEncoded
+    @POST("user/participateEvent.php")
+    Call<Message> participateEvent(@Field("idUser") int idUser, @Field("nomEvent") String nomEvent);
+
+    @FormUrlEncoded
+    @POST("user/cancelEvent.php")
+    Call<Message> cancelEvent(@Field("idUser") int idUser, @Field("nomEvent") String nomEvent);
+
+    @FormUrlEncoded
     @POST("user/updateLoc.php")
     Call<Message> updateLoc(@Field("idUser") int idUser, @Field("latitude") double latitude, @Field("longitude") double longitude);
 

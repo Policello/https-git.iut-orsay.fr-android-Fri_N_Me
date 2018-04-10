@@ -1,5 +1,6 @@
 package fr.iut_orsay.frinme.view;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,7 +22,10 @@ import android.widget.TextView;
 import fr.iut_orsay.frinme.MainActivity;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventModel;
+import fr.iut_orsay.frinme.rest.pojo.AfficherUser;
+import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.view.dialog.JoinFrag;
@@ -33,11 +38,16 @@ import retrofit2.Response;
  * Vue des détails de l'événement
  * utilisateur quelconque
  */
-public class Event extends Fragment {
+public class Event extends Fragment implements AdapterView.OnItemClickListener {
 
+    private OnFragmentInteractionListener mListener;
     private ListView mListView;
     private EventModel currentEvent;
     private boolean defaultValues = false;
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(String nomEvent);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +74,7 @@ public class Event extends Fragment {
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, new String[]{"Aucun"});
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(this);
 
         // Affichage de l'événement selectionné
         if (!defaultValues) {
@@ -101,7 +112,7 @@ public class Event extends Fragment {
             case "Boxe":
                 img.setImageResource(R.drawable.boxe);
                 break;
-            case "Ctriterum":
+            case "Criterium":
                 img.setImageResource(R.drawable.criterium);
                 break;
             case "Cyclisme sur piste":
@@ -176,19 +187,36 @@ public class Event extends Fragment {
         switch (item.getItemId()) {
             case 200:
                 // Dialogs permettant de s'inscrire aux evts
+                mListener.onFragmentInteraction(currentEvent.getNom());
                 DialogFragment joinFragment;
                 joinFragment = new JoinFrag();
                 joinFragment.show(getFragmentManager(), "PopupJoin");
                 return true;
             case 300:
                 // Dialogs permettant de se de-inscrire aux evts
+                mListener.onFragmentInteraction(currentEvent.getNom());
                 DialogFragment quitFrag;
                 quitFrag = new QuitFrag();
-                quitFrag.show(getFragmentManager(), "PopupJoin");
+                quitFrag.show(getFragmentManager(), "PopupQuit");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     private void sendRequest(View v) {
@@ -212,6 +240,37 @@ public class Event extends Fragment {
 
             @Override
             public void onFailure(Call<EventDetails> call, Throwable t) {
+                Log.e("REST CALL", t.getMessage());
+            }
+        });
+    }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Call<AfficherUser> call = RestUser.get().getInfoEvenementsUtilisateurs(1);
+        call.enqueue(new Callback<AfficherUser>() {
+            @Override
+            public void onResponse(Call<AfficherUser> call, Response<AfficherUser> response) {
+                final AfficherUser r = response.body();
+                if (r != null && response.isSuccessful()) {
+                    Bundle args = new Bundle();
+                    args.putParcelable("Contact", new ContactModel(""));
+                    Contact ContactFrag = new Contact();
+                    ContactFrag.setArguments(args);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out,
+                                    android.R.animator.fade_in, android.R.animator.fade_out)
+                            .replace(R.id.fragment_container, ContactFrag)
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    Log.e("REST CALL", "sendRequest not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AfficherUser> call, Throwable t) {
                 Log.e("REST CALL", t.getMessage());
             }
         });
