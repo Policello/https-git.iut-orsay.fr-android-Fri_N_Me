@@ -8,6 +8,7 @@ import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.Message;
+import fr.iut_orsay.frinme.rest.pojo.RechercheDynamique;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -67,6 +68,10 @@ public interface RestService {
     @FormUrlEncoded
     @POST("user/afficherUser.php")
     Call<AfficherUser> getInfoEvenementsUtilisateurs (@Field("idUser") int idUser);
+
+    @FormUrlEncoded
+    @POST("user/search.php")
+    Call<RechercheDynamique> getRechercheDynamique (@Field("pieceOfUser") String pieceOfUser);
 
 
 

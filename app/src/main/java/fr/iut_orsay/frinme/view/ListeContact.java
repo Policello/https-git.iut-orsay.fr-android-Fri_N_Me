@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
+import fr.iut_orsay.frinme.rest.pojo.RechercheDynamique;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,6 +91,12 @@ public class ListeContact extends Fragment {
         testContact.clear();
         testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
         sv = (SearchView) view.findViewById(R.id.SearchListeContact);
+        SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
+        tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
+        tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
+        tableView.addDataClickListener(new ListeContact.EventClickListener());
+        tableView.setColumnComparator(0, ContactComparator.getContactPseudoComparator());
+
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             //Inutile
             @Override
@@ -100,16 +108,32 @@ public class ListeContact extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Toast.makeText(getActivity(), "OnQueryTextChange", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "OnQueryTextChange", Toast.LENGTH_LONG).show();
+                if (!TextUtils.isEmpty(s)){
+                    Call<RechercheDynamique> call = RestUser.get().getRechercheDynamique(s);
+                    call.enqueue(new Callback<RechercheDynamique>() {
+                        @Override
+                        public void onResponse(Call<RechercheDynamique> call, Response<RechercheDynamique> response) {
+                            if (response.isSuccessful()) {
+                                final RechercheDynamique r = response.body();
+                                testContact.addAll(r.getMessage());
+                                SortableTableView tableView = (SortableTableView) v.findViewById(R.id.ListeContact);
+                                tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
+                                Log.e("REST CALL", testContact.toString());
+                            } else {
+                                Log.e("REST CALL", "sendRequest not successful listeContact");
+                            }
 
+                }
+
+                        @Override
+                        public void onFailure(Call<RechercheDynamique> call, Throwable t) {
+
+                        }
+
+            });
+        }
                 return false;
-            }
-        });
-        SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
-        tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
-        tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
-        tableView.addDataClickListener(new ListeContact.EventClickListener());
-        tableView.setColumnComparator(0, ContactComparator.getContactPseudoComparator());
     }
 
     private class EventClickListener implements TableDataClickListener<ContactModel> {
