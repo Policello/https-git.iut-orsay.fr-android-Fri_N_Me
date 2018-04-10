@@ -38,7 +38,7 @@ public interface RestService {
     @POST("event/addEvent.php")
     Call<Message> addEvent(@Field("capaciteEvent") int capaciteEvent, @Field("heure") String heure,
                            @Field("dateEvent") String dateEvent, @Field("NumUtilisateur") int NumUtilisateur,
-                           @Field("latitude") long latitude, @Field("longitude") long longitude,
+                           @Field("latitude") double latitude, @Field("longitude") double longitude,
                            @Field("commentaireLieu") String commentaireLieu,
                            @Field("nomTypeEvenement") String nomTypeEvenement,
                            @Field("nomEvenement") String nomEvenement);

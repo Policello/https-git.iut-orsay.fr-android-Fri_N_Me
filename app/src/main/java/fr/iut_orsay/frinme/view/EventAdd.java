@@ -3,6 +3,7 @@ package fr.iut_orsay.frinme.view;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -33,6 +40,8 @@ import fr.iut_orsay.frinme.rest.pojo.Message;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -40,9 +49,11 @@ public class EventAdd extends Fragment {
 
     private EditText date_picker;
     private EditText time_picker;
+    private EditText location_picker;
     private Button validEvent;
     private int mYear, mMonth, mDay;
     private int mHour, mMin;
+    private LatLng location;
     private List<String> categories;
 
 
@@ -87,6 +98,18 @@ public class EventAdd extends Fragment {
             timePicker.show();
         });
 
+        location_picker = v.findViewById(R.id.locationPicker);
+        location_picker.setOnClickListener(view -> {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(builder.build(getActivity()), 2);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
+        });
+
         final Calendar ca = Calendar.getInstance();
         mYear = ca.get(Calendar.YEAR);
         mMonth = ca.get(Calendar.MONTH);
@@ -95,6 +118,17 @@ public class EventAdd extends Fragment {
         mMin = ca.get(Calendar.MINUTE);
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                Place selectedPlace = PlacePicker.getPlace(data, getActivity());
+                location_picker.setText(selectedPlace.getAddress());
+                location = selectedPlace.getLatLng();
+            }
+        }
     }
 
     public void display() {
@@ -153,14 +187,14 @@ public class EventAdd extends Fragment {
         int nbPers = (Integer) ((Spinner) getView().findViewById(R.id.nbPersPicker)).getSelectedItem();
         String commentaire = ((EditText) getView().findViewById(R.id.des)).getText().toString();
 
-        if (nom.matches("\\s*") || category.matches("\\s*") || commentaire.matches("\\s*")) {
+        if (nom.matches("\\s*") || category.matches("\\s*") || commentaire.matches("\\s*") || location == null) {
             Toasty.warning(getActivity(), "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
         } else {
             Call<Message> call = RestUser.get().addEvent(nbPers,
                     DateFormat.getTimeInstance().format(Calendar.getInstance().getTime()),
                     DateFormat.getDateInstance().format(Calendar.getInstance().getTime()),
                     SessionManagerPreferences.getSettings(getActivity()).getUsrId(),
-                    0, 0, commentaire, category, nom);
+                    location.latitude, location.longitude, commentaire, category, nom);
             call.enqueue(new retrofit2.Callback<Message>() {
                 @Override
                 public void onResponse(Call<Message> call, Response<Message> response) {
