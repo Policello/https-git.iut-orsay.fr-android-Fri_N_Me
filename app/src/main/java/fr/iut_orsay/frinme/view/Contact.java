@@ -29,12 +29,9 @@ import java.util.Locale;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
 import fr.iut_orsay.frinme.model.DataBase;
-import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.AfficherUser;
-import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.EstAmi;
-import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.pojo.Message;
 import fr.iut_orsay.frinme.rest.pojo.StringBD;
 import retrofit2.Call;
@@ -51,7 +48,7 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
     private static final String TAG = "tag";
     private ListView mListView;
     private static List<StringBD> eventNomListe;
-    private List<String> eventNomListeCancer;
+    private List<String> eventNomListeAdapte;
     private ContactModel contactRecu;
     private boolean defaultValues = false;
 
@@ -66,8 +63,9 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contact, container, false);
         if (getArguments() != null) {
+            //On recupere le contact recu depuis un autre ecran (e.g : Event ou listeContacts)
             contactRecu = ((ContactModel) getArguments().getParcelable("Contact"));
-            eventNomListeCancer = new ArrayList<>();
+            eventNomListeAdapte = new ArrayList<>();
             eventNomListe = new ArrayList<>();
             Log.e(TAG, "onCreateView: " + contactRecu.getId());
         } else {
@@ -101,6 +99,13 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
         RecupererContact();
     }
 
+    /**
+     *  Recupere les coordonnées(longitude,latitude) et
+     *  renvoie les informations du lieu le plus proche(Ville par exemple)
+     *  Si rien ne se trouve à proximité il renverra "Pas d'info de lieu"
+     * @param l
+     * @return lieu
+     */
     public String getInfoFromLatLng(LatLng l) {
         Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
 
@@ -130,6 +135,15 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
         return lieu;
     }
 
+    /**
+     * Recupere la position d'un bouton(ici les boutons ont pour nom divers event)
+     * dans la ListView et renplacera le fragment present par le fragment de l'event
+     * selectionné par l'utilisateur
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Bundle args = new Bundle();
         args.putParcelable("event", DataBase.getAppDatabase(getActivity()).eventDao().findByName(parent.getItemAtPosition(position).toString()));
@@ -145,6 +159,9 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
 
     }
 
+    /**
+     * Permet de récuperer la liste d'event ou participe le contact selectionnée
+     */
     private void RecupererContact() {
         Call<fr.iut_orsay.frinme.rest.pojo.AfficherUser> call = RestUser.get().getInfoEvenementsUtilisateurs(contactRecu.getId());
         call.enqueue(new Callback<fr.iut_orsay.frinme.rest.pojo.AfficherUser>() {
@@ -156,12 +173,12 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
                     Log.e(TAG, "onResponse: " + eventNomListe.size());
                     Log.e(TAG, "onResponse: " + eventNomListe.toString());
                     if (eventNomListe.size() != 0) {
-                        for (StringBD cancer : eventNomListe) {
-                            eventNomListeCancer.add(cancer.getCancer());
-                            Log.e(TAG, "Creation array " + cancer.getCancer());
+                        for (StringBD event : eventNomListe) {
+                            eventNomListeAdapte.add(event.getNomEvent());
+                            Log.e(TAG, "Creation array " + event.getNomEvent());
                         }
                         final ArrayAdapter<String> adapter;
-                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, eventNomListeCancer);
+                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, eventNomListeAdapte);
                         mListView.setAdapter(adapter);
                     }
 
@@ -188,7 +205,7 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
             public void onResponse(Call<EstAmi> call, Response<EstAmi> response) {
                 final EstAmi r = response.body();
                 if (r != null && response.isSuccessful()) {
-                    Toast.makeText(getActivity(), r.getMessage() + "", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), r.getMessage() + "", Toast.LENGTH_LONG).show();
                     boolean ami = r.getMessage();
                     if (ami) {
                         menu.add(0, 100, 0, "Supprimer un ami").setIcon(R.drawable.ic_close_black_24dp)
@@ -216,7 +233,8 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 100:
-                Call<Message> callDel = RestUser.get().getDeleteFriend(23, 20);
+                Call<Message> callDel = RestUser.get().getDeleteFriend(fr.iut_orsay.frinme.model.SessionManagerPreferences.getSettings(getActivity()).getUsrId()
+                        , contactRecu.getId());
                 callDel.enqueue(new Callback<Message>() {
                     @Override
                     public void onResponse(Call<Message> call, Response<Message> response) {
@@ -236,7 +254,8 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
                 });
                 return true;
             case 200:
-                Call<Message> callAdd = RestUser.get().getAddFriend(23, 20);
+                Call<Message> callAdd = RestUser.get().getAddFriend(fr.iut_orsay.frinme.model.SessionManagerPreferences.getSettings(getActivity()).getUsrId()
+                        , contactRecu.getId());
                 callAdd.enqueue(new Callback<Message>() {
                     @Override
                     public void onResponse(Call<Message> call, Response<Message> response) {

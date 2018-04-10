@@ -1,9 +1,9 @@
 package fr.iut_orsay.frinme.view;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +61,9 @@ public class ListeContact extends Fragment {
         return view;
     }
 
+    /**
+     * Creer une table adapté qui sera triable
+     */
     private class ContactTableAdaptater extends TableDataAdapter<ContactModel> {
 
         ContactTableAdaptater(Context context, List<ContactModel> data) {
@@ -92,6 +94,12 @@ public class ListeContact extends Fragment {
         testContact.clear();
         testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
         sv = (SearchView) view.findViewById(R.id.SearchListeContact);
+        sv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sv.setIconified(false);
+            }
+        });
         SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
         tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
@@ -100,16 +108,17 @@ public class ListeContact extends Fragment {
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             //Inutile
+
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Toast.makeText(getActivity(), "OnQueryTextSubmit", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "OnQueryTextSubmit", Toast.LENGTH_LONG).show();
 
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Toast.makeText(getActivity(), "OnQueryTextChange", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "OnQueryTextChange", Toast.LENGTH_LONG).show();
                 if (!TextUtils.isEmpty(s)) {
                     Call<RechercheDynamique> call = RestUser.get().getRechercheDynamique(s);
                     call.enqueue(new Callback<RechercheDynamique>() {
@@ -139,13 +148,17 @@ public class ListeContact extends Fragment {
                     });
                 } else {
                     testContact.clear();
-                    testContact.addAll(tempTestContact);
+                    testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
                 }
                 return false;
             }
         });
     }
 
+    /**
+     * Recupére un contact que l'on à cliqué et le redirigera sur
+     * sa fiche detaillé donc la classe Contact
+     */
     private class EventClickListener implements TableDataClickListener<ContactModel> {
         @Override
         public void onDataClicked(int rowIndex, ContactModel clickedData) {
@@ -162,7 +175,12 @@ public class ListeContact extends Fragment {
         }
     }
 
-    //
+    /**
+     * Recupére la liste contact de l'utilsateur et crée une liste
+     * triable avec le nom de ces différents contact
+     *
+     * @param v
+     */
     private void sendRequest(View v) {
         Call<ContactListDetails> call = RestUser.get().getContactDetailedList(SessionManagerPreferences.getSettings(getActivity()).getUsrId());
         call.enqueue(new Callback<ContactListDetails>() {
@@ -170,7 +188,7 @@ public class ListeContact extends Fragment {
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
                 if (response.isSuccessful()) {
                     final ContactListDetails r = response.body();
-                    Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                     testContact.addAll(r.getContacts());
                     SortableTableView tableView = (SortableTableView) v.findViewById(R.id.ListeContact);
                     tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
@@ -187,6 +205,7 @@ public class ListeContact extends Fragment {
         });
     }
 
+
     private void sendRequestDyna(View v) {
         Call<ContactListDetails> call = RestUser.get().getContactDetailedList(SessionManagerPreferences.getSettings(getActivity()).getUsrId());
         call.enqueue(new Callback<ContactListDetails>() {
@@ -194,7 +213,7 @@ public class ListeContact extends Fragment {
             public void onResponse(Call<ContactListDetails> call, Response<ContactListDetails> response) {
                 if (response.isSuccessful()) {
                     final ContactListDetails r = response.body();
-                    Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
                     testContact.addAll(r.getContacts());
                     SortableTableView tableView = (SortableTableView) v.findViewById(R.id.ListeContact);
                     tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));

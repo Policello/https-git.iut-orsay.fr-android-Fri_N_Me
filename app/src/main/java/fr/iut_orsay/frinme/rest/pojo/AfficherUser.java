@@ -5,6 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Une classe qui nous permettra de recuperer les info d'un utilsateur
+ * ou contact depuis son json
+ */
 public class AfficherUser {
 
     @SerializedName("Evenements")
