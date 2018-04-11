@@ -33,16 +33,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by yyang5 on 13/03/2018.
+ * Fragment listant les contacts
  */
-
 public class ListeContact extends Fragment {
 
     List<ContactModel> testContact, tempTestContact;
     private static final String[] TABLE_HEADERS = {"Pseudo"};
     SearchView sv;
 
-
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         testContact = new ArrayList<>();
@@ -62,7 +61,7 @@ public class ListeContact extends Fragment {
     }
 
     /**
-     * Creer une table adapté qui sera triable
+     * Adapter le contact au tableau
      */
     private class ContactTableAdaptater extends TableDataAdapter<ContactModel> {
 
@@ -156,7 +155,7 @@ public class ListeContact extends Fragment {
     }
 
     /**
-     * Recupére un contact que l'on à cliqué et le redirigera sur
+     * Recupère un contact que l'on à cliqué et le redirigera sur
      * sa fiche detaillé donc la classe Contact
      */
     private class EventClickListener implements TableDataClickListener<ContactModel> {
@@ -179,7 +178,7 @@ public class ListeContact extends Fragment {
      * Recupére la liste contact de l'utilsateur et crée une liste
      * triable avec le nom de ces différents contact
      *
-     * @param v
+     * @param v vue actuelle
      */
     private void sendRequest(View v) {
         Call<ContactListDetails> call = RestUser.get().getContactDetailedList(SessionManagerPreferences.getSettings(getActivity()).getUsrId());

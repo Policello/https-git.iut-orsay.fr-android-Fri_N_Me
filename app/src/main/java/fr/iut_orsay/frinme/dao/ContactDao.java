@@ -9,6 +9,9 @@ import java.util.List;
 
 import fr.iut_orsay.frinme.model.ContactModel;
 
+/**
+ * Modèle contact de la BD locale
+ */
 @Dao
 public interface ContactDao {
 

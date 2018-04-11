@@ -21,6 +21,9 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+/**
+ * Activité contenant les différents paramètres
+ */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {

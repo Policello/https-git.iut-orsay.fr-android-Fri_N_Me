@@ -10,7 +10,7 @@ import static fr.iut_orsay.frinme.model.DataBase.fetchContacts;
 import static fr.iut_orsay.frinme.model.DataBase.fetchEvents;
 
 /**
- * Created by Martin on 20/03/2018.
+ * Activité lancée au démarrage de l'application
  */
 
 public class SplashActivity extends AppCompatActivity {

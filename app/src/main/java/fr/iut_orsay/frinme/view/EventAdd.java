@@ -43,7 +43,7 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment permettant d'ajouter un événement
  */
 public class EventAdd extends Fragment {
 
@@ -131,6 +131,9 @@ public class EventAdd extends Fragment {
         }
     }
 
+    /**
+     * Affiche le résultat des dialogs de date
+     */
     public void display() {
         date_picker.setText(new StringBuffer().append(mMonth + 1).append("-").append(mDay).append("-").append(mYear).append(" "));
         time_picker.setText(new StringBuffer().append(mHour).append(":").append(mMin));
@@ -155,6 +158,9 @@ public class EventAdd extends Fragment {
         }
     };
 
+    /**
+     * Récupère les catégories depuis le serveur
+     */
     private void getCategories() {
         Call<Categories> call = RestUser.get().getTypeActivities();
         call.enqueue(new retrofit2.Callback<Categories>() {
@@ -181,13 +187,16 @@ public class EventAdd extends Fragment {
         });
     }
 
+    /**
+     * Ajout un événement dans la base de données
+     */
     private void addEvent() {
         String nom = ((EditText) Objects.requireNonNull(getView()).findViewById(R.id.eventName)).getText().toString();
         String category = ((Spinner) getView().findViewById(R.id.catPicker)).getSelectedItem().toString();
         int nbPers = (Integer) ((Spinner) getView().findViewById(R.id.nbPersPicker)).getSelectedItem();
         String commentaire = ((EditText) getView().findViewById(R.id.des)).getText().toString();
 
-        if (nom.matches("\\s*") || category.matches("\\s*") || commentaire.matches("\\s*") || location == null) {
+        if (nom.matches("\\s*") || category.matches("\\s*") || location == null) {
             Toasty.warning(getActivity(), "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
         } else {
             Call<Message> call = RestUser.get().addEvent(nbPers,

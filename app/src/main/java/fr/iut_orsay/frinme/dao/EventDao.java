@@ -10,6 +10,9 @@ import java.util.List;
 
 import fr.iut_orsay.frinme.model.EventModel;
 
+/**
+ * Modèle événement de la BD locale
+ */
 @Dao
 public interface EventDao {
 

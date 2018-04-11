@@ -14,6 +14,9 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
+/**
+ * Liste des différents appels REST
+ */
 public interface RestService {
 
     @FormUrlEncoded

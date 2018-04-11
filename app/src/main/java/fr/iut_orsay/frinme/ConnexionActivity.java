@@ -20,6 +20,9 @@ import retrofit2.Response;
 
 import static fr.iut_orsay.frinme.model.DataBase.fetchContacts;
 
+/**
+ * Activité de connexion
+ */
 public class ConnexionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText ETmail, ETmdpasse;
@@ -44,7 +47,12 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
         btnInscription.setOnClickListener(this);
     }
 
-    //méthode faisant le travail de récupération des données JSON
+    /**
+     * Connecte l'utilisateur
+     *
+     * @param mail mail de l'utilisateur
+     * @param mdpasse mot de passe de l'utilisateur
+     */
     private void sendRequest(final String mail, final String mdpasse) {
         Call<Connexion> call = RestUser.get().checkLogin(mail, mdpasse);
         //Lançons notre objet call de manière asynchrone
@@ -77,6 +85,7 @@ public class ConnexionActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
+    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnValider) {
             boolean error = false;

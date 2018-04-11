@@ -23,9 +23,8 @@ import fr.iut_orsay.frinme.model.EventModel;
 import fr.iut_orsay.frinme.model.InfoWindowData;
 
 /**
- * Created by cyan on 27/03/2018.
+ * Fenêtre personnalisée lors du click sur un marker
  */
-
 public class CustomInfoWindowGoogleMap implements GoogleMap.InfoWindowAdapter, View.OnClickListener{
     private Context context;
     private Object o;

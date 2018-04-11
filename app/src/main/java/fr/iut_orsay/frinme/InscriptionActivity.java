@@ -16,6 +16,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Activité d'inscription
+ */
 public class InscriptionActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText pseudo, mail, mdp, mdpConfirm;
@@ -51,6 +54,16 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * Inscrit  un contact dans la BD
+     *
+     * @param mail mail de l'utilisateur
+     * @param mdpasse mot de passe de l'utilisateur
+     * @param pseudo pseudo de l'utilisateur
+     * @param commentaire commentaire de l'utilisateur
+     * @param latitude position de l'utilisateur
+     * @param longitude position de l'utilisateur
+     */
     private void inscription(String mail, String mdpasse,
                              String pseudo, String commentaire,
                              Long latitude, Long longitude) {

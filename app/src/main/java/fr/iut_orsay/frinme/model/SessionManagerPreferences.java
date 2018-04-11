@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 
 import static android.content.Context.MODE_PRIVATE;
 
+/**
+ * Gestionnaire de persistance longue
+ */
 public class SessionManagerPreferences {
 
     @SuppressLint("StaticFieldLeak")

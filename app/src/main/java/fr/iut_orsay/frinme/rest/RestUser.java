@@ -20,6 +20,9 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * Client REST
+ */
 public class RestUser {
     private static final String API_URL = "https://webdev.iut-orsay.fr/Projet_Android_S4_2018/api/";
 

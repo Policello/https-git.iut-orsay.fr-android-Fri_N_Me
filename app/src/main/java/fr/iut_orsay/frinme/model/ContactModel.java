@@ -12,9 +12,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Représente un contact , les évenements auquels il participe et ses attributs.
+ * Représente un contact, les évenements auquels il participe et ses attributs.
  */
-
 @Entity(tableName = "contact")
 public class ContactModel implements Parcelable {
 

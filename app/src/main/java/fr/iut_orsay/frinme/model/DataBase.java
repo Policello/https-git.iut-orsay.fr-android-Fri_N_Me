@@ -14,6 +14,9 @@ import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import retrofit2.Call;
 import retrofit2.Response;
 
+/**
+ * Base d edonnées locale
+ */
 @Database(entities = {EventModel.class, ContactModel.class} , version = 1, exportSchema = false)
 public abstract class DataBase extends RoomDatabase {
 

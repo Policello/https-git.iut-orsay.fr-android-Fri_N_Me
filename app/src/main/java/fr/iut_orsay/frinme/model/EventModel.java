@@ -18,7 +18,6 @@ import java.util.List;
 /**
  * Représente un événement et tous ses attributs
  */
-
 @Entity(tableName = "event")
 public class EventModel implements Parcelable {
 
