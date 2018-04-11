@@ -147,7 +147,9 @@ public class ListeContact extends Fragment {
                     });
                 } else {
                     testContact.clear();
+                    DataBase.fetchContacts(getActivity(), SessionManagerPreferences.getSettings(getActivity()).getUsrId());
                     testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
+                    tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
                 }
                 return false;
             }

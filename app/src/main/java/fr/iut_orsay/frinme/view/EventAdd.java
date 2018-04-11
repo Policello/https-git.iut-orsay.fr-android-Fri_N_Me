@@ -33,6 +33,7 @@ import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
 import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.Categories;
@@ -210,6 +211,7 @@ public class EventAdd extends Fragment {
                     final Message r = response.body();
                     if (r != null && response.isSuccessful()) {
                         Toasty.success(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                        DataBase.fetchEvents(getActivity());
                         getFragmentManager().popBackStack();
                     } else {
                         Log.e("REST CALL", "sendRequest not successful");
