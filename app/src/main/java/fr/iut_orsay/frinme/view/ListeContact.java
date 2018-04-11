@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ListeContact extends Fragment {
 
     List<ContactModel> testContact, tempTestContact;
     private static final String[] TABLE_HEADERS = {"Pseudo"};
+    private ContactTableAdaptater ca;
     SearchView sv;
 
     @Override
@@ -93,25 +95,23 @@ public class ListeContact extends Fragment {
         testContact.clear();
         testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
         sv = (SearchView) view.findViewById(R.id.SearchListeContact);
-        sv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sv.setIconified(false);
-            }
-        });
+        sv.setOnClickListener(v -> sv.setIconified(false));
         SortableTableView tableView = (SortableTableView) view.findViewById(R.id.ListeContact);
-        tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
+        ca = new ListeContact.ContactTableAdaptater(getActivity(), testContact);
+        tableView.setDataAdapter(ca);
         tableView.setHeaderAdapter(new SimpleTableHeaderAdapter(getActivity(), TABLE_HEADERS));
         tableView.addDataClickListener(new ListeContact.EventClickListener());
         tableView.setColumnComparator(0, ContactComparator.getContactPseudoComparator());
 
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            //Inutile
+        sv.setOnCloseListener(() -> {
+            sv.setQuery("", false);
+            sv.clearFocus();
+            return false;
+        });
 
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                //Toast.makeText(getActivity(), "OnQueryTextSubmit", Toast.LENGTH_LONG).show();
-
                 return false;
             }
 
@@ -149,11 +149,16 @@ public class ListeContact extends Fragment {
                     testContact.clear();
                     DataBase.fetchContacts(getActivity(), SessionManagerPreferences.getSettings(getActivity()).getUsrId());
                     testContact.addAll(DataBase.getAppDatabase(getActivity()).contactDao().getAll());
-                    tableView.setDataAdapter(new ListeContact.ContactTableAdaptater(getActivity(), testContact));
+                    ca.notifyDataSetChanged();
                 }
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     /**
