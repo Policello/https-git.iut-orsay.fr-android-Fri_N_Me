@@ -73,10 +73,6 @@ public class Event extends Fragment implements AdapterView.OnItemClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mListView = (ListView) view.findViewById(R.id.listView);
 
-        // Remplissage de la liste d'amis
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, new String[]{"Aucun"});
-        mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(this);
 
         // Affichage de l'événement selectionné
