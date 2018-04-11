@@ -90,49 +90,13 @@ public class Contact extends Fragment implements AdapterView.OnItemClickListener
             LastEvenementsContactsDetails.setText(contactRecu.getLastEvent());
             NotesContactsDetails.setText(contactRecu.getNotes());
             LatLng myLoc = new LatLng(contactRecu.getCoordonnées().getLatitude(), contactRecu.getCoordonnées().getLongitude());
-            LocalisationContactsDetails.setText(getInfoFromLatLng(myLoc));
+            LocalisationContactsDetails.setText(Map.getInfoFromLatLng(getActivity(), myLoc));
 
         }
 
         ImageView img = (ImageView) view.findViewById(R.id.ImageProfil);
         img.setImageResource(R.drawable.ic_menu_camera);
         RecupererContact();
-    }
-
-    /**
-     *  Recupere les coordonnées(longitude,latitude) et
-     *  renvoie les informations du lieu le plus proche(Ville par exemple)
-     *  Si rien ne se trouve à proximité il renverra "Pas d'info de lieu"
-     * @param l
-     * @return lieu
-     */
-    public String getInfoFromLatLng(LatLng l) {
-        Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
-
-        List<Address> addresses = null;
-        try {
-            addresses = gcd.getFromLocation(l.latitude, l.longitude, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, "pas de résultats");
-        }
-
-        String lieu;
-
-        try {
-            Log.d(TAG, addresses.get(0).toString());
-            if (addresses.get(0).getLocality() != null) {
-                lieu = addresses.get(0).getLocality();
-            } else if (addresses.get(0).getCountryName() != null) {
-                lieu = addresses.get(0).getCountryName();
-            } else {
-                lieu = "Pas d'infos de lieu";
-            }
-        } catch (IndexOutOfBoundsException e) {
-            lieu = "Pas d'infos de lieu";
-        }
-
-        return lieu;
     }
 
     /**

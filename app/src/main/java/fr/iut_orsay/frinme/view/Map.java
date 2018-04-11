@@ -293,7 +293,7 @@ public class Map extends Fragment implements
         Log.d(TAG, "" + firstLocationUpdate);
         if (firstLocationUpdate) {
 
-            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Me").snippet(getInfoFromLatLng(myLoc)));
+            myLocattionMarker = mMap.addMarker(new MarkerOptions().position(myLoc).title("Me").snippet(getInfoFromLatLng(getActivity(), myLoc)));
 
             myLocattionMarker.setTag(new InfoWindowData(new ContactModel("Me")));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(myLoc));
@@ -302,7 +302,7 @@ public class Map extends Fragment implements
             firstLocationUpdate = false;
         } else {
             myLocattionMarker.setPosition(myLoc);
-            myLocattionMarker.setTitle("Me : " + getInfoFromLatLng(myLoc));
+            myLocattionMarker.setTitle("Me : " + getInfoFromLatLng(getActivity(), myLoc));
         }
 
         try {
@@ -350,7 +350,7 @@ public class Map extends Fragment implements
         Marker m = mMap.addMarker(new MarkerOptions().position(l).title(precision).snippet("").icon(BitmapDescriptorFactory.defaultMarker(couleur)));
         mMap.setOnMarkerClickListener(marker -> {
             if (marker.getSnippet().equals("")) {
-                marker.setSnippet(getInfoFromLatLng(marker.getPosition()));
+                marker.setSnippet(getInfoFromLatLng(getActivity(), marker.getPosition()));
             }
             marker.showInfoWindow();
             return true;
@@ -479,14 +479,16 @@ public class Map extends Fragment implements
 
     /**
      * Renvoie un nom de lieu à partir de coordonées
-     * @param l : coordonnées
-     * @return :
+     *
+     * @param c context
+     * @param l coordonnées
+     * @return
      *  - Nom de ville si possible
      *  - Sinon, nom de pays
      *  - Sinon, "pas d'infos de lieu"
      */
-    public String getInfoFromLatLng(LatLng l) {
-        Geocoder gcd = new Geocoder(this.getActivity(), Locale.getDefault());
+    public static String getInfoFromLatLng(Context c, LatLng l) {
+        Geocoder gcd = new Geocoder(c, Locale.getDefault());
 
         List<Address> addresses = null;
         try {

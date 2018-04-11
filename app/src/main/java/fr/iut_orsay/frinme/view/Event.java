@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import fr.iut_orsay.frinme.MainActivity;
 import fr.iut_orsay.frinme.R;
 import fr.iut_orsay.frinme.model.ContactModel;
@@ -91,7 +93,7 @@ public class Event extends Fragment implements AdapterView.OnItemClickListener {
             tvCat.setText(currentEvent.getType());
 
             TextView tvLocation = (TextView) view.findViewById(R.id.location);
-            tvLocation.setText(currentEvent.getCoordonnées().toString());
+            tvLocation.setText(Map.getInfoFromLatLng(getActivity(), new LatLng(currentEvent.getCoordonnées().getLatitude(), currentEvent.getCoordonnées().getLongitude())));
         }
 
         // Affiche l'aimge associée à l'événement
