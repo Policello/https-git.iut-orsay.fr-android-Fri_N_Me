@@ -5,15 +5,23 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * Une classe qui nous permettra de recuperer les info d'un utilsateur
+ * ou contact depuis son json
+ */
 public class AfficherUser {
 
-    @SerializedName("id")
+    @SerializedName("Evenements")
     @Expose
     private List<StringBD> event;
 
     @SerializedName("message")
     @Expose
     private String message;
+
+    @SerializedName("success")
+    @Expose
+    private boolean success;
 
     public List<StringBD> getEvent() {
         return event;
@@ -38,9 +46,5 @@ public class AfficherUser {
     public void setSuccess(boolean success) {
         this.success = success;
     }
-
-    @SerializedName("success")
-    @Expose
-    private boolean success;
 
 }

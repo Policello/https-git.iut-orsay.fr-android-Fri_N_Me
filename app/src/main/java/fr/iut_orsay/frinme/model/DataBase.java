@@ -14,6 +14,9 @@ import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import retrofit2.Call;
 import retrofit2.Response;
 
+/**
+ * Base d edonnées locale
+ */
 @Database(entities = {EventModel.class, ContactModel.class} , version = 1, exportSchema = false)
 public abstract class DataBase extends RoomDatabase {
 
@@ -48,6 +51,7 @@ public abstract class DataBase extends RoomDatabase {
                     if (r.getEvents().size() != DataBase.getAppDatabase(c).eventDao().countEvents()) {
                         DataBase.getAppDatabase(c).eventDao().deleteAll();
                         DataBase.getAppDatabase(c).eventDao().insertAll(r.getEvents());
+                        DataBase.getAppDatabase(c).eventDao().insertAll(r.getEventsJo());
                     }
                 } else {
                     Log.e("REST CALL", "sendRequest not successful");

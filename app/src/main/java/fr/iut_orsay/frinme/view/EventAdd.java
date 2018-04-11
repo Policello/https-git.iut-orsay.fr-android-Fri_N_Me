@@ -3,6 +3,7 @@ package fr.iut_orsay.frinme.view;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,12 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +33,7 @@ import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
 import fr.iut_orsay.frinme.R;
+import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
 import fr.iut_orsay.frinme.rest.RestUser;
 import fr.iut_orsay.frinme.rest.pojo.Categories;
@@ -33,16 +41,20 @@ import fr.iut_orsay.frinme.rest.pojo.Message;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment permettant d'ajouter un événement
  */
 public class EventAdd extends Fragment {
 
     private EditText date_picker;
     private EditText time_picker;
+    private EditText location_picker;
     private Button validEvent;
     private int mYear, mMonth, mDay;
     private int mHour, mMin;
+    private LatLng location;
     private List<String> categories;
 
 
@@ -87,6 +99,18 @@ public class EventAdd extends Fragment {
             timePicker.show();
         });
 
+        location_picker = v.findViewById(R.id.locationPicker);
+        location_picker.setOnClickListener(view -> {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(builder.build(getActivity()), 2);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
+        });
+
         final Calendar ca = Calendar.getInstance();
         mYear = ca.get(Calendar.YEAR);
         mMonth = ca.get(Calendar.MONTH);
@@ -97,6 +121,20 @@ public class EventAdd extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                Place selectedPlace = PlacePicker.getPlace(data, getActivity());
+                location_picker.setText(selectedPlace.getAddress());
+                location = selectedPlace.getLatLng();
+            }
+        }
+    }
+
+    /**
+     * Affiche le résultat des dialogs de date
+     */
     public void display() {
         date_picker.setText(new StringBuffer().append(mMonth + 1).append("-").append(mDay).append("-").append(mYear).append(" "));
         time_picker.setText(new StringBuffer().append(mHour).append(":").append(mMin));
@@ -121,6 +159,9 @@ public class EventAdd extends Fragment {
         }
     };
 
+    /**
+     * Récupère les catégories depuis le serveur
+     */
     private void getCategories() {
         Call<Categories> call = RestUser.get().getTypeActivities();
         call.enqueue(new retrofit2.Callback<Categories>() {
@@ -147,26 +188,30 @@ public class EventAdd extends Fragment {
         });
     }
 
+    /**
+     * Ajout un événement dans la base de données
+     */
     private void addEvent() {
         String nom = ((EditText) Objects.requireNonNull(getView()).findViewById(R.id.eventName)).getText().toString();
         String category = ((Spinner) getView().findViewById(R.id.catPicker)).getSelectedItem().toString();
         int nbPers = (Integer) ((Spinner) getView().findViewById(R.id.nbPersPicker)).getSelectedItem();
         String commentaire = ((EditText) getView().findViewById(R.id.des)).getText().toString();
 
-        if (nom.matches("\\s*") || category.matches("\\s*") || commentaire.matches("\\s*")) {
+        if (nom.matches("\\s*") || category.matches("\\s*") || location == null) {
             Toasty.warning(getActivity(), "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
         } else {
             Call<Message> call = RestUser.get().addEvent(nbPers,
                     DateFormat.getTimeInstance().format(Calendar.getInstance().getTime()),
                     DateFormat.getDateInstance().format(Calendar.getInstance().getTime()),
                     SessionManagerPreferences.getSettings(getActivity()).getUsrId(),
-                    0, 0, commentaire, category, nom);
+                    location.latitude, location.longitude, commentaire, category, nom);
             call.enqueue(new retrofit2.Callback<Message>() {
                 @Override
                 public void onResponse(Call<Message> call, Response<Message> response) {
                     final Message r = response.body();
                     if (r != null && response.isSuccessful()) {
                         Toasty.success(getActivity(), r.getMessage(), Toast.LENGTH_LONG).show();
+                        DataBase.fetchEvents(getActivity());
                         getFragmentManager().popBackStack();
                     } else {
                         Log.e("REST CALL", "sendRequest not successful");

@@ -8,12 +8,24 @@ import fr.iut_orsay.frinme.rest.pojo.EventDetails;
 import fr.iut_orsay.frinme.rest.pojo.EventListDetails;
 import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
 import fr.iut_orsay.frinme.rest.pojo.Message;
+import fr.iut_orsay.frinme.rest.pojo.RechercheDynamique;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
+/**
+ * Liste des différents appels REST
+ */
 public interface RestService {
+
+    @FormUrlEncoded
+    @POST("user/participateEvent.php")
+    Call<Message> participateEvent(@Field("idUser") int idUser, @Field("nomEvent") String nomEvent);
+
+    @FormUrlEncoded
+    @POST("user/cancelEvent.php")
+    Call<Message> cancelEvent(@Field("idUser") int idUser, @Field("nomEvent") String nomEvent);
 
     @FormUrlEncoded
     @POST("user/updateLoc.php")
@@ -29,7 +41,7 @@ public interface RestService {
     @POST("event/addEvent.php")
     Call<Message> addEvent(@Field("capaciteEvent") int capaciteEvent, @Field("heure") String heure,
                            @Field("dateEvent") String dateEvent, @Field("NumUtilisateur") int NumUtilisateur,
-                           @Field("latitude") long latitude, @Field("longitude") long longitude,
+                           @Field("latitude") double latitude, @Field("longitude") double longitude,
                            @Field("commentaireLieu") String commentaireLieu,
                            @Field("nomTypeEvenement") String nomTypeEvenement,
                            @Field("nomEvenement") String nomEvenement);
@@ -37,6 +49,10 @@ public interface RestService {
     @FormUrlEncoded
     @POST("event/listEventsMapDetails/")
     Call<EventDetails> getEventDetails(@Field("nomEvent") String nomEvent);
+
+    @FormUrlEncoded
+    @POST("contact/listContactNamed.php")
+    Call<ContactListDetails> getContactList(@Field("nameUser") String nameUser);
 
     @FormUrlEncoded
     @POST("contact/listContact.php")
@@ -66,8 +82,11 @@ public interface RestService {
 
     @FormUrlEncoded
     @POST("user/afficherUser.php")
-    Call<AfficherUser> getInfoEvenementsUtilisateurs (@Field("idUser") int idUser);
+    Call<AfficherUser> getInfoEvenementsUtilisateurs(@Field("idUser") int idUser);
 
+    @FormUrlEncoded
+    @POST("contact/search.php")
+    Call<RechercheDynamique> getRechercheDynamique(@Field("pieceOfUser") String pieceOfUser);
 
 
 }

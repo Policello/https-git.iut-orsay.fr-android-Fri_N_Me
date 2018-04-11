@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/eventName"
-        android:hint="Choissez la catégorie de l'evenement" />
+        android:hint="Choisissez la catégorie de l'evenement" />
 
     <Spinner
         android:id="@+id/nbPersPicker"
@@ -25,15 +25,24 @@
         android:layout_below="@+id/catPicker"
         android:hint="Choisissez le nb de pers de l'evenement" />
 
-
     <EditText
-        android:id="@+id/datePicker"
+        android:id="@+id/locationPicker"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/nbPersPicker"
         android:clickable="true"
         android:focusable="false"
-        android:hint="Choisir la date de l'evenement"
+        android:hint="Choisissez le lieu de l'événement"
+        android:inputType="date" />
+
+    <EditText
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/locationPicker"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="Choisissez la date de l'evenement"
         android:inputType="date" />
 
 

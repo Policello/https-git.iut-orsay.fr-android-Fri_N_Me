@@ -8,7 +8,11 @@ import java.util.List;
 import fr.iut_orsay.frinme.model.ContactModel;
 
 
-
+/**
+ * Une classe pojo qui nous permettra de recuperer
+ * la liste des contacts d'un utilisateur depuis
+ * son json
+ */
 public class ContactListDetails extends Message {
 
     @SerializedName("id")

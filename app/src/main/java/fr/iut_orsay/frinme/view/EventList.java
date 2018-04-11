@@ -23,7 +23,9 @@ import fr.iut_orsay.frinme.model.DataBase;
 import fr.iut_orsay.frinme.model.EventComparator;
 import fr.iut_orsay.frinme.model.EventModel;
 
-
+/**
+ * Fragment listant les événements
+ */
 public class EventList extends Fragment {
 
     // Liste d'événements
@@ -70,6 +72,9 @@ public class EventList extends Fragment {
         tableView.setColumnComparator(3, EventComparator.getEventLocComparator());
     }
 
+    /**
+     * Adapter l'événement au tableau
+     */
     private class EventTableAdaptater extends TableDataAdapter<EventModel> {
 
         EventTableAdaptater(Context context, List<EventModel> data) {
@@ -113,6 +118,9 @@ public class EventList extends Fragment {
 
     }
 
+    /**
+     * Click listener du tableau
+     */
     private class EventClickListener implements TableDataClickListener<EventModel> {
         @Override
         public void onDataClicked(int rowIndex, EventModel event) {

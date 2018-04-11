@@ -10,13 +10,16 @@ import java.util.List;
 
 import fr.iut_orsay.frinme.model.EventModel;
 
+/**
+ * Modèle événement de la BD locale
+ */
 @Dao
 public interface EventDao {
 
     @Query("SELECT * FROM event")
     List<EventModel> getAll();
 
-    @Query("SELECT * FROM event where nom LIKE  :nomEvenement")
+    @Query("SELECT * FROM event where nom LIKE :nomEvenement")
     EventModel findByName(String nomEvenement);
 
     @Query("SELECT COUNT(*) from event")

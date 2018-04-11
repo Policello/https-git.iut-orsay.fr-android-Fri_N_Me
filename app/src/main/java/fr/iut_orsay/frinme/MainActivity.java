@@ -21,17 +21,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import fr.iut_orsay.frinme.model.SessionManagerPreferences;
+import fr.iut_orsay.frinme.rest.RestUser;
+import fr.iut_orsay.frinme.rest.pojo.ContactListDetails;
+import fr.iut_orsay.frinme.rest.pojo.Message;
 import fr.iut_orsay.frinme.view.Contact;
+import fr.iut_orsay.frinme.view.Event;
 import fr.iut_orsay.frinme.view.EventAdd;
 import fr.iut_orsay.frinme.view.EventList;
 import fr.iut_orsay.frinme.view.ListeContact;
 import fr.iut_orsay.frinme.view.Map;
 import fr.iut_orsay.frinme.view.dialog.JoinFrag;
 import fr.iut_orsay.frinme.view.dialog.QuitFrag;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+/**
+ * Activité principale de l'application
+ */
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        JoinFrag.OnFragmentInteractionListener, QuitFrag.OnFragmentInteractionListener {
+        JoinFrag.OnFragmentInteractionListener, QuitFrag.OnFragmentInteractionListener,
+        Event.OnFragmentInteractionListener {
 
     public enum Status {
         EXTERNE,
@@ -44,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean isFabOpen = false;
     private FloatingActionButton fabEvent;
     private FloatingActionButton fab;
+    private String nomEvent;
     private final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
@@ -115,6 +127,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onFragmentInteraction(String nomEvent) {
+        this.nomEvent = nomEvent;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
@@ -181,11 +198,43 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(int res) {
         if (res == 1) {
-            userStatus = Status.INTERNE;
-            invalidateOptionsMenu();
+            Call<Message> call = RestUser.get().participateEvent(SessionManagerPreferences.getSettings(getApplication()).getUsrId(), nomEvent);
+            call.enqueue(new Callback<Message>() {
+                @Override
+                public void onResponse(Call<Message> call, Response<Message> response) {
+                    final Message r = response.body();
+                    if (r != null && response.isSuccessful()) {
+                        userStatus = Status.INTERNE;
+                        invalidateOptionsMenu();
+                    } else {
+                        Log.e("REST CALL", "sendRequest not successful");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Message> call, Throwable t) {
+                    Log.e("REST CALL", t.getMessage());
+                }
+            });
         } else if (res == 2) {
-            userStatus = Status.EXTERNE;
-            invalidateOptionsMenu();
+            Call<Message> call = RestUser.get().cancelEvent(SessionManagerPreferences.getSettings(getApplication()).getUsrId(), nomEvent);
+            call.enqueue(new Callback<Message>() {
+                @Override
+                public void onResponse(Call<Message> call, Response<Message> response) {
+                    final Message r = response.body();
+                    if (r != null && response.isSuccessful()) {
+                        userStatus = Status.EXTERNE;
+                        invalidateOptionsMenu();
+                    } else {
+                        Log.e("REST CALL", "sendRequest not successful");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Message> call, Throwable t) {
+                    Log.e("REST CALL", t.getMessage());
+                }
+            });
         }
         Log.e("STATUS", userStatus.toString());
     }

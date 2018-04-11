@@ -18,12 +18,10 @@ import java.util.List;
 /**
  * Représente un événement et tous ses attributs
  */
-
 @Entity(tableName = "event")
 public class EventModel implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
-    @SerializedName("NumEvenement")
     @Expose
     private int id;
 
